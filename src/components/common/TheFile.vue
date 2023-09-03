@@ -8,7 +8,7 @@
 import { reactive, ref } from 'vue'
 
 const props = defineProps(['fileName', 'fileIcon'])
-const componentSettings = reactive({
+const cs = reactive({
   size: 150, // 文件图标大小
   showActionsMenu: false
 })
@@ -19,15 +19,15 @@ const handleShare = () => {}
 </script>
 
 <template>
-  <!--  <v-card :width="componentSettings.size" :min-height="componentSettings.size" >-->
-  <v-btn :size="componentSettings.size" :width="componentSettings.size" stacked v-bind="$attrs">
+  <!--  <v-card :width="cs.size" :min-height="cs.size" >-->
+  <v-btn :size="cs.size" :width="cs.size" stacked v-bind="$attrs">
     <template #prepend>
       <v-icon :icon="`mdi-${fileIcon}`" color="#62B1FA" size="130"></v-icon>
     </template>
     <span class="file-text">{{ fileName }}</span>
   </v-btn>
 
-  <!--    <v-card-actions v-if="componentSettings.showActionsMenu">-->
+  <!--    <v-card-actions v-if="cs.showActionsMenu">-->
   <!--      <v-btn-->
   <!--          color="surface-variant"-->
   <!--          icon="mdi-monitor-arrow-down-variant"-->

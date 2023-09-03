@@ -12,7 +12,7 @@ export const useAppStore = defineStore(`appStore`, {
     getDelay: (state) => state.app.delay
   },
   actions: {
-    sendGlobalMessage(message: string, type?: 'error' | 'success' | 'warning' | 'info'): void {
+    globalMessage(message: string, type?: 'error' | 'success' | 'warning' | 'info'): void {
       this.messageQueue.push({ message, type, show: true })
     }
   }

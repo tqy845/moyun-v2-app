@@ -15,7 +15,7 @@ const cs = reactive<{ showDialog: boolean; messageList: Array<any> }>({
   messageList: []
 })
 
-appStore.$subscribe((mutation, state) => {
+appStore.$subscribe((_, state) => {
   if (state.messageQueue.length) {
     cs.showDialog = true
     cs.messageList.push(...state.messageQueue.copyWithin(0, state.messageQueue.length))
@@ -26,7 +26,7 @@ appStore.$subscribe((mutation, state) => {
       if (!cs.messageList) {
         cs.showDialog = false
       }
-    }, cs.messageList[0]?.delay || 133000)
+    }, cs.messageList[0]?.delay || 3000)
   }
 })
 </script>

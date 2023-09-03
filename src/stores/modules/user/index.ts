@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { getUserDefaultSettings, type User, type UserStore } from './helper'
-import { fetchCodeImage, loginForUserByAccount, logoutForUser } from '@/api'
+import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
+import { encrypt } from '@/utils/functions'
 
 export const useUserStore = defineStore('userStore', {
   state: (): UserStore => getUserDefaultSettings(),
@@ -22,16 +23,23 @@ export const useUserStore = defineStore('userStore', {
       return ''
     },
     /**
+     * 注册账户
+     */
+    async registerByAccount(user: User) {
+      const _user = Object.assign({}, user)
+      return await registerByAccount({ email: _user.email, password: encrypt(_user.password) })
+    },
+    /**
      * 用户使用账号密码登录
      * @param user 用户对象
      * @returns 登录结果
      */
     async userLoginByAccount(user: User) {
-      const _user: User & { uuid: string; username: string } = Object.assign({}, user, {
+      const _user: User & { uuid: string } = Object.assign({}, user, {
         uuid: this.uuid || ''
       })
 
-      const { code, data } = await loginForUserByAccount(_user)
+      const { code, data } = await loginByAccount(_user)
 
       if (code === 200) {
         this.token = data?.token

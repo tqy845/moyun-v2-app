@@ -126,7 +126,7 @@ const data = reactive({
   toggleSelected: [] || ''
 })
 
-const componentSettings = reactive({
+const cs = reactive({
   isMultiple: controlState.value
 })
 
@@ -143,7 +143,7 @@ whenever(ctrl_a, () => {
   console.log('全选')
   data.toggleSelected = data.fileList.map((item) => item.fileName)
 
-  appStore.sendGlobalMessage('全选', 'success')
+  appStore.globalMessage('全选', 'success')
 })
 
 /**

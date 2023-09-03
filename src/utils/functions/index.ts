@@ -1,5 +1,9 @@
 import { registeredTouch } from '@/api'
 
+import { encrypt, decrypt } from './jsencrypt'
+
+export { encrypt, decrypt }
+
 interface TouchIDOptions {
   publicKey: {
     rp: { name: string } // 网站信息
