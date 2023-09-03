@@ -1,0 +1,23 @@
+{
+  "login": "モユン・ログイン",
+  "login.button": "ログイン",
+  "register": "モユン・新規登録",
+  "register.button": "新規登録",
+  "register.complete": "登録完了",
+  "register.terms": "ウェブサイトの利用規約に同意しました",
+  "email.label": "メールアドレス",
+  "email.hint": "メールアドレスを入力してください",
+  "email.required": "メールアドレスは必須です",
+  "email.counter": "最大20文字まで",
+  "email.invalid": "無効なメールアドレスです",
+  "wechat.login": "WeChatでログイン",
+  "qq.login": "QQでログイン",
+  "account.login": "メールアドレスでログイン",
+  "biometric.login": "生体認証でログイン",
+  "account.null": "アカウントを持っていませんか？",
+  "account.have": "すでにアカウントを持っていますか？",
+  "forgot.password": "パスワードを忘れました",
+  "reset.password": "パスワードをリセット",
+  "change.password": "パスワードを変更",
+  "toggle.language": "言語切り替え"
+}

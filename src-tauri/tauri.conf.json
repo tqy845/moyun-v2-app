@@ -1,0 +1,46 @@
+{
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "摸云 Safe and sound - Mo yun",
+    "version": "0.0.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": {
+        "all": false,
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.tauri.dev",
+      "icon": [
+        "../public/img/icons/192x192.png",
+        "../public/img/icons/192x192.png",
+        "../public/img/icons/512x512.png",
+        "icons/icon.icns",
+        "../public/favicon.ico"
+      ]
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "resizable": true,
+        "title": "摸云 Safe and sound - Mo yun",
+        "width": 1152,
+        "height": 864
+      }
+    ]
+  }
+}
