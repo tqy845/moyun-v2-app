@@ -1,0 +1,23 @@
+{
+  "login": "MoYun · Đăng nhập",
+  "login.button": "Đăng nhập",
+  "register": "MoYun · Đăng ký",
+  "register.button": "Đăng ký",
+  "register.complete": "Hoàn tất đăng ký",
+  "register.terms": "Tôi đã đọc và đồng ý với các điều khoản và điều lệ của trang web",
+  "email.label": "Địa chỉ Email",
+  "email.hint": "Nhập địa chỉ email của bạn",
+  "email.required": "Vui lòng nhập địa chỉ email",
+  "email.counter": "Tối đa 20 ký tự",
+  "email.invalid": "Địa chỉ email không hợp lệ",
+  "wechat.login": "Đăng nhập bằng WeChat",
+  "qq.login": "Đăng nhập bằng QQ",
+  "account.login": "Đăng nhập bằng Email",
+  "biometric.login": "Đăng nhập bằng nhận dạng sinh trắc học",
+  "account.null": "Chưa có tài khoản?",
+  "account.have": "Đã có tài khoản?",
+  "forgot.password": "Quên mật khẩu",
+  "reset.password": "Đặt lại mật khẩu",
+  "change.password": "Thay đổi mật khẩu",
+  "toggle.language": "Chuyển đổi ngôn ngữ"
+}
