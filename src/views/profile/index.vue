@@ -123,7 +123,7 @@ const data = reactive({
       type: 'file'
     }
   ],
-  toggleSelected: [] || ''
+  toggleSelected: [] as string[]
 })
 
 const componentSettings = reactive({
@@ -142,7 +142,6 @@ const { ctrl_a } = useMagicKeys({
 whenever(ctrl_a, () => {
   console.log('全选')
   data.toggleSelected = data.fileList.map((item) => item.fileName)
-
   appStore.sendGlobalMessage('全选', 'success')
 })
 
@@ -181,13 +180,19 @@ const handleRename = () => {
   console.log('重命名文件...')
 }
 
-const handleDbClick = (item) => {
+const navigateToFolder = (item: any) => {
+  // Add your logic here for handling folder navigation
+  console.log('Navigate to folder:', item)
+}
+
+const handleDbClick = (item: { type: string }) => {
   console.log('双击..', item)
   if (item.type === 'file') {
     console.log('不受打开支持的文件...')
   } else if (item.type === 'folder') {
+    console.log('文件夹')
   } else if (item.type === 'mp3') {
-    console.log('音乐..')
+    console.log('音乐')
   }
 }
 const breadcrumbItems = computed(() => {
@@ -212,7 +217,7 @@ const breadcrumbItems = computed(() => {
 
 <template>
   <v-container ref="el" class="" style="min-width: 100%">
-    <!-- 导航条-->
+    <!-- 导航条 -->
     <TheFIleBar :items="breadcrumbItems" @item-click="navigateToFolder" />
     <div
       v-if="width"

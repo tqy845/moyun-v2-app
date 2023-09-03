@@ -1,5 +1,5 @@
 <!-- App -->
-<script setup>
+<script lang="ts" setup>
 import { CtGlobalNotification } from '@/components/custom'
 </script>
 

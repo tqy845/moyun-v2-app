@@ -4,7 +4,8 @@
   @date  2023/08/06
   @description “loading按钮”组件
 -->
-<script setup>
+<script lang="ts" setup>
+// @ts-nocheck
 import { ref } from 'vue'
 
 const isLoading = ref(false)
@@ -13,7 +14,7 @@ const isLoading = ref(false)
  * @param event
  * @returns {Promise<void>}
  */
-const handleClick = async (event) => {
+const handleClick = async (event: any) => {
   // 当按钮被点击时，将 isLoading 设置为 true，表示按钮处于加载状态。
   isLoading.value = true
   try {
@@ -34,7 +35,6 @@ const handleClick = async (event) => {
 
 <template>
   <v-btn :disabled="isLoading" :loading="isLoading" v-bind="$attrs" @click="handleClick($attrs)">
-    <!-- @ts-ignore -->
     <template v-for="(_, key, index) in $slots" :key="index" v-slot:[key]>
       <slot :name="key"></slot>
     </template>
