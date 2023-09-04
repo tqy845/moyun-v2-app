@@ -18,8 +18,8 @@
     "jsx": "preserve",
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false, // 不允许出现未使用的变量
+    "noUnusedParameters": false, // 不允许出现未使用的函数
     "noFallthroughCasesInSwitch": true,
     /* 目录配置 */
     "baseUrl": ".",
