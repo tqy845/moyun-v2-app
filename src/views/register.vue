@@ -1,5 +1,5 @@
 <!--
-  login
+  register
   @author 谭期元
   @date  2023/08/06
   @description “注册”页面
@@ -9,17 +9,26 @@ import { CtLoadingButton as cBtn } from '@/components/custom'
 import { useRouter } from 'vue-router'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useUserStore } from '@/stores'
 
 const i18n = useI18n()
 const router = useRouter()
+const userStore = useUserStore()
+
+const cs = reactive({
+  isSubmit: false,
+  doneRegister: false
+})
+
+const data = reactive({
+  doneHint: ''
+})
 
 const form = reactive({
   email: '',
-  terms: false
-})
-
-const componentSettings = reactive({
-  isSubmit: false
+  password: '',
+  confirmPassword: '',
+  isAgreeTerms: false // 同意条款
 })
 
 const rules = {
@@ -29,11 +38,39 @@ const rules = {
     const pattern =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     if (pattern.test(value)) {
-      componentSettings.isSubmit = true
+      cs.isSubmit = true
       return true
     }
-    componentSettings.isSubmit = false
+    cs.isSubmit = false
     return i18n.t('email.invalid')
+  },
+  password: (value: string) => {
+    if (value.length >= 5) {
+      cs.isSubmit = true
+      return true
+    }
+    cs.isSubmit = false
+    return i18n.t('password.counter')
+  },
+  confirmPassword: (value: string) => {
+    if (value.length >= 5 && value === form.password) {
+      cs.isSubmit = true
+      return true
+    }
+    if (value !== form.password) {
+      return i18n.t('password.notMatch')
+    }
+    cs.isSubmit = false
+    return i18n.t('password.counter')
+  }
+}
+
+const handleRegister = async () => {
+  console.log('注册用户')
+  const { code, message } = await userStore.registerByAccount(form)
+  if (code === 200) {
+    data.doneHint = message
+    cs.doneRegister = true
   }
 }
 
@@ -68,7 +105,9 @@ const toLogin = () => {
     </v-row>
     <v-divider class="my-6"></v-divider>
     <v-row align="center" class="my-2 flex-column" justify="center">
+      <!-- 邮箱号 -->
       <v-text-field
+        size="small"
         v-model="form.email"
         :hint="$t('email.hint')"
         :label="$t('email.label')"
@@ -77,13 +116,50 @@ const toLogin = () => {
         prepend-inner-icon="mdi-email"
         variant="outlined"
       ></v-text-field>
-      <v-checkbox v-model="form.terms" :label="$t('register.terms')" color="secondary"></v-checkbox>
-      <c-btn :disabled="!(componentSettings.isSubmit && form.terms)" color="primary">
+
+      <!-- 密码 -->
+      <v-text-field
+        v-model="form.password"
+        type="password"
+        :hint="$t('password.hint')"
+        :label="$t('password.text')"
+        :rules="[rules.password]"
+        class="w-100"
+        prepend-inner-icon="mdi-lock"
+        variant="outlined"
+      ></v-text-field>
+
+      <!-- 确认密码 -->
+      <v-text-field
+        v-model="form.confirmPassword"
+        type="password"
+        :hint="$t('password.hint')"
+        :label="$t('password.confirm.text')"
+        :rules="[rules.confirmPassword]"
+        class="w-100"
+        prepend-inner-icon="mdi-lock"
+        variant="outlined"
+      ></v-text-field>
+
+      <!-- 条款 -->
+      <v-checkbox
+        v-model="form.isAgreeTerms"
+        :label="$t('register.terms')"
+        color="secondary"
+      ></v-checkbox>
+
+      <!-- 完成注册 -->
+      <c-btn
+        :disabled="!(cs.isSubmit && form.isAgreeTerms)"
+        color="primary"
+        @click="handleRegister"
+      >
         {{ $t('register.complete') }}
         <v-icon end icon="mdi-chevron-right"></v-icon>
       </c-btn>
     </v-row>
 
+    <!-- 前往登录 -->
     <v-row align="center" justify="center">
       <span class="text-none text-button">{{ $t('account.have') }}</span>
       <c-btn class="text-none font-weight-bold" size="x-small" variant="text" @click="toLogin"
@@ -91,6 +167,20 @@ const toLogin = () => {
       </c-btn>
     </v-row>
   </v-form>
+
+  <!-- 完成注册弹框 -->
+  <v-dialog v-model="cs.doneRegister" width="auto">
+    <v-card>
+      <v-card-text>
+        {{ data.doneHint }}
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" block @click="cs.doneRegister = false">{{
+          $t('confirm.text')
+        }}</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style lang="scss" scoped>

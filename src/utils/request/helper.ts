@@ -6,6 +6,7 @@ export interface ResponseType<T> {
   message: string
   code: number
   data: T
+  status: number
 }
 
 export const ERROR_TYPE = {

@@ -14,9 +14,6 @@ const form = reactive({
   code: ''
 })
 
-
-
-
 const emits = defineEmits(['close', 'save', 'refresh'])
 </script>
 
@@ -30,26 +27,29 @@ const emits = defineEmits(['close', 'save', 'refresh'])
         <v-container>
           <v-row>
             <v-col cols="12">
+              <!-- 账户名 -->
               <v-text-field
                 v-model="form.username"
-                label="Account or Email"
+                :label="$t('account.or.email')"
                 required
                 variant="outlined"
               ></v-text-field>
             </v-col>
+            <!-- 密码 -->
             <v-col cols="12">
               <v-text-field
                 v-model="form.password"
-                label="Password"
+                :label="$t('password.text')"
                 required
                 type="password"
                 variant="outlined"
               ></v-text-field>
             </v-col>
+            <!-- 验证码 -->
             <v-col cols="12" sm="9">
               <v-text-field
                 v-model="form.code"
-                label="Code"
+                :label="$t('code.text')"
                 required
                 variant="outlined"
               ></v-text-field>

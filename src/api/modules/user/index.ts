@@ -4,6 +4,10 @@
 import request from '@/utils/request'
 import { type User } from '@/stores'
 
+/**
+ * 获取验证码
+ * @returns
+ */
 export const fetchCodeImage = () => {
   return request<{ img: string; uuid: string; code: string; captchaEnabled: boolean }>({
     url: '/captchaImage',
@@ -11,7 +15,21 @@ export const fetchCodeImage = () => {
   })
 }
 
-export const loginForUserByAccount = (param: User) => {
+/**
+ * 注册账户
+ */
+export const registerByAccount = (param: { email: string; password: string }) => {
+  return request<{ token?: string }>({
+    url: '/registerByEmail',
+    method: 'post',
+    data: param
+  })
+}
+
+/**
+ * 使用账户登录
+ */
+export const loginByAccount = (param: User) => {
   return request<{ token?: string }>({
     url: '/login',
     method: 'post',
@@ -19,6 +37,11 @@ export const loginForUserByAccount = (param: User) => {
   })
 }
 
+/**
+ * 退出登录
+ * @param param
+ * @returns
+ */
 export const logoutForUser = (param: User) => {
   return request({
     url: '/system/user/logout',

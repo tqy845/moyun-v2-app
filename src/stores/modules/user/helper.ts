@@ -1,6 +1,7 @@
 export interface User {
-  username: string
+  email: string
   password: string
+  username?: string
   code?: string
 }
 
@@ -14,7 +15,8 @@ export const getUserDefaultSettings = (): UserStore => {
   return {
     user: {
       username: '',
-      password: ''
+      password: '',
+      email: ''
     }
   }
 }
