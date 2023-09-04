@@ -6,7 +6,7 @@
   @description “二级菜单”组件
 -->
 <script lang="ts" setup>
-const items = [{ text: '文件', icon: 'mdi-file-cabinet' }]
+const items = [{ text: '文件', icon: 'mdi-folder' }]
 </script>
 
 <template>

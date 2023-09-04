@@ -43,8 +43,11 @@
         "fullscreen": false,
         "resizable": true,
         "title": "摸云 Safe and sound - Mo yun",
-        "width": 1152,
-        "height": 864
+        "width": 1024,
+        "height": 768,
+        "minWidth": 1024,
+        "minHeight": 768,
+        "center": true
       }
     ]
   }
