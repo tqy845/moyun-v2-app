@@ -2,7 +2,7 @@
   "build": {
     "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build",
-    "devPath": "http://localhost:1420",
+    "devPath": "http://localhost:11420",
     "distDir": "../dist",
     "withGlobalTauri": false
   },
@@ -19,9 +19,14 @@
       }
     },
     "bundle": {
+      "windows": {
+        "webviewInstallMode": {
+          "type": "downloadBootstrapper"
+        }
+      },
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.example.moyun",
       "icon": [
         "../public/img/icons/192x192.png",
         "../public/img/icons/192x192.png",
@@ -38,8 +43,11 @@
         "fullscreen": false,
         "resizable": true,
         "title": "摸云 Safe and sound - Mo yun",
-        "width": 1152,
-        "height": 864
+        "width": 1024,
+        "height": 768,
+        "minWidth": 1024,
+        "minHeight": 768,
+        "center": true
       }
     ]
   }

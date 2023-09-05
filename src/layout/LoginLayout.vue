@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {RouterView} from 'vue-router'
-import {TheAd, TheSwitchLanguage} from '@/components/common'
+import { RouterView } from 'vue-router'
+import { TheAd, TheSwitchLanguage } from '@/components/common'
 </script>
 
 <template>
@@ -9,18 +9,18 @@ import {TheAd, TheSwitchLanguage} from '@/components/common'
       <v-container>
         <!-- 第一行显示 logo -->
         <div class="d-flex align-center justify-center my-4">
-          <img alt="Logo" height="100" src="public/img/icons/512x512.png" width="100"/>
+          <img alt="Logo" height="100" src="/public/img/icons/512x512.png" width="100" />
         </div>
 
         <!-- 第二行是表单填写账号密码 -->
         <div>
-          <RouterView/>
+          <RouterView />
         </div>
 
         <!-- 第三行是尾注 -->
         <div class="mt-4 px-4">
           <!-- i18n -->
-          <TheSwitchLanguage icon size="small"/>
+          <TheSwitchLanguage icon size="small" />
         </div>
       </v-container>
       <!-- 尾注 copyright-->
@@ -30,7 +30,7 @@ import {TheAd, TheSwitchLanguage} from '@/components/common'
     </v-navigation-drawer>
 
     <v-main class="align-center justify-center">
-      <TheAd/>
+      <TheAd />
     </v-main>
   </v-app>
 </template>

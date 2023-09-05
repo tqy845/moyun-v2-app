@@ -7,27 +7,12 @@
 -->
 <script lang="ts" setup>
 import { reactive } from 'vue'
-
-const user = reactive({
-  initials: '谭',
-  fullName: '谭期元',
-  username: '卡的淋漓尽致',
-  email: 'tqy845@outlook.com'
-})
 </script>
 
 <template>
-  <v-list>
-    <v-list-item :subtitle="user.email" :title="user.username">
-      <template #prepend>
-        <v-avatar color="surface-variant">{{ user.initials }}</v-avatar>
-      </template>
-    </v-list-item>
-  </v-list>
-
   <v-divider :thickness="1" class="border-opacity-1" color="gray"></v-divider>
 
-  <v-list>
+  <v-list v-bind="$attrs">
     <v-list-item :title="$t('school.text')" value="school">
       <template v-slot:prepend>
         <v-icon icon="mdi-school"></v-icon>
