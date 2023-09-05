@@ -200,17 +200,17 @@ const breadcrumbItems = computed(() => {
   const items = []
   let currentPath = '/'
 
-  for (const item of data.fileList) {
-    if (currentPath === '/') {
-      items.push({ text: '主页', path: currentPath })
-    } else {
-      items.push({ text: item.fileName, path: currentPath })
-    }
+  // for (const item of data.fileList) {
+  //   if (currentPath === '/') {
+  //     items.push({ text: '主页', path: currentPath })
+  //   } else {
+  //     items.push({ text: item.fileName, path: currentPath })
+  //   }
 
-    if (item.type === 'folder') {
-      currentPath += `${item.fileName}/`
-    }
-  }
+  //   if (item.type === 'folder') {
+  //     currentPath += `${item.fileName}/`
+  //   }
+  // }
 
   return items
 })
