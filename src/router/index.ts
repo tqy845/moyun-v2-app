@@ -28,7 +28,7 @@ const router = createRouter({
 
 // Setup Component
 /**
- * 注册路由实例
+ * 挂载路由实例
  * @param app App 实例
  */
 export const setupRouter = async (app: App) => {

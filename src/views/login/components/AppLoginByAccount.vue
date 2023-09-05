@@ -1,3 +1,9 @@
+<!--
+  AppLoginByAccount
+  @author 谭期元
+  @date  2023/09/05
+  @description “使用账户登录”页
+-->
 <script lang="ts" setup>
 import { reactive } from 'vue'
 
@@ -7,6 +13,7 @@ const props = defineProps({
     required: true
   }
 })
+
 
 const form = reactive({
   username: '',

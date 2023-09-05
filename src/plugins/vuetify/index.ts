@@ -2,17 +2,15 @@
  * Vuetify
  */
 import 'vuetify/styles'
-import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
+import '@mdi/font/css/materialdesignicons.css' // 确保你使用了 css-loader
 
 import { createVuetify } from 'vuetify'
 import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
-// import * as components from 'vuetify/components'
-// import * as directives from 'vuetify/directives'
 import { i18n } from '@/plugins/i18n'
 import { useI18n } from 'vue-i18n'
 import type { App } from 'vue'
 
-// Create instance of vuetify component
+// 创建 Vuetify 组件实例
 const vuetify = createVuetify({
   // Vuetify Icons
   icons: {
@@ -29,8 +27,9 @@ const vuetify = createVuetify({
 })
 
 /**
- * Setup Component
- * @param app App实例
+ * 挂载 Vuetify 组件
+ * @function
+ * @param {App} app - Vue 3 应用程序实例
  */
 export const setupVuetify = (app: App) => {
   app.use(vuetify)
