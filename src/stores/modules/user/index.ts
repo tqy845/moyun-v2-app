@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { getUserDefaultSettings, User, UserStore } from './helper'
 import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
-import { encrypt } from '@/utils/functions/token'
+import { encrypt } from '@/utils/functions'
 
 export const useUserStore = defineStore('userStore', {
   state: (): UserStore => getUserDefaultSettings(),
