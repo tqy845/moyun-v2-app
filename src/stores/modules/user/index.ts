@@ -15,7 +15,12 @@ export const useUserStore = defineStore('userStore', {
       const {
         code,
         data: { img, uuid }
-      } = await fetchCodeImage()
+      } = await fetchCodeImage<{
+        img: string
+        uuid: string
+        code: string
+        captchaEnabled: boolean
+      }>()
       if (code === 200) {
         this.uuid = uuid
         return `data:image/gif;base64,${img}`
@@ -27,7 +32,10 @@ export const useUserStore = defineStore('userStore', {
      */
     async registerByAccount(user: User) {
       const _user = Object.assign({}, user)
-      return await registerByAccount({ email: _user.email, password: encrypt(_user.password) })
+      return await registerByAccount<{ token?: string }>({
+        email: _user.email,
+        password: encrypt(_user.password)
+      })
     },
     /**
      * 用户使用账号密码登录
@@ -39,7 +47,7 @@ export const useUserStore = defineStore('userStore', {
         uuid: this.uuid || ''
       })
 
-      const { code, data } = await loginByAccount(_user)
+      const { code, data } = await loginByAccount<{ token?: string }>(_user)
 
       if (code === 200) {
         this.token = data?.token

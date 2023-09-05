@@ -8,8 +8,8 @@ import { type User } from '@/stores'
  * 获取验证码
  * @returns
  */
-export const fetchCodeImage = () => {
-  return request<{ img: string; uuid: string; code: string; captchaEnabled: boolean }>({
+export const fetchCodeImage = <T = any>() => {
+  return request<T>({
     url: '/captchaImage',
     method: 'get'
   })
@@ -18,19 +18,19 @@ export const fetchCodeImage = () => {
 /**
  * 注册账户
  */
-export const registerByAccount = (param: { email: string; password: string }) => {
-  return request<{ token?: string }>({
+export const registerByAccount = <T = any>(params: { email: string; password: string }) => {
+  return request<T>({
     url: '/registerByEmail',
     method: 'post',
-    data: param
+    data: params
   })
 }
 
 /**
  * 使用账户登录
  */
-export const loginByAccount = (param: User) => {
-  return request<{ token?: string }>({
+export const loginByAccount = <T = any>(param: User) => {
+  return request<T>({
     url: '/login',
     method: 'post',
     data: param
@@ -42,8 +42,8 @@ export const loginByAccount = (param: User) => {
  * @param param
  * @returns
  */
-export const logoutForUser = (param: User) => {
-  return request({
+export const logoutForUser = <T = any>(param: User) => {
+  return request<T>({
     url: '/system/user/logout',
     method: 'delete',
     data: param
