@@ -1,15 +1,14 @@
 import { defineStore } from 'pinia'
-import { getUserDefaultSettings, type User, type UserStore } from './helper'
+import { getUserDefaultSettings, User, UserStore } from './helper'
 import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
-import { encrypt } from '@/utils/functions'
+import { encrypt } from '@/utils/functions/token'
 
 export const useUserStore = defineStore('userStore', {
   state: (): UserStore => getUserDefaultSettings(),
   getters: {},
   actions: {
     /**
-     *  获取验证码
-     * @returns base64的验证码图片
+     * 获取验证码图片
      */
     async getCodeImage() {
       const {
@@ -22,32 +21,30 @@ export const useUserStore = defineStore('userStore', {
         captchaEnabled: boolean
       }>()
       if (code === 200) {
-        this.uuid = uuid
+        this.user.uuid = uuid
         return `data:image/gif;base64,${img}`
       }
       return ''
     },
+
     /**
-     * 注册账户
+     * 使用账户信息注册用户
+     * @param {User} user - 包含邮箱和密码的用户对象
      */
     async registerByAccount(user: User) {
-      const _user = Object.assign({}, user)
       return await registerByAccount<{ token?: string }>({
-        email: _user.email,
-        password: encrypt(_user.password)
+        email: user.email,
+        password: encrypt(user.password)
       })
     },
+
     /**
-     * 用户使用账号密码登录
-     * @param user 用户对象
-     * @returns 登录结果
+     * 使用账户信息进行用户登录
+     * @param {User} user - 包含邮箱和密码的用户对象
      */
     async userLoginByAccount(user: User) {
-      const _user: User & { uuid: string } = Object.assign({}, user, {
-        uuid: this.uuid || ''
-      })
-
-      const { code, data } = await loginByAccount<{ token?: string }>(_user)
+      Object.assign(user, { password: encrypt(user.password) })
+      const { code, data } = await loginByAccount<{ token?: string }>(user)
 
       if (code === 200) {
         this.token = data?.token
@@ -55,22 +52,28 @@ export const useUserStore = defineStore('userStore', {
       }
       return false
     },
+
     /**
-     * 用户通过Touch登录
-     * @param user 用户对象
-     * @returns 登录结果
+     * 使用触摸登录用户（未实现）
+     * @param {User} user - 用户对象
      */
     async userLoginByTouch(user: User) {
       return false
     },
+
     /**
-     * 注销登录
+     * 用户注销操作
      */
     async logout() {
       logoutForUser(this.user)
       this.$reset()
     }
   },
+
+  /**
+   * 用户存储对象的数据持久化配置
+   * @type {Array<{storage:StorageLike ; paths:Array<string>}>} 持久化配置
+   */
   persist: [
     {
       storage: localStorage,

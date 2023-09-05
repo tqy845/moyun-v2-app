@@ -1,12 +1,16 @@
 import JSEncrypt from 'jsencrypt/bin/jsencrypt'
 
-// 密钥对生成 http://web.chacuo.net/netrsakeypair
-
-const publicKey =
+/**
+ * 公钥用于加密数据
+ */
+const PUBLIC_KEY =
   'MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKoR8mX0rGKLqzcWmOzbfj64K8ZIgOdH\n' +
   'nzkXSOVOZbFu/TJhZ7rFAN+eaGkl3C4buccQd/EjEsj9ir7ijT7h96MCAwEAAQ=='
 
-const privateKey =
+/**
+ * 私钥用于解密数据
+ */
+const PRIVATE_KEY =
   'MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAqhHyZfSsYourNxaY\n' +
   '7Nt+PrgrxkiA50efORdI5U5lsW79MmFnusUA355oaSXcLhu5xxB38SMSyP2KvuKN\n' +
   'PuH3owIDAQABAkAfoiLyL+Z4lf4Myxk6xUDgLaWGximj20CUf+5BKKnlrK+Ed8gA\n' +
@@ -16,16 +20,24 @@ const privateKey =
   'YhovyloRYsM+IS9h/0BzlEAuO0ktMQIgSPT3aFAgJYwKpqRYKlLDVcflZFCKY7u3\n' +
   'UP8iWi1Qw0Y='
 
-// 加密
+/**
+ * 使用公钥加密文本
+ * @param {string} text - 要加密的文本
+ * @returns {string} 加密后的文本
+ */
 export const encrypt = (text: string): string => {
   const encryptor = new JSEncrypt()
-  encryptor.setPublicKey(publicKey) // 设置公钥
+  encryptor.setPUBLIC_KEY(PUBLIC_KEY) // 设置公钥
   return encryptor.encrypt(text) // 对数据进行加密
 }
 
-// 解密
+/**
+ * 使用私钥解密文本
+ * @param {string} text - 要解密的文本
+ * @returns {string} 解密后的文本
+ */
 export const decrypt = (text: string): string => {
   const encryptor = new JSEncrypt()
-  encryptor.setPrivateKey(privateKey) // 设置私钥
+  encryptor.setPRIVATE_KEY(PRIVATE_KEY) // 设置私钥
   return encryptor.decrypt(text) // 对数据进行解密
 }
