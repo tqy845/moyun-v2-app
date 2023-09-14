@@ -10,11 +10,15 @@ import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/
 import { TheFIleBar, TheFile, TheFileBottomMenu } from '@/components/common'
 import { useAppStore } from '@/stores'
 
+const appStore = useAppStore()
+
 const el = ref(null)
 const { width } = useElementSize(el)
 const controlState = useKeyModifier('Control') // 绑定Control键实现 多选
 
-const appStore = useAppStore()
+const cs = reactive({
+  isMultiple: controlState.value
+})
 
 const data = reactive({
   fileList: [
@@ -126,10 +130,6 @@ const data = reactive({
   toggleSelected: [] as string[]
 })
 
-const cs = reactive({
-  isMultiple: controlState.value
-})
-
 /**
  * 绑定Ctrl + A实现全选目标
  */
@@ -160,26 +160,6 @@ whenever(ctrl_d, () => {
   data.fileList = data.fileList.filter((item) => !data.toggleSelected.includes(item.fileName))
   data.toggleSelected = []
 })
-
-const handleDownload = () => {
-  console.log('下载文件...')
-}
-
-const handleCollect = () => {
-  console.log('收藏文件...')
-}
-
-const handleDelete = () => {
-  console.log('删除文件...')
-}
-
-const handleShare = () => {
-  console.log('分享文件...')
-}
-
-const handleRename = () => {
-  console.log('重命名文件...')
-}
 
 const navigateToFolder = (item: any) => {
   // Add your logic here for handling folder navigation

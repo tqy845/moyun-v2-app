@@ -1,3 +1,7 @@
+/**
+ * User Store
+ */
+
 import { defineStore } from 'pinia'
 import { getUserDefaultSettings, User, UserStore } from './helper'
 import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
@@ -20,6 +24,7 @@ export const useUserStore = defineStore('userStore', {
         code: string
         captchaEnabled: boolean
       }>()
+
       if (code === 200) {
         this.user.uuid = uuid
         return `data:image/gif;base64,${img}`
@@ -43,13 +48,15 @@ export const useUserStore = defineStore('userStore', {
      * @param {User} user - 包含邮箱和密码的用户对象
      */
     async userLoginByAccount(user: User) {
-      Object.assign(user, { password: encrypt(user.password) })
-      const { code, data } = await loginByAccount<{ token?: string }>(user)
+      // const _user = { ...user, password: encrypt(user.password) }
+      const _user = user
+      const { code, data } = await loginByAccount<{ token: string }>(_user)
 
       if (code === 200) {
-        this.token = data?.token
+        this.token = data['token']
         return true
       }
+
       return false
     },
 
@@ -77,7 +84,7 @@ export const useUserStore = defineStore('userStore', {
   persist: [
     {
       storage: localStorage,
-      paths: ['user']
+      paths: ['user', 'token']
     }
   ]
 })

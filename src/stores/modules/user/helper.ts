@@ -1,5 +1,5 @@
 /**
- * 用户信息接口
+ * 用户对象接口
  * @interface User
  */
 export interface User {
@@ -47,9 +47,9 @@ export interface UserStore {
 
   /**
    * 用户令牌（可选）
-   * @type {string | undefined}
+   * @type {string | null}
    */
-  token?: string
+  token: string | null
 }
 
 /**
@@ -63,6 +63,7 @@ export const getUserDefaultSettings = (): UserStore => {
       username: '',
       password: '',
       email: ''
-    }
+    },
+    token: null
   }
 }

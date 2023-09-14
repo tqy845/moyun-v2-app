@@ -7,9 +7,11 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { TheMainMenu, TheSearch, TheSecondaryMenu } from '@/components/common'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const asideMenuShow = ref(true)
-const fav = ref(false)
 
 const user = reactive({
   initials: '谭',
@@ -20,6 +22,7 @@ const user = reactive({
 
 const handleProfile = () => {
   console.log('profile')
+  router.replace('/login')
 }
 </script>
 
