@@ -34,9 +34,8 @@ const toSignUp = useDebounceFn(() => {
 /**
  * 前往个人中心
  */
-const toProfile = () => {
-  console.log('profile')
-  router.push('/profile')
+const toWelcome = () => {
+  router.replace('/welcome')
 }
 
 const getCodeImage = useDebounceFn(async () => {
@@ -50,7 +49,7 @@ const getCodeImage = useDebounceFn(async () => {
 const onLoginByWeChat = () => {
   console.log('onLoginByWeChat')
   // todo: 待实现微信授权
-  toProfile()
+  toWelcome()
 }
 
 /**
@@ -63,7 +62,6 @@ const onLoginByQQ = () => {
   setTimeout(() => appStore.globalMessage('123123123', 'warning'), 100)
   setTimeout(() => appStore.globalMessage('123123123', 'error'), 150)
   setTimeout(() => appStore.globalMessage('123123123', 'info'), 450)
-  // toProfile()
 }
 
 /**
@@ -72,7 +70,7 @@ const onLoginByQQ = () => {
 const loginByAccountHandler = async (form: User) => {
   console.log('使用账户登录')
   if (await userStore.userLoginByAccount(form)) {
-    toProfile()
+    toWelcome()
   } else {
     await getCodeImage()
   }

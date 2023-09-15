@@ -4,10 +4,10 @@
 
 // @ts-nocheck
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import { Home } from '@/views'
-import type { App } from 'vue'
-
+import { DefaultLayout } from '@/layout'
 import { routesHome } from './modules'
+import { Home, Welcome } from '@/views'
+import type { App } from 'vue'
 
 // Route rule definition
 
@@ -16,6 +16,17 @@ const constantRoutes: readonly RouteRecordRaw[] = [
     path: '',
     redirect: '/login',
     component: Home
+  },
+
+  {
+    path: '/welcome',
+    component: DefaultLayout,
+    children: [
+      {
+        path: '',
+        component: Welcome
+      }
+    ]
   },
   ...routesHome
 ]
