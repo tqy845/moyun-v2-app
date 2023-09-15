@@ -1,3 +1,4 @@
+import { AsideMenuItem } from './helper'
 /**
  * App Store
  */
@@ -21,6 +22,24 @@ export const useAppStore = defineStore(`appStore`, {
      */
     globalMessage(message: string, type?: 'error' | 'success' | 'warning' | 'info'): void {
       this.messageQueue.push({ message, type, show: true })
+    },
+    /**
+     * 更新侧边栏菜单激活项
+     */
+    updateAsideMenuItem(item: AsideMenuItem) {
+      this.asideMenu.itemList.forEach((i) => {
+        i.active = i.route === item.route ? true : false
+      })
     }
-  }
+  },
+  /**
+   * 用户存储对象的数据持久化配置
+   * @type {Array<{storage:StorageLike ; paths:Array<string>}>} 持久化配置
+   */
+  persist: [
+    {
+      storage: localStorage,
+      paths: ['asideMenu']
+    }
+  ]
 })

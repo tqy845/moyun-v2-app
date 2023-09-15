@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { getUserDefaultSettings, User, UserStore } from './helper'
 import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
 import { encrypt } from '@/utils/functions'
+import { useAppStore } from '@/stores'
 
 export const useUserStore = defineStore('userStore', {
   state: (): UserStore => getUserDefaultSettings(),
@@ -66,6 +67,7 @@ export const useUserStore = defineStore('userStore', {
      */
     async logout() {
       logoutForUser(this.user)
+      useAppStore().$reset()
       this.$reset()
     }
   },

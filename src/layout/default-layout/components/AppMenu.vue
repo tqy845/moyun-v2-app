@@ -5,7 +5,7 @@
   @description “菜单列表”组件
 -->
 <script lang="ts" setup>
-const items = [{ text: '文件', icon: 'mdi-folder', path: '/file' }]
+const items = [{ text: '文件', icon: 'mdi-folder', path: '/personal/file' }]
 </script>
 
 <template>
