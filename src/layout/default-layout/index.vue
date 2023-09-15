@@ -6,10 +6,17 @@
 -->
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import { TheMainMenu, TheSearch, TheSecondaryMenu } from '@/components/common'
+import { TheMainMenu } from '@/components/common'
+import { useMagicKeys, whenever } from '@vueuse/core'
+import { AppSearch, AppMenu } from './components'
+
+const cs = reactive({
+  search: {
+    show: false
+  }
+})
 
 const asideMenuShow = ref(true)
-const fav = ref(false)
 
 const user = reactive({
   initials: '谭',
@@ -21,6 +28,20 @@ const user = reactive({
 const handleProfile = () => {
   console.log('profile')
 }
+
+/**
+ * 绑定ctrl k => 搜索·快捷键
+ */
+const { ctrl_k } = useMagicKeys({
+  passive: false,
+  onEventFired(e) {
+    if (e.ctrlKey && e.key === 'k' && e.type === 'keydown') e.preventDefault()
+  }
+})
+whenever(ctrl_k, () => {
+  console.log('搜索')
+  cs.search.show = !cs.search.show
+})
 </script>
 
 <template>
@@ -79,11 +100,11 @@ const handleProfile = () => {
     </v-navigation-drawer>
 
     <v-navigation-drawer color="grey-lighten-5" nav permanent width="248">
-      <!-- 文件搜索 -->
-      <TheSearch />
+      <!-- 搜索组件 -->
+      <AppSearch v-model="cs.search.show" />
 
-      <!-- 二级菜单-->
-      <TheSecondaryMenu />
+      <!-- 菜单组件 -->
+      <AppMenu />
     </v-navigation-drawer>
 
     <v-main>

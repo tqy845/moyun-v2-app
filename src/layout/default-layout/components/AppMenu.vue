@@ -1,9 +1,8 @@
 <!--
-  TheFile
+  AppMenu
   @author 谭期元
-  @date  2023/08/07
-  @version 0.0.1
-  @description “二级菜单”组件
+  @date  2023/09/15
+  @description “菜单列表”组件
 -->
 <script lang="ts" setup>
 const items = [{ text: '文件', icon: 'mdi-folder' }]
