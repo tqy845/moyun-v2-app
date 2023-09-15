@@ -1,7 +1,4 @@
-import TheAd from './TheAd.vue'
-import TheSwitchLanguage from './TheSwitchLanguage.vue'
-import TheMainMenu from './TheMainMenu.vue'
-import TheFile from './TheFile.vue'
-import TheFileBottomMenu from './TheFileBottomMenu.vue'
+import AppLanguage from './AppLanguage.vue'
+import AppFile from './AppFile.vue'
 
-export { TheAd, TheMainMenu, TheFileBottomMenu, TheSwitchLanguage, TheFile }
+export { AppLanguage, AppFile }

@@ -1,13 +1,11 @@
 <!--
-  home
+  AppSidebar
   @author 谭期元
-  @date  2023/08/07
-  @version 0.0.1
-  @description “主菜单”组件
+  @date  2023/09/15
+  @description “侧边栏”组件
 -->
-<script lang="ts" setup>
-import { reactive } from 'vue'
-</script>
+
+<script lang="ts" setup></script>
 
 <template>
   <v-divider :thickness="1" class="border-opacity-1" color="gray"></v-divider>

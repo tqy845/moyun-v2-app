@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { RouterView } from 'vue-router'
-import { TheAd, TheSwitchLanguage } from '@/components/common'
+import { AppLanguage } from '@/components/common'
+import { AppAd } from './components'
 </script>
 
 <template>
@@ -20,7 +21,7 @@ import { TheAd, TheSwitchLanguage } from '@/components/common'
         <!-- 第三行是尾注 -->
         <div class="mt-4 px-4">
           <!-- i18n -->
-          <TheSwitchLanguage icon size="small" />
+          <AppLanguage icon size="small" />
         </div>
       </v-container>
       <!-- 尾注 copyright-->
@@ -30,7 +31,8 @@ import { TheAd, TheSwitchLanguage } from '@/components/common'
     </v-navigation-drawer>
 
     <v-main class="align-center justify-center">
-      <TheAd />
+      <!-- 广告 -->
+      <AppAd />
     </v-main>
   </v-app>
 </template>

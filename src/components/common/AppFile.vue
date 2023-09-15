@@ -1,5 +1,5 @@
 <!--
-  TheFile
+  AppFile
   @author 谭期元
   @date  2023/08/07
   @description “文件”组件
