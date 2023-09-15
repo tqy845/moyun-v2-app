@@ -1,8 +1,8 @@
 <!--
-  home
+  AppBottomBar
   @author 谭期元
-  @date  2023/08/07
-  @description “文件底部菜单”组件
+  @date  2023/09/15
+  @description “文件”底部操作栏
 -->
 <script lang="ts" setup></script>
 

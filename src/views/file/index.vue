@@ -5,9 +5,10 @@
   @description “文件展示”首页
 -->
 <script lang="ts" setup>
-import { computed, reactive, ref, watchEffect } from 'vue'
+import { reactive, ref } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
-import { TheFile, TheFileBottomMenu } from '@/components/common'
+import { AppFile } from '@/components/common'
+import { AppBottomBar } from './components'
 import { useAppStore } from '@/stores'
 
 const el = ref(null)
@@ -196,30 +197,12 @@ const handleDbClick = (item: { type: string }) => {
     console.log('音乐')
   }
 }
-const breadcrumbItems = computed(() => {
-  const items = []
-  let currentPath = '/'
-
-  // for (const item of data.fileList) {
-  //   if (currentPath === '/') {
-  //     items.push({ text: '主页', path: currentPath })
-  //   } else {
-  //     items.push({ text: item.fileName, path: currentPath })
-  //   }
-
-  //   if (item.type === 'folder') {
-  //     currentPath += `${item.fileName}/`
-  //   }
-  // }
-
-  return items
-})
 </script>
 
 <template>
   <v-container ref="el" class="" style="min-width: 100%">
     <!-- 导航条 -->
-    <!-- <TheFileBar :items="breadcrumbItems" @item-click="navigateToFolder" /> -->
+    <!-- <AppFileBar :items="breadcrumbItems" @item-click="navigateToFolder" /> -->
     <div
       v-if="width"
       :style="{ 'padding-left': `${((width - 32) % 158) / 2 + 15}px` }"
@@ -234,7 +217,7 @@ const breadcrumbItems = computed(() => {
         <v-row>
           <v-col v-for="(iterator, index) in data.fileList" :key="index" class="pa-1" cols="auto">
             <!-- 渲染文件-->
-            <TheFile
+            <AppFile
               :file-icon="iterator.icon"
               :file-name="iterator.fileName"
               :value="iterator.fileName"
@@ -247,8 +230,7 @@ const breadcrumbItems = computed(() => {
       </v-btn-toggle>
     </div>
     <!--文件底部操作菜单-->
-    {{ data.toggleSelected }}
-    <TheFileBottomMenu v-if="data.toggleSelected?.length" />
+    <AppBottomBar v-if="data.toggleSelected?.length" />
   </v-container>
 </template>
 

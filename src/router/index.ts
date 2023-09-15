@@ -5,7 +5,7 @@
 // @ts-nocheck
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { DefaultLayout } from '@/layout'
-import { routesHome } from './modules'
+import { routeProfile, routeFile } from './modules'
 import { Home, Welcome } from '@/views'
 import type { App } from 'vue'
 
@@ -28,7 +28,8 @@ const constantRoutes: readonly RouteRecordRaw[] = [
       }
     ]
   },
-  ...routesHome
+  ...routeProfile,
+  ...routeFile
 ]
 
 // Create Instance of Router

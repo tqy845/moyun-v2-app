@@ -1,3 +1,9 @@
+<!--
+  AppAd
+  @author 谭期元
+  @date  2023/09/15
+  @description “广告”组件
+-->
 <script lang="ts" setup>
 import { ref } from 'vue'
 const data = ref([

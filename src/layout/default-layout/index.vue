@@ -6,9 +6,11 @@
 -->
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import { TheMainMenu } from '@/components/common'
 import { useMagicKeys, whenever } from '@vueuse/core'
-import { AppSearch, AppMenu, AppHeader } from './components'
+import { AppSearch, AppMenu, AppHeaderBar, AppSidebar } from './components'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const cs = reactive({
   search: {
@@ -27,10 +29,11 @@ const user = reactive({
 
 const handleProfile = () => {
   console.log('profile')
+  router.replace('/login')
 }
 
 /**
- * 绑定ctrl k => 搜索·快捷键
+ * 绑定ctrl k => 搜索快捷键
  */
 const { ctrl_k } = useMagicKeys({
   passive: false,
@@ -70,9 +73,10 @@ whenever(ctrl_k, () => {
           </v-list>
         </v-sheet>
 
-        <v-sheet class="flex-1 h-100" @click="asideMenuShow = !asideMenuShow"
-          ><TheMainMenu
-        /></v-sheet>
+        <v-sheet class="flex-1 h-100" @click="asideMenuShow = !asideMenuShow">
+          <!-- 侧边栏 -->
+          <AppSidebar />
+        </v-sheet>
       </v-sheet>
       <!-- <v-row class="flex-column">
         <v-col no-gutters class="bg-surface-variant">
@@ -108,8 +112,8 @@ whenever(ctrl_k, () => {
     </v-navigation-drawer>
 
     <v-main>
-      <!-- 上边菜单条 -->
-      <AppHeader />
+      <!-- 头部菜单栏 -->
+      <AppHeaderBar />
 
       <!-- 内容区域 -->
       <RouterView />

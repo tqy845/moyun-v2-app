@@ -1,11 +1,11 @@
 <!--
-  AppTopBar
+  AppHeaderBar
   @author 谭期元
   @date  2023/09/15
   @description “上边菜单栏”组件
 -->
 <script lang="ts" setup>
-import { TheSwitchLanguage } from '@/components/common'
+import { AppLanguage } from '@/components/common'
 
 const props = defineProps({
   breadcrumbItems: {
@@ -39,7 +39,7 @@ const props = defineProps({
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
 
-    <TheSwitchLanguage />
+    <AppLanguage />
   </v-app-bar>
 </template>
 
