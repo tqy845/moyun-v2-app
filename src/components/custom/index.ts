@@ -1,4 +1,4 @@
-import CtLoadingButton from './CtLoadingButton.vue'
-import CtGlobalNotification from './CtGlobalNotification.vue'
+import AppPromiseButton from './AppPromiseButton.vue'
+import AppNotification from './AppNotification.vue'
 
-export { CtLoadingButton, CtGlobalNotification }
+export { AppPromiseButton, AppNotification }

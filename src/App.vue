@@ -1,10 +1,10 @@
 <!-- App -->
 <script lang="ts" setup>
-import { CtGlobalNotification } from '@/components/custom'
+import { AppNotification } from '@/components/custom'
 </script>
 
 <template>
-  <CtGlobalNotification />
+  <AppNotification />
   <RouterView />
 </template>
 

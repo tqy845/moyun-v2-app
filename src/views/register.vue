@@ -5,7 +5,7 @@
   @description “注册”页面
 -->
 <script lang="ts" setup>
-import { CtLoadingButton as cBtn } from '@/components/custom'
+import { AppPromiseButton as cBtn } from '@/components/custom'
 import { useRouter } from 'vue-router'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
