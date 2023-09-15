@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { computed, reactive, ref, watchEffect } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
-import { TheFileBar, TheFile, TheFileBottomMenu } from '@/components/common'
+import { TheFile, TheFileBottomMenu } from '@/components/common'
 import { useAppStore } from '@/stores'
 
 const el = ref(null)
@@ -219,7 +219,7 @@ const breadcrumbItems = computed(() => {
 <template>
   <v-container ref="el" class="" style="min-width: 100%">
     <!-- 导航条 -->
-    <TheFileBar :items="breadcrumbItems" @item-click="navigateToFolder" />
+    <!-- <TheFileBar :items="breadcrumbItems" @item-click="navigateToFolder" /> -->
     <div
       v-if="width"
       :style="{ 'padding-left': `${((width - 32) % 158) / 2 + 15}px` }"

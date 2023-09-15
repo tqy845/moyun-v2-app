@@ -8,7 +8,7 @@
 import { reactive, ref } from 'vue'
 import { TheMainMenu } from '@/components/common'
 import { useMagicKeys, whenever } from '@vueuse/core'
-import { AppSearch, AppMenu } from './components'
+import { AppSearch, AppMenu, AppHeader } from './components'
 
 const cs = reactive({
   search: {
@@ -108,6 +108,10 @@ whenever(ctrl_k, () => {
     </v-navigation-drawer>
 
     <v-main>
+      <!-- 上边菜单条 -->
+      <AppHeader />
+
+      <!-- 内容区域 -->
       <RouterView />
     </v-main>
   </v-app>

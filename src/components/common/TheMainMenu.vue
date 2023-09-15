@@ -13,6 +13,12 @@ import { reactive } from 'vue'
   <v-divider :thickness="1" class="border-opacity-1" color="gray"></v-divider>
 
   <v-list v-bind="$attrs">
+    <v-list-item :title="$t('personal.text')" value="personal">
+      <template v-slot:prepend>
+        <v-icon icon="mdi-account-circle"></v-icon>
+      </template>
+    </v-list-item>
+
     <v-list-item :title="$t('school.text')" value="school">
       <template v-slot:prepend>
         <v-icon icon="mdi-school"></v-icon>
@@ -22,12 +28,6 @@ import { reactive } from 'vue'
     <v-list-item :title="$t('family.text')" value="home">
       <template v-slot:prepend>
         <v-icon icon="mdi-home-heart"></v-icon>
-      </template>
-    </v-list-item>
-
-    <v-list-item :title="$t('people.text')" value="people">
-      <template v-slot:prepend>
-        <v-icon icon="mdi-account-circle"></v-icon>
       </template>
     </v-list-item>
 

@@ -1,8 +1,8 @@
 <!--
-  home
+  AppTopBar
   @author 谭期元
-  @date  2023/08/07
-  @description “首页”
+  @date  2023/09/15
+  @description “上边菜单栏”组件
 -->
 <script lang="ts" setup>
 import { TheSwitchLanguage } from '@/components/common'
