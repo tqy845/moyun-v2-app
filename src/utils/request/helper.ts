@@ -30,7 +30,7 @@ export interface ResponseType<T> {
    * 响应状态
    * @type {number}
    */
-  status: number
+  status?: number
 }
 
 /**
