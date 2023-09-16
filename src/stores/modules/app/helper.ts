@@ -15,6 +15,17 @@ export interface App {
 }
 
 /**
+ * 侧边栏菜单项接口
+ * @interface AsideMenuItem
+ */
+export interface AsideMenuItem {
+  title: string
+  icon: string
+  active: boolean
+  route: string
+}
+
+/**
  * 应用存储对象接口
  * @interface AppStore
  */
@@ -30,6 +41,13 @@ export interface AppStore {
    * @type {Array<any>}
    */
   messageQueue: Array<any>
+
+  /**
+   * 侧边栏配置
+   */
+  asideMenu: {
+    itemList: Array<AsideMenuItem>
+  }
 }
 
 /**
@@ -42,6 +60,40 @@ export const getAppDefaultSettings = (): AppStore => {
     app: {
       delay: import.meta.env.VITE_APP_BASE_DELAY
     },
-    messageQueue: []
+    messageQueue: [],
+    asideMenu: {
+      itemList: [
+        {
+          title: 'welcome.text',
+          icon: 'emoticon',
+          active: true,
+          route: '/welcome'
+        },
+        {
+          title: 'personal.text',
+          icon: 'account-circle',
+          active: false,
+          route: '/personal'
+        }
+        // {
+        //   title: 'school.text',
+        //   icon: 'school',
+        //   active: false,
+        //   route: '/school'
+        // },
+        // {
+        //   title: 'family.text',
+        //   icon: 'home-heart',
+        //   active: false,
+        //   route: '/family'
+        // },
+        // {
+        //   title: 'rooms.text',
+        //   icon: 'sofa-single',
+        //   active: false,
+        //   route: '/login'
+        // }
+      ]
+    }
   }
 }

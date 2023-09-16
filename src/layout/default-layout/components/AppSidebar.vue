@@ -5,19 +5,43 @@
   @description “侧边栏”组件
 -->
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { AsideMenuItem, useAppStore } from '@/stores'
+import { onClickOutside } from '@vueuse/core'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const appStore = useAppStore()
+
+/**
+ * 选择菜单项
+ * @param item 选中的菜单项
+ */
+const handleSelectItem = (item: AsideMenuItem) => {
+  console.log('选择菜单项', item)
+  appStore.updateAsideMenuItem(item)
+  router.push(item.route)
+}
+</script>
 
 <template>
   <v-divider :thickness="1" class="border-opacity-1" color="gray"></v-divider>
 
   <v-list v-bind="$attrs">
-    <v-list-item :title="$t('personal.text')" value="personal">
+    <v-list-item
+      v-for="(item, index) in appStore.asideMenu.itemList"
+      :key="index"
+      :title="$t(item.title)"
+      :value="index"
+      :active="item.active"
+      @click="handleSelectItem(item)"
+    >
       <template v-slot:prepend>
-        <v-icon icon="mdi-account-circle"></v-icon>
+        <v-icon :icon="`mdi-${item.icon}`"></v-icon>
       </template>
     </v-list-item>
 
-    <v-list-item :title="$t('school.text')" value="school">
+    <!-- <v-list-item :title="$t('school.text')" value="school">
       <template v-slot:prepend>
         <v-icon icon="mdi-school"></v-icon>
       </template>
@@ -33,7 +57,7 @@
       <template v-slot:prepend>
         <v-icon icon="mdi-sofa-single"></v-icon>
       </template>
-    </v-list-item>
+    </v-list-item> -->
   </v-list>
 </template>
 
