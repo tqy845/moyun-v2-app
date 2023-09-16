@@ -7,7 +7,7 @@
 -->
 <script lang="ts" setup>
 import { IconBiometric } from '@/components/icons'
-import { CtLoadingButton as cBtn } from '@/components/custom'
+import { AppPromiseButton as cBtn } from '@/components/custom'
 import { touchIDRegistered } from '@/utils/functions'
 import { useRouter } from 'vue-router'
 import { useUserStore, useAppStore, type User } from '@/stores'

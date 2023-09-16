@@ -1,5 +1,6 @@
+import AppSidebar from './AppSidebar.vue'
 import AppSearch from './AppSearch.vue'
 import AppMenu from './AppMenu.vue'
-import AppHeader from './AppHeader.vue'
+import AppHeaderBar from './AppHeaderBar.vue'
 
-export { AppSearch, AppMenu, AppHeader }
+export { AppSearch, AppMenu, AppHeaderBar, AppSidebar }

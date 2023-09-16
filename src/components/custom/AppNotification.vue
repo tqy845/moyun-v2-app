@@ -1,5 +1,5 @@
 <!--
-  CtGlobalNotification
+  AppNotification
   @author 谭期元
   @date  2023/08/13
   @description “全局”消息组件
