@@ -1,40 +1,4 @@
-import FileSaver from 'file-saver'
-import { fileDownloadByName } from '@/api'
 
-/**
- * 文件对象
- * @class File
- */
-export class File {
-  /**
-   * 文件名
-   * @type {string}
-   */
-  name: string
-  icon: string
-  type: string
-  power?: string | number
-
-  constructor(params: { name: string; icon: string; type: string }) {
-    this.name = params.name
-    this.icon = params.icon
-    this.type = params.type
-  }
-
-  /**
-   * 文件下载
-   */
-  async download() {
-    this.power = `awaiting`
-    const {
-      data: { blob }
-    } = await fileDownloadByName<{ blob: Blob }>(this.name, (progressEvent: ProgressEvent) => {
-      this.power = (progressEvent.loaded / progressEvent.total) * 100
-    })
-    FileSaver.saveAs(blob, this.name)
-    this.power = 0
-  }
-}
 
 /**
  * 文件存储对象接口

@@ -8,7 +8,7 @@
 import { reactive } from 'vue'
 import { usePrecision } from '@vueuse/math'
 import { UseMousePressed } from '@vueuse/components'
-import { File } from '@/stores'
+import { File } from '@/types/models'
 
 defineProps<{
   fileItem: File
@@ -35,8 +35,8 @@ const handleShare = () => {}
         <v-col class="progress-linear">
           <!-- 进度条 -->
           <v-progress-linear
-            :model-value="fileItem.power"
-            :active="!!fileItem.power"
+            :model-value="typeof fileItem.power === 'number' ? fileItem.power : 0"
+            :active="!!fileItem.power && fileItem.power !== 'completed'"
             :indeterminate="fileItem.power === 'awaiting'"
             color="deep-purple-accent-3"
             height="25"

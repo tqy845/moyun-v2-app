@@ -21,9 +21,6 @@ const cs = reactive({
  */
 const handleDownload = async () => {
   console.log('下载文件...')
-  cs.downWindow.show = true
-  await fileStore.downloadByName('demo_file.mp4')
-  cs.downWindow.show = false
 }
 
 const handleCollect = () => {

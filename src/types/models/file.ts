@@ -1,0 +1,82 @@
+import FileSaver from 'file-saver'
+import { fileDownloadByName } from '@/api'
+
+/**
+ * 文件属性
+ */
+export interface FileProperties {
+  name: string
+  icon: string
+  type: string
+}
+
+/**
+ * 文件类
+ */
+export class File {
+  /**
+   * 文件名
+   */
+  name: string
+
+  /**
+   * 文件图标
+   */
+  icon: string
+
+  /**
+   * 文件类型
+   */
+  type: string
+
+  /**
+   * 下载进度或状态
+   */
+  power?: string | number
+
+  /**
+   * 创建一个新的 File 实例
+   * @param params 文件属性，包括名称、图标和类型。
+   */
+  constructor(params: FileProperties) {
+    this.name = params.name
+    this.icon = params.icon
+    this.type = params.type
+  }
+
+  /**
+   * 下载文件
+   * @returns {Promise<void>} 下载完成后的 Promise。
+   */
+  async download(): Promise<void> {
+    this.power = 'awaiting'
+    const {
+      data: { blob }
+    } = await fileDownloadByName<{ blob: Blob }>(this.name, (progressEvent: ProgressEvent) => {
+      this.power = (progressEvent.loaded / progressEvent.total) * 100
+    })
+    FileSaver.saveAs(blob, this.name)
+    this.power = 'completed'
+  }
+
+  /**
+   * 重命名文件
+   * @param newName 新的文件名称。
+   */
+  async rename(newName: string): Promise<void> {
+    this.name = newName
+  }
+}
+
+/**
+ * 文件夹的类，继承自 File
+ */
+export class Folder extends File {
+  /**
+   * 创建一个新的 Folder 实例
+   * @param params 文件夹属性，包括名称、图标和类型。
+   */
+  constructor(params: FileProperties) {
+    super(params)
+  }
+}

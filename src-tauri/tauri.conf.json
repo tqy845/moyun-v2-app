@@ -22,6 +22,9 @@
       "windows": {
         "webviewInstallMode": {
           "type": "downloadBootstrapper"
+        },
+        "wix": {
+          "language": "zh-CN"
         }
       },
       "active": true,

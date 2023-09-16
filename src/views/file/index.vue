@@ -9,7 +9,8 @@ import { reactive, ref } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
 import { AppFile } from '@/components/common'
 import { AppBottomBar, AppBaseRightClickMenu, AppFileRightClickMenu } from './components'
-import { useAppStore, File, useFileStore } from '@/stores'
+import { useAppStore, useFileStore } from '@/stores'
+import { File } from '@/types/models'
 
 const containerRef = ref(null)
 const { width } = useElementSize(containerRef)
@@ -129,7 +130,6 @@ whenever(ctrl_d, () => {
 
 const handleDownload = async (file: File) => {
   console.log('下载文件...')
-  // await fileStore.downloadByName(file.name)
 }
 
 const handleCollect = () => {
