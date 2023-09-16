@@ -42,4 +42,8 @@ html {
 .hidden-none {
   display: block !important; /* 或者 display: flex !important; 或其他适当的 display 值 */
 }
+
+.w-min {
+  min-width: 100% !important;
+}
 </style>

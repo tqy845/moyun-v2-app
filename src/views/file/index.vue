@@ -8,127 +8,94 @@
 import { reactive, ref } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
 import { AppFile } from '@/components/common'
-import { AppBottomBar } from './components'
-import { useAppStore } from '@/stores'
+import { AppBottomBar, AppBaseRightClickMenu, AppFileRightClickMenu } from './components'
+import { useAppStore, File, useFileStore } from '@/stores'
 
-const el = ref(null)
-const { width } = useElementSize(el)
+const containerRef = ref(null)
+const { width } = useElementSize(containerRef)
 const controlState = useKeyModifier('Control') // 绑定Control键实现 多选
 
 const appStore = useAppStore()
+const fileStore = useFileStore()
 
-const data = reactive({
-  fileList: [
-    {
-      icon: 'file-cloud',
-      fileName: '文件1',
-      type: 'file'
-    },
-    {
-      icon: 'folder',
-      fileName: '新建文件夹',
-      type: 'folder',
-      children: [
-        {
-          icon: 'file-cloud',
-          fileName: '文件1',
-          type: 'file'
-        },
-        {
-          icon: 'file-cloud',
-          fileName: '文件2',
-          type: 'file'
-        },
-        {
-          icon: 'file-cloud',
-          fileName: '文件3',
-          type: 'file'
-        },
-        {
-          icon: 'file-cloud',
-          fileName: '文件4',
-          type: 'file'
-        }
-      ]
-    },
-    {
-      icon: 'folder',
-      fileName: '新建文件夹2',
-      type: 'folder',
-      children: [
-        {
-          icon: 'file-cloud',
-          fileName: '文件1',
-          type: 'file'
-        },
-        {
-          icon: 'file-cloud',
-          fileName: '文件2',
-          type: 'file'
-        },
-        {
-          icon: 'file-cloud',
-          fileName: '文件3',
-          type: 'file'
-        },
-        {
-          icon: 'file-cloud',
-          fileName: '文件4',
-          type: 'file'
-        }
-      ]
-    },
-    {
-      icon: 'file-cloud',
-      fileName: '文件2',
-      type: 'file'
-    },
-    {
-      icon: 'file-cloud',
-      fileName: '文件3',
-      type: 'file'
-    },
-    {
-      icon: 'file-cloud',
-      fileName: '文件4',
-      type: 'file'
-    },
-    {
-      icon: 'music-note',
-      fileName: '爱你 - 陈芳语',
-      type: 'mp3'
-    },
-    {
-      icon: 'file-cloud',
-      fileName: '文件6',
-      type: 'file'
-    },
-    {
-      icon: 'file-cloud',
-      fileName: '文件7',
-      type: 'file'
-    },
-    {
-      icon: 'file-cloud',
-      fileName: '文件8',
-      type: 'file'
-    },
-    {
-      icon: 'file-cloud',
-      fileName: '文件9',
-      type: 'file'
-    },
-    {
-      icon: 'file-cloud',
-      fileName: '文件10',
-      type: 'file'
-    }
-  ],
-  toggleSelected: [] as string[]
+const cs = reactive<{
+  rightClickMenu: {
+    show: boolean
+    file: File
+    x: number
+    y: number
+  }
+}>({
+  rightClickMenu: {
+    show: false,
+    file: {} as File,
+    x: 0,
+    y: 0
+  }
 })
 
-const cs = reactive({
-  isMultiple: controlState.value
+const data = reactive<{
+  fileList: Array<File>
+  selected: number | Array<number>
+}>({
+  fileList: [
+    new File({
+      icon: 'file-cloud',
+      name: 'demo_file.mp4',
+      type: 'file'
+    }),
+    new File({
+      icon: 'folder',
+      name: '新建文件夹',
+      type: 'folder'
+    }),
+    new File({
+      icon: 'file-cloud',
+      name: 'demo.docx',
+      type: 'file'
+    }),
+    new File({
+      icon: 'file-cloud',
+      name: '文件3',
+      type: 'file'
+    }),
+    new File({
+      icon: 'file-cloud',
+      name: '文件4',
+      type: 'file'
+    }),
+    new File({
+      icon: 'music-note',
+      name: '爱你 - 陈芳语',
+      type: 'mp3'
+    }),
+    new File({
+      icon: 'file-cloud',
+      name: '文件6',
+      type: 'file'
+    }),
+    new File({
+      icon: 'file-cloud',
+      name: '文件7',
+      type: 'file'
+    }),
+    new File({
+      icon: 'file-cloud',
+      name: '文件8',
+      type: 'file'
+    }),
+    new File({
+      icon: 'file-cloud',
+      name: '文件9',
+      type: 'file'
+    }),
+    new File({
+      icon: 'file-cloud',
+      name: '文件10',
+      type: 'file'
+    })
+  ],
+  selected: []
 })
 
 /**
@@ -142,9 +109,8 @@ const { ctrl_a } = useMagicKeys({
 })
 whenever(ctrl_a, () => {
   console.log('全选')
-  data.toggleSelected = data.fileList.map((item) => item.fileName)
-
-  appStore.globalMessage('全选', 'success')
+  data.selected = []
+  for (let i = 0; i < data.fileList.length; i++) data.selected.push(i)
 })
 
 /**
@@ -157,13 +123,13 @@ const { ctrl_d } = useMagicKeys({
   }
 })
 whenever(ctrl_d, () => {
-  console.log('删除文件', data.toggleSelected)
-  data.fileList = data.fileList.filter((item) => !data.toggleSelected.includes(item.fileName))
-  data.toggleSelected = []
+  console.log('删除文件')
+  handleDelete()
 })
 
-const handleDownload = () => {
+const handleDownload = async (file: File) => {
   console.log('下载文件...')
+  // await fileStore.downloadByName(file.name)
 }
 
 const handleCollect = () => {
@@ -172,6 +138,10 @@ const handleCollect = () => {
 
 const handleDelete = () => {
   console.log('删除文件...')
+  data.fileList = data.fileList.filter((item, index) =>
+    Array.isArray(data.selected) ? !data.selected.includes(index) : index !== data.selected
+  )
+  data.selected = []
 }
 
 const handleShare = () => {
@@ -187,7 +157,7 @@ const navigateToFolder = (item: any) => {
   console.log('Navigate to folder:', item)
 }
 
-const handleDbClick = (item: { type: string }) => {
+const handleDoubleClick = (item: { type: string }) => {
   console.log('双击..', item)
   if (item.type === 'file') {
     console.log('不受打开支持的文件...')
@@ -197,40 +167,67 @@ const handleDbClick = (item: { type: string }) => {
     console.log('音乐')
   }
 }
+
+const handleContextMenu = (event: MouseEvent) => {
+  console.log('右键菜单')
+  event.preventDefault()
+  const { clientX, clientY } = event
+  console.log(clientX, clientY)
+  cs.rightClickMenu.x = clientX
+  cs.rightClickMenu.y = clientY
+}
+
+const handleRightClick = (event: MouseEvent, file: File) => {
+  console.log('右键文件菜单', file)
+  event.preventDefault()
+  const { clientX, clientY } = event
+  cs.rightClickMenu = {
+    x: clientX,
+    y: clientY,
+    show: true,
+    file
+  }
+}
 </script>
 
 <template>
-  <v-container ref="el" class="" style="min-width: 100%">
-    <!-- 导航条 -->
-    <!-- <AppFileBar :items="breadcrumbItems" @item-click="navigateToFolder" /> -->
-    <div
-      v-if="width"
-      :style="{ 'padding-left': `${((width - 32) % 158) / 2 + 15}px` }"
-      style="min-width: 100%"
-    >
-      <v-btn-toggle
-        v-model="data.toggleSelected"
-        :density="null"
-        :multiple="!!controlState"
-        class="pa-5"
-      >
+  <v-container
+    ref="containerRef"
+    class="w-min fill-height align-start"
+    @contextmenu="handleContextMenu"
+  >
+    <div v-if="width" :style="{ 'padding-left': `${((width - 32) % 158) / 2 + 15}px` }">
+      <v-btn-toggle v-model="data.selected" :density="null" :multiple="!!controlState" class="pa-5">
         <v-row>
           <v-col v-for="(iterator, index) in data.fileList" :key="index" class="pa-1" cols="auto">
             <!-- 渲染文件-->
             <AppFile
-              :file-icon="iterator.icon"
-              :file-name="iterator.fileName"
-              :value="iterator.fileName"
+              :file-item="iterator"
               elevation="0"
               style="background-color: rgba(0, 0, 0, 0)"
-              @dblclick="handleDbClick(iterator)"
+              @dblclick="handleDoubleClick(iterator)"
+              @contextmenu.stop="handleRightClick($event, iterator)"
             />
           </v-col>
         </v-row>
       </v-btn-toggle>
     </div>
     <!--文件底部操作菜单-->
-    <AppBottomBar v-if="data.toggleSelected?.length" />
+    <AppBottomBar v-if="Array.isArray(data.selected) && data.selected?.length > 1" />
+
+    <!-- 右键菜单 -->
+    <!-- {{ cs.rightClickMenu }}
+    <AppBaseRightClickMenu
+      :style="{ top: cs.rightClickMenu.y + 'px', left: cs.rightClickMenu.x + 'px' }"
+    /> -->
+
+    <AppFileRightClickMenu
+      :file="cs.rightClickMenu.file"
+      v-show="cs.rightClickMenu.show"
+      :style="{ top: cs.rightClickMenu.y + 'px', left: cs.rightClickMenu.x + 'px' }"
+      @close="cs.rightClickMenu.show = false"
+    />
+    <!-- <AppDownWindow /> -->
   </v-container>
 </template>
 

@@ -49,6 +49,7 @@ export const useUserStore = defineStore('userStore', {
      * @param {User} user - 包含邮箱和密码的用户对象
      */
     async userLoginByAccount(user: User) {
+      useAppStore().$reset()
       // const _user = { ...user, password: encrypt(user.password) }
       const _user = user
       const { code, data } = await loginByAccount<{ token: string }>(_user)
@@ -74,7 +75,6 @@ export const useUserStore = defineStore('userStore', {
      */
     async logout() {
       logoutForUser(this.user)
-      useAppStore().$reset()
       this.$reset()
     }
   },

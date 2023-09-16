@@ -5,9 +5,15 @@
   @description “文件”组件
 -->
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
+import { usePrecision } from '@vueuse/math'
+import { UseMousePressed } from '@vueuse/components'
+import { File } from '@/stores'
 
-const props = defineProps(['fileName', 'fileIcon'])
+defineProps<{
+  fileItem: File
+}>()
+
 const cs = reactive({
   size: 150, // 文件图标大小
   showActionsMenu: false
@@ -19,45 +25,43 @@ const handleShare = () => {}
 </script>
 
 <template>
-  <!--  <v-card :width="cs.size" :min-height="cs.size" >-->
   <v-btn :size="cs.size" :width="cs.size" stacked v-bind="$attrs">
     <template #prepend>
-      <v-icon :icon="`mdi-${fileIcon}`" color="#62B1FA" size="130"></v-icon>
+      <v-row class="flex-column">
+        <v-col>
+          <!-- 文件图标 -->
+          <v-icon :icon="`mdi-${fileItem.icon}`" color="#62B1FA" size="130"></v-icon>
+        </v-col>
+        <v-col class="progress-linear">
+          <!-- 进度条 -->
+          <v-progress-linear
+            :model-value="fileItem.power"
+            :active="!!fileItem.power"
+            :indeterminate="fileItem.power === 'awaiting'"
+            color="deep-purple-accent-3"
+            height="25"
+            rounded
+            striped
+          >
+            <template v-slot:default="{ value }">
+              <strong>{{ usePrecision(value, 2) }}%</strong>
+            </template>
+          </v-progress-linear>
+        </v-col>
+      </v-row>
     </template>
-    <span class="file-text">{{ fileName }}</span>
+    <!-- 文件名 -->
+    <span class="file-text text-none">{{ fileItem.name }}</span>
   </v-btn>
-
-  <!--    <v-card-actions v-if="cs.showActionsMenu">-->
-  <!--      <v-btn-->
-  <!--          color="surface-variant"-->
-  <!--          icon="mdi-monitor-arrow-down-variant"-->
-  <!--          size="small"-->
-  <!--          variant="text"-->
-  <!--          @click="handleDownload"-->
-  <!--      ></v-btn>-->
-
-  <!--      <v-btn-->
-  <!--          color="surface-variant"-->
-  <!--          icon="mdi-heart-outline"-->
-  <!--          size="small"-->
-  <!--          variant="text"-->
-  <!--          @click="handleCollect"-->
-  <!--      ></v-btn>-->
-
-  <!--      <v-btn-->
-  <!--          color="surface-variant"-->
-  <!--          icon="mdi-share-variant-outline"-->
-  <!--          size="small"-->
-  <!--          variant="text"-->
-  <!--          @click="handleShare"-->
-  <!--      ></v-btn>-->
-  <!--    </v-card-actions>-->
-  <!--  </v-card>-->
 </template>
 
 <style lang="scss">
 .file-text {
   position: relative;
   bottom: 8px;
+}
+.progress-linear {
+  position: absolute;
+  top: 40px;
 }
 </style>

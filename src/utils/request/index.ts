@@ -1,8 +1,9 @@
-import { UserStore } from './../../stores/modules/user/helper'
 import axios, { type AxiosRequestConfig, type AxiosResponse, type AxiosInstance } from 'axios'
 import type { ResponseType } from '@/utils/request/helper'
 import { useAppStore, useUserStore } from '@/stores'
 import { useCookies } from '@vueuse/integrations/useCookies'
+import { invoke } from '@tauri-apps/api'
+
 /**
  * 创建 axios 实例
  */
@@ -20,7 +21,7 @@ const cookies = useCookies(['locale'])
  * @param config 请求配置
  * @return Promise<ResponseType<T>> 响应数据
  */
-const request = async <T = any>(config: AxiosRequestConfig): Promise<ResponseType<T> | null> => {
+const request = async <T = any>(config: AxiosRequestConfig): Promise<ResponseType<T>> => {
   try {
     const appStore = useAppStore()
     const userStore = useUserStore()
@@ -34,19 +35,16 @@ const request = async <T = any>(config: AxiosRequestConfig): Promise<ResponseTyp
 
     // 发起请求
     const response: AxiosResponse = await instance.request(config)
-
     // 处理文件流
     if (response.headers['content-type'] === 'application/octet-stream') {
-      // 创建一个Blob对象并下载文件
       const blob = new Blob([response.data])
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = 'downloaded-file.ext' // 指定下载的文件名
-      a.click()
-      window.URL.revokeObjectURL(url)
-
-      return null // 返回null表示无需处理响应数据
+      return {
+        code: 200,
+        message: 'success',
+        data: {
+          blob
+        } as T
+      }
     }
 
     // 处理其他响应数据
@@ -56,7 +54,7 @@ const request = async <T = any>(config: AxiosRequestConfig): Promise<ResponseTyp
     console.log('Response:', data)
 
     if (data.code !== 200) {
-      appStore.globalMessage(data.message, 'error')
+      appStore.notification(data.message, 'error')
     }
     return data
   } catch (err: any) {

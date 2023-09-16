@@ -20,7 +20,7 @@ export const useAppStore = defineStore(`appStore`, {
      * @param {string} message - 消息文本
      * @param {'error' | 'success' | 'warning' | 'info'} [type] - 消息类型
      */
-    globalMessage(message: string, type?: 'error' | 'success' | 'warning' | 'info'): void {
+    notification(message: string, type?: 'error' | 'success' | 'warning' | 'info'): void {
       this.messageQueue.push({ message, type, show: true })
     },
     /**

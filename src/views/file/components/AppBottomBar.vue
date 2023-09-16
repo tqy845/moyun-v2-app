@@ -5,15 +5,25 @@
   @description “文件”底部操作栏
 -->
 <script lang="ts" setup>
+import { reactive } from 'vue'
 import { useFileStore } from '@/stores'
 
 const fileStore = useFileStore()
+
+const cs = reactive({
+  downWindow: {
+    show: true
+  }
+})
 
 /**
  * 文件下载
  */
 const handleDownload = async () => {
-  console.log('下载文件...', await fileStore.downloadByName('demo_file.mp4'))
+  console.log('下载文件...')
+  cs.downWindow.show = true
+  await fileStore.downloadByName('demo_file.mp4')
+  cs.downWindow.show = false
 }
 
 const handleCollect = () => {

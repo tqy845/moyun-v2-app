@@ -74,6 +74,12 @@ export const getAppDefaultSettings = (): AppStore => {
           icon: 'account-circle',
           active: false,
           route: '/personal'
+        },
+        {
+          title: 'trashcan.text',
+          icon: 'trash-can',
+          active: false,
+          route: '/trash-can'
         }
         // {
         //   title: 'school.text',

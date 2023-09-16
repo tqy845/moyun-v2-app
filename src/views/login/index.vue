@@ -58,10 +58,10 @@ const onLoginByWeChat = () => {
 const onLoginByQQ = () => {
   console.log('onLoginByQQ')
   // todo: 待实现QQ授权
-  appStore.globalMessage('!@3', 'success')
-  setTimeout(() => appStore.globalMessage('123123123', 'warning'), 100)
-  setTimeout(() => appStore.globalMessage('123123123', 'error'), 150)
-  setTimeout(() => appStore.globalMessage('123123123', 'info'), 450)
+  appStore.notification('!@3', 'success')
+  setTimeout(() => appStore.notification('123123123', 'warning'), 100)
+  setTimeout(() => appStore.notification('123123123', 'error'), 150)
+  setTimeout(() => appStore.notification('123123123', 'info'), 450)
 }
 
 /**

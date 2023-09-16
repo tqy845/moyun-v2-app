@@ -5,3 +5,4 @@ export * from './user'
 export * from './user/helper'
 
 export * from './file'
+export * from './file/helper'
