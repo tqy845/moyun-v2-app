@@ -25,12 +25,14 @@ export class File {
    * 文件下载
    */
   async download() {
+    this.power = `awaiting`
     const {
       data: { blob }
     } = await fileDownloadByName<{ blob: Blob }>(this.name, (progressEvent: ProgressEvent) => {
       this.power = (progressEvent.loaded / progressEvent.total) * 100
     })
     FileSaver.saveAs(blob, this.name)
+    this.power = 0
   }
 }
 
