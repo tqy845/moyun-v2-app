@@ -1,8 +1,13 @@
-import { AsideMenuItem } from './helper'
 /**
  * App Store
  */
 
+import { AsideMenuItem } from './helper'
+import {
+  isPermissionGranted,
+  requestPermission,
+  sendNotification
+} from '@tauri-apps/api/notification'
 import { defineStore } from 'pinia'
 import { type AppStore, getAppDefaultSettings } from './helper'
 
@@ -20,8 +25,20 @@ export const useAppStore = defineStore(`appStore`, {
      * @param {string} message - 消息文本
      * @param {'error' | 'success' | 'warning' | 'info'} [type] - 消息类型
      */
-    notification(message: string, type?: 'error' | 'success' | 'warning' | 'info'): void {
+    async notification(
+      message: string,
+      type?: 'error' | 'success' | 'warning' | 'info'
+    ): Promise<void> {
       this.messageQueue.push({ message, type, show: true })
+
+      let permissionGranted = await isPermissionGranted()
+      if (!permissionGranted) {
+        const permission = await requestPermission()
+        permissionGranted = permission === 'granted'
+      }
+      if (permissionGranted) {
+        sendNotification({ title: 'MoYun', body: message })
+      }
     },
     /**
      * 更新侧边栏菜单激活项

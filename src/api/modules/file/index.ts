@@ -1,4 +1,5 @@
-import request from '@/utils/request'
+import request from '@/utils/request/tauri'
+import { ResponseType } from '@tauri-apps/api/http'
 
 /**
  * 下载文件
@@ -8,11 +9,7 @@ import request from '@/utils/request'
 export const fileDownloadByName = <T = any>(fileName: string, downloadProgress: Function) => {
   return request<T>({
     url: `/system/user/file/${fileName}`,
-    method: 'get',
-    responseType: 'blob', // 指定响应数据类型为二进制数据
-    onDownloadProgress(progressEvent) {
-      // 监听下载进度
-      downloadProgress(progressEvent)
-    }
+    method: 'GET',
+    responseType: ResponseType.Text
   })
 }

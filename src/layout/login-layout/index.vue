@@ -10,7 +10,7 @@ import { AppAd } from './components'
       <v-container>
         <!-- 第一行显示 logo -->
         <div class="d-flex align-center justify-center my-4">
-          <img alt="Logo" height="100" src="/public/img/icons/512x512.png" width="100" />
+          <v-img alt="Logo" height="100" src="img/icons/512x512.png" width="100" />
         </div>
 
         <!-- 第二行是表单填写账号密码 -->

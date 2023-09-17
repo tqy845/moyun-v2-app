@@ -10,9 +10,9 @@
 <template>
   <v-container class="fill-height">
     <v-row class="flex-column text-center" justify="center" align="center">
-      <v-col class="" justify="center" align="center"
-        ><v-img aspect-ratio="1/1" width="220" src="/public/img/icons/512x512.png"></v-img
-      ></v-col>
+      <v-col class="" justify="center" align="center">
+        <v-img aspect-ratio="1/1" width="220" src="img/icons/512x512.png"></v-img>
+      </v-col>
       <v-col class="text-button pa-0 ma-1"
         >全局搜索 <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
         <code class="bg-grey-lighten-3 pa-2 rounded-lg">K</code></v-col

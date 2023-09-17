@@ -1,5 +1,5 @@
-import { User } from '@/stores';
-import request from '@/utils/request'
+import request from '@/utils/request/tauri'
+import { User } from '@/stores'
 
 /**
  * 获取验证码
@@ -7,8 +7,8 @@ import request from '@/utils/request'
  */
 export const fetchCodeImage = <T = any>() => {
   return request<T>({
-    url: '/captchaImage',
-    method: 'get'
+    url: `/captchaImage`,
+    method: 'GET'
   })
 }
 
@@ -20,8 +20,8 @@ export const fetchCodeImage = <T = any>() => {
  */
 export const registerByAccount = <T = any>(params: { email: string; password: string }) => {
   return request<T>({
-    url: '/registerByEmail',
-    method: 'post',
+    url: `/registerByEmail`,
+    method: 'POST',
     data: params
   })
 }
@@ -34,7 +34,7 @@ export const registerByAccount = <T = any>(params: { email: string; password: st
 export const loginByAccount = <T = any>(param: User) => {
   return request<T>({
     url: '/login',
-    method: 'post',
+    method: 'POST',
     data: param
   })
 }
@@ -47,7 +47,7 @@ export const loginByAccount = <T = any>(param: User) => {
 export const logoutForUser = <T = any>(param: User) => {
   return request<T>({
     url: '/system/user/logout',
-    method: 'delete',
+    method: 'DELETE',
     data: param
   })
 }
@@ -60,7 +60,7 @@ export const logoutForUser = <T = any>(param: User) => {
 export const registeredTouch = <T = any>(options: { [key: string]: any }) => {
   return request<T>({
     url: '/touch',
-    method: 'post',
+    method: 'POST',
     data: options
   })
 }

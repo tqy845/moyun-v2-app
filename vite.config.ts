@@ -23,14 +23,14 @@ export default async ({ mode }) => {
     server: {
       host: env['VITE_APP_HOST '],
       port: parseInt(env['VITE_APP_PORT'], 10),
-      strictPort: true,
-      proxy: {
-        '/api/v1': {
-          target: env['VITE_APP_API_ENDPOINT'], //代理的地址
-          changeOrigin: true,
-          rewrite: (path) => path.replace('/api/v1', '')
-        }
-      }
+      strictPort: true
+      // proxy: {
+      //   '/api/v1': {
+      //     target: env['VITE_APP_API_ENDPOINT'], //代理的地址
+      //     changeOrigin: true,
+      //     rewrite: (path) => path.replace('/api/v1', '')
+      //   }
+      // }
     },
     // 3. to make use of `TAURI_DEBUG` and other env variables
     // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
