@@ -1,6 +1,7 @@
 import FileSaver from 'file-saver'
 import { fileDownloadByName } from '@/api'
-
+import { invoke } from '@tauri-apps/api'
+import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
 /**
  * 文件属性
  */
@@ -52,10 +53,13 @@ export class File {
     this.power = 'awaiting'
     const {
       data: { blob }
-    } = await fileDownloadByName<{ blob: Blob }>(this.name, (progressEvent: ProgressEvent) => {
-      this.power = (progressEvent.loaded / progressEvent.total) * 100
+    } = await fileDownloadByName<{ blob: Blob }>(this.name, (progress: number) => {
+      this.power = progress
     })
-    FileSaver.saveAs(blob, this.name)
+    // await invoke('save_blob', { blob })
+    const result = await invoke('greet', { name: `123` })
+    console.log(result)
+    // FileSaver.saveAs(blob, this.name)
     this.power = 'completed'
   }
 

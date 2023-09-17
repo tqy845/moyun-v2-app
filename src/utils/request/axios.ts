@@ -1,14 +1,13 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse, type AxiosInstance } from 'axios'
-import type { ResponseType } from '@/utils/request/helper'
+import { BASE_URL, type ResponseType } from '@/utils/request/helper'
 import { useAppStore, useUserStore } from '@/stores'
 import { useCookies } from '@vueuse/integrations/useCookies'
-import { invoke } from '@tauri-apps/api'
 
 /**
  * 创建 axios 实例
  */
 const instance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_API_VERSION
+  baseURL: BASE_URL
 })
 
 /**
@@ -21,7 +20,7 @@ const cookies = useCookies(['locale'])
  * @param config 请求配置
  * @return Promise<ResponseType<T>> 响应数据
  */
-const request = async <T = any>(config: AxiosRequestConfig): Promise<ResponseType<T>> => {
+const axiosRequest = async <T = any>(config: AxiosRequestConfig): Promise<ResponseType<T>> => {
   try {
     const appStore = useAppStore()
     const userStore = useUserStore()
@@ -67,4 +66,4 @@ const request = async <T = any>(config: AxiosRequestConfig): Promise<ResponseTyp
   }
 }
 
-export default request
+export default axiosRequest

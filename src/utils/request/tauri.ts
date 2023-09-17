@@ -1,12 +1,7 @@
 import { Body, FetchOptions, Response, fetch } from '@tauri-apps/api/http'
-import type { ResponseType } from '@/utils/request/helper'
+import { BASE_URL, type ResponseType } from '@/utils/request/helper'
 import { useAppStore, useUserStore } from '@/stores'
 import { useCookies } from '@vueuse/integrations/useCookies'
-
-/**
- * 基础请求地址
- */
-const BASE_URL = import.meta.env.VITE_APP_API_ENDPOINT
 
 /**
  * 操作cookies
@@ -17,7 +12,7 @@ const cookies = useCookies(['locale'])
  * Fetch
  * @param options 请求配置
  */
-const request = async <T = any>(
+const tauriRequest = async <T = any>(
   options: { url: string; data?: Object } & FetchOptions
 ): Promise<ResponseType<T>> => {
   const appStore = useAppStore()
@@ -77,4 +72,4 @@ const request = async <T = any>(
   return result
 }
 
-export default request
+export default tauriRequest

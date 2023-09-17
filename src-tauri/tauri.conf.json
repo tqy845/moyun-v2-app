@@ -21,6 +21,7 @@
         "open": true
       },
       "fs": {
+        "scope": ["$APPDATA/*"],
         "all": true,
         "readFile": true,
         "writeFile": true,
