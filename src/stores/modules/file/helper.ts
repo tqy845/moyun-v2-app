@@ -31,6 +31,6 @@ export const getFileDefaultSettings = (): FileStore => {
   return {
     fileList: [],
     fileView: 'icon',
-    fileItemSize: 130
+    fileItemSize: 121
   }
 }

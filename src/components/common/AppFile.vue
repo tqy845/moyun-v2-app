@@ -30,7 +30,7 @@ const handleShare = () => {}
 
 <template>
   <v-btn
-    :size="fileStore.fileItemSize"
+    :size="fileStore.fileItemSize + 15"
     :width="fileStore.fileItemSize"
     stacked
     v-bind="$attrs"
