@@ -30,7 +30,7 @@ const handleShare = () => {}
       <v-row class="flex-column">
         <v-col>
           <!-- 文件图标 -->
-          <v-icon :icon="`mdi-${fileItem.icon}`" color="#62B1FA" size="130"></v-icon>
+          <v-icon :icon="`mdi-${fileItem.icon}`" color="#62B1FA" :size="cs.size - 30"></v-icon>
         </v-col>
         <v-col class="progress-linear">
           <!-- 进度条 -->
@@ -51,7 +51,7 @@ const handleShare = () => {}
       </v-row>
     </template>
     <!-- 文件名 -->
-    <p class="text-none file-name">
+    <p class="text-none file-name" style="width: cs.size">
       {{ fileItem.name }}
     </p>
   </v-btn>
@@ -59,7 +59,6 @@ const handleShare = () => {}
 
 <style lang="scss">
 .file-name {
-  width: 150px;
   height: 40px;
   word-break: break-all;
   text-overflow: ellipsis;
