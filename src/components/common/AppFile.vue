@@ -60,6 +60,7 @@ const handleShare = () => {}
 <style lang="scss">
 .file-name {
   width: 150px;
+  height: 40px;
   word-break: break-all;
   text-overflow: ellipsis;
   display: -webkit-box;
