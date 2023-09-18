@@ -51,7 +51,12 @@ const handleShare = () => {}
       </v-row>
     </template>
     <!-- 文件名 -->
-    <span class="file-text text-none">{{ fileItem.name }}</span>
+    <div
+      class="file-text text-none"
+      style="max-width: 150px; white-space: normal; word-wrap: break-word"
+    >
+      {{ fileItem.name }}
+    </div>
   </v-btn>
 </template>
 
