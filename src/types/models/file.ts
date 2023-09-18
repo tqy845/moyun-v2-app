@@ -8,7 +8,7 @@ import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
 export interface FileProperties {
   name: string
   icon: string
-  type: string
+  extension: string
 }
 
 /**
@@ -26,9 +26,9 @@ export class File {
   icon: string
 
   /**
-   * 文件类型
+   * 扩展名
    */
-  type: string
+  extension: string
 
   /**
    * 下载进度或状态
@@ -42,7 +42,7 @@ export class File {
   constructor(params: FileProperties) {
     this.name = params.name
     this.icon = params.icon
-    this.type = params.type
+    this.extension = params.extension
   }
 
   /**

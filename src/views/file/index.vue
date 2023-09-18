@@ -5,7 +5,7 @@
   @description “文件展示”首页
 -->
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
 import { AppFile } from '@/components/common'
 import { AppBottomBar, AppBaseRightClickMenu, AppFileRightClickMenu } from './components'
@@ -39,64 +39,12 @@ const data = reactive<{
   fileList: Array<File>
   selected: number | Array<number>
 }>({
-  fileList: [
-    new File({
-      icon: 'file-cloud',
-      name: 'demo_file.mp4',
-      type: 'file'
-    }),
-    new File({
-      icon: 'folder',
-      name: '新建文件夹',
-      type: 'folder'
-    }),
-    new File({
-      icon: 'file-cloud',
-      name: 'demo.docx',
-      type: 'file'
-    }),
-    new File({
-      icon: 'file-cloud',
-      name: '文件3',
-      type: 'file'
-    }),
-    new File({
-      icon: 'file-cloud',
-      name: '文件4',
-      type: 'file'
-    }),
-    new File({
-      icon: 'music-note',
-      name: '爱你 - 陈芳语',
-      type: 'mp3'
-    }),
-    new File({
-      icon: 'file-cloud',
-      name: '文件6',
-      type: 'file'
-    }),
-    new File({
-      icon: 'file-cloud',
-      name: '文件7',
-      type: 'file'
-    }),
-    new File({
-      icon: 'file-cloud',
-      name: '文件8',
-      type: 'file'
-    }),
-    new File({
-      icon: 'file-cloud',
-      name: '文件9',
-      type: 'file'
-    }),
-    new File({
-      icon: 'file-cloud',
-      name: '文件10',
-      type: 'file'
-    })
-  ],
+  fileList: [],
   selected: []
+})
+
+onMounted(async () => {
+  data.fileList = await fileStore.list()
 })
 
 /**
@@ -157,13 +105,13 @@ const navigateToFolder = (item: any) => {
   console.log('Navigate to folder:', item)
 }
 
-const handleDoubleClick = (item: { type: string }) => {
+const handleDoubleClick = (item: File) => {
   console.log('双击..', item)
-  if (item.type === 'file') {
+  if (item.extension === 'file') {
     console.log('不受打开支持的文件...')
-  } else if (item.type === 'folder') {
+  } else if (item.extension === 'folder') {
     console.log('文件夹')
-  } else if (item.type === 'mp3') {
+  } else if (item.extension === 'mp3') {
     console.log('音乐')
   }
 }
