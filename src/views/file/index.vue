@@ -147,7 +147,7 @@ const handleRightClick = (event: MouseEvent, file: File) => {
     <div v-if="width" :style="{ 'padding-left': `${((width - 32) % 158) / 2 + 15}px` }">
       <v-btn-toggle v-model="data.selected" :density="null" :multiple="!!controlState" class="pa-5">
         <v-row>
-          <v-col v-for="(iterator, index) in data.fileList" :key="index" class="pa-1" cols="auto">
+          <v-col v-for="(iterator, index) in data.fileList" :key="index" class="px-1" cols="auto">
             <!-- 渲染文件-->
             <AppFile
               :file-item="iterator"

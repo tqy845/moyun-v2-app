@@ -15,7 +15,7 @@ defineProps<{
 }>()
 
 const cs = reactive({
-  size: 150, // 文件图标大小
+  size: 160, // 文件图标大小
   showActionsMenu: false
 })
 
@@ -25,7 +25,7 @@ const handleShare = () => {}
 </script>
 
 <template>
-  <v-btn :size="cs.size" :width="cs.size" stacked v-bind="$attrs">
+  <v-btn :size="cs.size" :width="cs.size" stacked v-bind="$attrs" class="pa-5">
     <template #prepend>
       <v-row class="flex-column">
         <v-col>
@@ -51,20 +51,25 @@ const handleShare = () => {}
       </v-row>
     </template>
     <!-- 文件名 -->
-    <div
-      class="file-text text-none"
-      style="max-width: 150px; white-space: normal; word-wrap: break-word"
-    >
+    <p class="text-none file-name">
       {{ fileItem.name }}
-    </div>
+    </p>
   </v-btn>
 </template>
 
 <style lang="scss">
-.file-text {
+.file-name {
+  width: 150px;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* 这里是超出几行省略 */
+  overflow: hidden;
   position: relative;
   bottom: 8px;
 }
+
 .progress-linear {
   position: absolute;
   top: 40px;
