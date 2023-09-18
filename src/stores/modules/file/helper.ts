@@ -15,6 +15,11 @@ export interface FileStore {
    * @type {'icon' | 'list'}
    */
   fileView: 'icon' | 'list'
+  /**
+   * 文件项大小
+   * @type {number}
+   */
+  fileItemSize: number
 }
 
 /**
@@ -25,6 +30,7 @@ export interface FileStore {
 export const getFileDefaultSettings = (): FileStore => {
   return {
     fileList: [],
-    fileView: 'icon'
+    fileView: 'icon',
+    fileItemSize: 160
   }
 }

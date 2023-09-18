@@ -7,19 +7,21 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { usePrecision } from '@vueuse/math'
-import { UseMousePressed } from '@vueuse/components'
 import { File } from '@/types/models'
+import { useFileStore } from '@/stores'
 
-defineProps<{
-  fileItem: File
-}>()
+const fileStore = useFileStore()
 
-const cs = reactive({
-  size: 160, // 文件图标大小
-  showActionsMenu: false
+defineProps({
+  fileItem: {
+    type: File,
+    required: true
+  }
 })
 
-
+const cs = reactive({
+  showActionsMenu: false
+})
 
 const handleDownload = () => {}
 const handleCollect = () => {}
@@ -27,12 +29,22 @@ const handleShare = () => {}
 </script>
 
 <template>
-  <v-btn :size="cs.size" :width="cs.size" stacked v-bind="$attrs" class="pa-5">
+  <v-btn
+    :size="fileStore.fileItemSize"
+    :width="fileStore.fileItemSize"
+    stacked
+    v-bind="$attrs"
+    class="pa-5"
+  >
     <template #prepend>
       <v-row class="flex-column">
         <v-col>
           <!-- 文件图标 -->
-          <v-icon :icon="`mdi-${fileItem.icon}`" color="#62B1FA" :size="cs.size - 30"></v-icon>
+          <v-icon
+            :icon="`mdi-${fileItem.icon}`"
+            color="#62B1FA"
+            :size="fileStore.fileItemSize - 30"
+          ></v-icon>
         </v-col>
         <v-col class="progress-linear">
           <!-- 进度条 -->
