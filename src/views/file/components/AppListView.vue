@@ -21,8 +21,8 @@ const props = defineProps<{
 
 const headers = [
   { title: '名称', align: 'start', key: 'name' },
-  { title: '修改日期', align: 'end', key: 'lastModified' },
-  { title: '类型', align: 'end', key: 'extension' },
+  { title: '修改日期', align: 'start', key: 'lastModified' },
+  { title: '类型', align: 'center', key: 'extension' },
   { title: '大小', align: 'end', key: 'size' }
 ]
 </script>
@@ -49,7 +49,7 @@ const headers = [
       </v-row>
     </template>
     <template v-slot:item.size="{ item }">
-      <v-row justify="start">
+      <v-row justify="end">
         {{ fileUtils.formatSize(item.columns.size) }}
       </v-row>
     </template>
