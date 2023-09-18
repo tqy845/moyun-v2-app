@@ -40,13 +40,17 @@ function handleMouseWheel(event: WheelEvent) {
     // 根据滚动方向执行相应操作
     if (delta > 0) {
       // 向下滚动
-      // console.log('Ctrl + 鼠标向下滚动')
-      fileStore.fileItemSize -= 3
+      // console.log('Ctrl + 鼠标向下滚动', fileStore.fileItemSize)
+      if (fileStore.fileItemSize > 80) {
+        fileStore.fileItemSize -= 3
+      }
       // 在这里执行你的操作
     } else if (delta < 0) {
       // 向上滚动
-      // console.log('Ctrl + 鼠标向上滚动')
-      fileStore.fileItemSize += 3
+      // console.log('Ctrl + 鼠标向上滚动', fileStore.fileItemSize)
+      if (fileStore.fileItemSize < 300) {
+        fileStore.fileItemSize += 3
+      }
       // 在这里执行你的操作
     }
   }
