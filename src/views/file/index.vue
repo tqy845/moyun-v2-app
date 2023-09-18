@@ -7,8 +7,13 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
-import { AppFile } from '@/components/common'
-import { AppBottomBar, AppBaseRightClickMenu, AppFileRightClickMenu } from './components'
+import {
+  AppBottomBar,
+  AppBaseRightClickMenu,
+  AppFileRightClickMenu,
+  AppIconView,
+  AppListView
+} from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { File } from '@/types/models'
 
@@ -144,22 +149,24 @@ const handleRightClick = (event: MouseEvent, file: File) => {
     class="w-min fill-height align-start"
     @contextmenu="handleContextMenu"
   >
-    <div v-if="width" :style="{ 'padding-left': `${((width - 32) % 158) / 2 + 15}px` }">
-      <v-btn-toggle v-model="data.selected" :density="null" :multiple="!!controlState" class="pa-5">
-        <v-row>
-          <v-col v-for="(iterator, index) in data.fileList" :key="index" class="px-1" cols="auto">
-            <!-- 渲染文件-->
-            <AppFile
-              :file-item="iterator"
-              elevation="0"
-              style="background-color: rgba(0, 0, 0, 0)"
-              @dblclick="handleDoubleClick(iterator)"
-              @contextmenu.stop="handleRightClick($event, iterator)"
-            />
-          </v-col>
-        </v-row>
-      </v-btn-toggle>
-    </div>
+    <!-- 图标视图 -->
+    <AppIconView
+      v-if="fileStore.fileView === 'icon'"
+      :width="width"
+      :multiple="!!controlState"
+      :data="data"
+      @doubleClick="handleDoubleClick"
+      @rightClick="handleRightClick"
+    />
+
+    <!-- 列表视图 -->
+    <AppListView
+      v-if="fileStore.fileView === 'list'"
+      :data="data"
+      @doubleClick="handleDoubleClick"
+      @rightClick="handleRightClick"
+    />
+
     <!--文件底部操作菜单-->
     <AppBottomBar v-if="Array.isArray(data.selected) && data.selected?.length > 1" />
 

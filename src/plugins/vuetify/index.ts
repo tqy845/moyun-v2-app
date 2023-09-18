@@ -9,6 +9,7 @@ import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import { i18n } from '@/plugins/i18n'
 import { useI18n } from 'vue-i18n'
 import type { App } from 'vue'
+import { VDataTable, VDataTableServer, VDataTableVirtual } from 'vuetify/labs/VDataTable'
 
 // 创建 Vuetify 组件实例
 const vuetify = createVuetify({
@@ -19,8 +20,13 @@ const vuetify = createVuetify({
   // Vuetify I18n
   locale: {
     adapter: createVueI18nAdapter({ i18n, useI18n })
-  }
+  },
   // Vuetify Components
+  components: {
+    VDataTable,
+    VDataTableServer,
+    VDataTableVirtual
+  }
   // components,
   // // Vuetify Directives
   // directives,

@@ -6,6 +6,7 @@
 -->
 <script lang="ts" setup>
 import { AppLanguage } from '@/components/common'
+import AppFileView from '@/components/common/AppFileView.vue'
 
 const props = defineProps({
   breadcrumbItems: {
@@ -33,12 +34,18 @@ const props = defineProps({
       <v-breadcrumbs v-bind="$attrs"></v-breadcrumbs>
     </v-app-bar-title>
 
+    <!-- 右侧分栏 -->
     <v-spacer></v-spacer>
 
+    <!-- 搜索 -->
     <v-btn icon>
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
 
+    <!-- 视图切换 -->
+    <AppFileView />
+
+    <!-- I18n 语言切换 -->
     <AppLanguage />
   </v-app-bar>
 </template>

@@ -6,7 +6,7 @@ import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
 import { fetchFileList } from '@/api'
 import { File, FileProperties } from '@/types/models'
-import { getFileIcon } from '@/utils/functions/file'
+import { fileUtils } from '@/utils/functions'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
@@ -25,12 +25,23 @@ export const useFileStore = defineStore('fileStore', {
         console.log(item)
         _fileList.push(
           new File({
-            icon: getFileIcon(item),
+            icon: fileUtils.getIcon(item),
             ...item
           })
         )
       })
       return _fileList
     }
-  }
+  },
+
+  /**
+   * 用户存储对象的数据持久化配置
+   * @type {Array<{storage:StorageLike ; paths:Array<string>}>} 持久化配置
+   */
+  persist: [
+    {
+      storage: localStorage,
+      paths: ['fileView']
+    }
+  ]
 })

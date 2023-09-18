@@ -1,4 +1,4 @@
-
+import { File } from '@/types/models'
 
 /**
  * 文件存储对象接口
@@ -10,6 +10,11 @@ export interface FileStore {
    * @type {Array<File>}
    */
   fileList: Array<File>
+  /**
+   * 文件视图
+   * @type {'icon' | 'list'}
+   */
+  fileView: 'icon' | 'list'
 }
 
 /**
@@ -19,6 +24,7 @@ export interface FileStore {
  */
 export const getFileDefaultSettings = (): FileStore => {
   return {
-    fileList: []
+    fileList: [],
+    fileView: 'icon'
   }
 }

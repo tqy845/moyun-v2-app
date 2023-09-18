@@ -34,6 +34,11 @@ export class File {
    */
   extension: string
 
+  path: string
+  isDirectory: boolean
+  size: number
+  lastModified: Date
+
   /**
    * 下载进度或状态
    */
@@ -47,6 +52,10 @@ export class File {
     this.name = params.name
     this.icon = params.icon || ''
     this.extension = params.extension
+    this.path = params.path
+    this.isDirectory = params.isDirectory
+    this.size = params.size
+    this.lastModified = params.lastModified
   }
 
   /**
