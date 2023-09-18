@@ -7,8 +7,12 @@ import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
  */
 export interface FileProperties {
   name: string
-  icon: string
+  path: string
+  isDirectory: boolean
+  size: number
+  lastModified: Date
   extension: string
+  icon?: string
 }
 
 /**
@@ -41,7 +45,7 @@ export class File {
    */
   constructor(params: FileProperties) {
     this.name = params.name
-    this.icon = params.icon
+    this.icon = params.icon || ''
     this.extension = params.extension
   }
 

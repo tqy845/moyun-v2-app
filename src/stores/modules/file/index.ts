@@ -6,6 +6,7 @@ import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
 import { fetchFileList } from '@/api'
 import { File } from '@/types/models'
+import { getFileIcon } from '@/utils/functions/file'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
@@ -31,7 +32,7 @@ export const useFileStore = defineStore('fileStore', {
         console.log(item)
         _fileList.push(
           new File({
-            icon: item.isDirectory ? 'folder' : 'file-cloud',
+            icon: getFileIcon(item),
             ...item
           })
         )
