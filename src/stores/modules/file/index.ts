@@ -5,7 +5,7 @@
 import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
 import { fetchFileList } from '@/api'
-import { File } from '@/types/models'
+import { File, FileProperties } from '@/types/models'
 import { getFileIcon } from '@/utils/functions/file'
 
 export const useFileStore = defineStore('fileStore', {
@@ -17,14 +17,7 @@ export const useFileStore = defineStore('fileStore', {
      */
     async list() {
       const { data } = await fetchFileList<{
-        fileList: Array<{
-          name: string
-          path: string
-          isDirectory: boolean
-          size: number
-          lastModified: Date
-          extension: string
-        }>
+        fileList: Array<FileProperties>
       }>()
       const { fileList } = data
       const _fileList: Array<File> = []
