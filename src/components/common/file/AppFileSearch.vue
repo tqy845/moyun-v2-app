@@ -47,7 +47,14 @@ const handleSearchItem = useDebounceFn((name: string) => fileStore.filter(name),
   </v-row>
 
   <v-btn icon @click="cs.autocomplete.show = !cs.autocomplete.show">
-    <v-icon>{{ 'mdi-' + (!cs.autocomplete.show ? `magnify` : `magnify-remove-outline`) }}</v-icon>
+    <v-icon>{{
+      'mdi-' +
+      (cs.autocomplete.show
+        ? `magnify-remove-outline`
+        : data.search
+        ? `magnify-plus-cursor`
+        : `magnify`)
+    }}</v-icon>
   </v-btn>
 </template>
 

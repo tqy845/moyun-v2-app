@@ -26,9 +26,9 @@ const props = defineProps({
     </template>
 
     <!-- 更多操作 -->
-    <template v-slot:prepend>
+    <!-- <template v-slot:prepend>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
-    </template>
+    </template> -->
 
     <!-- 面包屑 -->
     <v-app-bar-title>
