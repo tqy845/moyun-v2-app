@@ -1,3 +1,4 @@
+import { useFileStore } from '@/stores'
 import { FileProperties } from './../../types/models/file'
 import { FILE_ICON_TYPE } from '@/types/enums'
 
@@ -36,9 +37,67 @@ const formatSize = (fileSizeInBytes: number) => {
   }
 }
 
+/**
+ * 图标视图鼠标滚动事件
+ * @param event 滚动事件
+ */
+const iconViewMouseWheel = (event: WheelEvent) => {
+  const fileStore = useFileStore()
+
+  // 检查 Ctrl 键是否按下
+  if (event.ctrlKey) {
+    // 阻止默认滚动行为，以防止页面滚动
+    event.preventDefault()
+
+    // 获取滚动方向
+    const delta = event.deltaY
+
+    // 根据滚动方向执行相应操作
+    if (delta > 0) {
+      // 向下滚动
+      if (fileStore.fileItemSize > 80) {
+        fileStore.fileItemSize -= 3
+      } else {
+        fileStore.fileView = 'list'
+      }
+      // 在这里执行你的操作
+    } else if (delta < 0) {
+      // 向上滚动
+      if (fileStore.fileItemSize < 300) {
+        fileStore.fileItemSize += 3
+      }
+    }
+  }
+}
+
+/**
+ * 列表视图鼠标滚动事件
+ * @param event 滚动事件
+ */
+const listViewMouseWheel = (event: WheelEvent) => {
+  const fileStore = useFileStore()
+
+  // 检查 Ctrl 键是否按下
+  if (event.ctrlKey) {
+    // 阻止默认滚动行为，以防止页面滚动
+    event.preventDefault()
+
+    // 获取滚动方向
+    const delta = event.deltaY
+
+    // 根据滚动方向执行相应操作
+    if (delta < 0) {
+      // 向上滚动
+      fileStore.fileView = 'icon'
+    }
+  }
+}
+
 const fileUtils = {
   getIcon,
-  formatSize
+  formatSize,
+  iconViewMouseWheel,
+  listViewMouseWheel
 }
 
 export default fileUtils

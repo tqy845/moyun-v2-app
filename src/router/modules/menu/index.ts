@@ -3,7 +3,7 @@
  */
 import type { RouteRecordRaw } from 'vue-router'
 import { DefaultLayout, DefaultMenu, DefaultBlank } from '@/layout'
-import { File, Welcome } from '@/views'
+import { File, Welcome, TrashCan, SynchroDisk } from '@/views'
 
 // Route rule definition
 export const routeMenu: Readonly<RouteRecordRaw[]> = [
@@ -35,6 +35,21 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
         components: {
           aside: DefaultMenu,
           default: File
+        }
+      },
+      {
+        path: 'trash-can',
+        components: {
+          aside: DefaultMenu,
+          default: TrashCan
+        }
+      },
+
+      {
+        path: 'synchro-disk',
+        components: {
+          aside: DefaultMenu,
+          default: SynchroDisk
         }
       }
     ]

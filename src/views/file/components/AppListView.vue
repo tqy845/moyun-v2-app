@@ -6,6 +6,7 @@
 -->
 
 <script lang="ts" setup>
+// @ts-nocheck
 import { File } from '@/types/models'
 import { useDateFormat, useWindowSize } from '@vueuse/core'
 import { fileUtils } from '@/utils/functions'
@@ -25,10 +26,11 @@ const headers = [
   { title: '类型', align: 'center', key: 'extension' },
   { title: '大小', align: 'end', key: 'size' }
 ]
+
+window.addEventListener('wheel', fileUtils.listViewMouseWheel)
 </script>
 
 <template>
-  <!-- {{ data.fileList }} -->
   <v-data-table-virtual
     fixed-header
     :headers="headers"
@@ -50,7 +52,7 @@ const headers = [
     </template>
     <template v-slot:item.size="{ item }">
       <v-row justify="end">
-        {{ fileUtils.formatSize(item.columns.size) }}
+        {{ fileUtils.formatSize(item?.columns?.size) }}
       </v-row>
     </template>
   </v-data-table-virtual>

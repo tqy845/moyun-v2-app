@@ -12,6 +12,7 @@ import { AppFile } from '@/components/common'
 import { useMagicKeys } from '@vueuse/core'
 import { reactive } from 'vue'
 import { useFileStore } from '@/stores'
+import { fileUtils } from '@/utils/functions'
 
 const fileStore = useFileStore()
 
@@ -28,35 +29,7 @@ const props = defineProps<{
 
 const data = computed(() => props.data)
 
-function handleMouseWheel(event: WheelEvent) {
-  // 检查 Ctrl 键是否按下
-  if (event.ctrlKey) {
-    // 阻止默认滚动行为，以防止页面滚动
-    event.preventDefault()
-
-    // 获取滚动方向
-    const delta = event.deltaY
-
-    // 根据滚动方向执行相应操作
-    if (delta > 0) {
-      // 向下滚动
-      // console.log('Ctrl + 鼠标向下滚动', fileStore.fileItemSize)
-      if (fileStore.fileItemSize > 80) {
-        fileStore.fileItemSize -= 3
-      }
-      // 在这里执行你的操作
-    } else if (delta < 0) {
-      // 向上滚动
-      // console.log('Ctrl + 鼠标向上滚动', fileStore.fileItemSize)
-      if (fileStore.fileItemSize < 300) {
-        fileStore.fileItemSize += 3
-      }
-      // 在这里执行你的操作
-    }
-  }
-}
-
-window.addEventListener('wheel', handleMouseWheel)
+window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 </script>
 
 <template>

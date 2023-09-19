@@ -64,5 +64,9 @@ export const FILE_ICON_TYPE: { [key: string]: string } = {
   json: 'code-json',
   xml: 'xml',
   sql: 'database',
-  default: 'file-cloud'
+  default: 'file-cloud',
+  // 程序类
+  bat: 'powershell',
+  sh: 'powershell',
+  exe: 'application'
 }

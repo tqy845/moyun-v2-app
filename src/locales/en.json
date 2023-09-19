@@ -1,6 +1,8 @@
 {
   "login": "Log In",
   "login.button": "Log In",
+  "login.form.button": "Log In Now",
+  "login.form.title": "Account Login",
   "register": "Register",
   "register.button": "Register",
   "register.complete": "Complete Registration",
@@ -38,6 +40,8 @@
   "family.text": "Family",
   "personal.text": "Personal",
   "welcome.text": "Welcome",
-  "trashcan.text": "Trash Can",
+  "menu.trashcan.text": "Trash Can",
+  "menu.file.text": "File",
+  "menu.synchro.disk.text": "SynchroDisk(Local)",
   "rooms.text": "Rooms"
 }

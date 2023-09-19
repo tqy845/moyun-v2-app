@@ -1,6 +1,8 @@
 {
   "login": "摸云 · 登录",
   "login.button": "登录",
+  "login.form.title": "账户登录",
+  "login.form.button": "立即登录",
   "register": "摸云 · 注册",
   "register.button": "注册",
   "register.complete": "完成注册",
@@ -38,6 +40,8 @@
   "family.text": "家庭",
   "personal.text": "个人",
   "welcome.text": "欢迎",
-  "trashcan.text": "垃圾桶",
+  "menu.trashcan.text": "垃圾桶",
+  "menu.file.text": "文件",
+  "menu.synchro.disk.text": "同步盘（本地）",
   "rooms.text": "房间"
 }
