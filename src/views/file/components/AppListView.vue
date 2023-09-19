@@ -7,17 +7,15 @@
 
 <script lang="ts" setup>
 // @ts-nocheck
-import { File } from '@/types/models'
 import { useDateFormat, useWindowSize } from '@vueuse/core'
 import { fileUtils } from '@/utils/functions'
+import { useFileStore } from '@/stores'
 
 const { height } = useWindowSize()
+const fileStore = useFileStore()
 
 const props = defineProps<{
-  data: {
-    fileList: Array<File>
-    selected: number | Array<number>
-  }
+  selected: number | Array<number>
 }>()
 
 const headers = [
@@ -34,7 +32,7 @@ window.addEventListener('wheel', fileUtils.listViewMouseWheel)
   <v-data-table-virtual
     fixed-header
     :headers="headers"
-    :items="data.fileList"
+    :items="fileStore.fileList"
     class="elevation-1"
     :height="height - 100"
     item-value="name"

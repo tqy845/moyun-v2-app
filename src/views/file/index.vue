@@ -41,15 +41,13 @@ const cs = reactive<{
 })
 
 const data = reactive<{
-  fileList: Array<File>
   selected: number | Array<number>
 }>({
-  fileList: [],
   selected: []
 })
 
 onMounted(async () => {
-  data.fileList = await fileStore.list()
+  await fileStore.list()
 })
 
 /**
@@ -64,7 +62,7 @@ const { ctrl_a } = useMagicKeys({
 whenever(ctrl_a, () => {
   console.log('全选')
   data.selected = []
-  for (let i = 0; i < data.fileList.length; i++) data.selected.push(i)
+  for (let i = 0; i < fileStore.fileList.length; i++) data.selected.push(i)
 })
 
 /**
@@ -91,10 +89,6 @@ const handleCollect = () => {
 
 const handleDelete = () => {
   console.log('删除文件...')
-  data.fileList = data.fileList.filter((item, index) =>
-    Array.isArray(data.selected) ? !data.selected.includes(index) : index !== data.selected
-  )
-  data.selected = []
 }
 
 const handleShare = () => {
@@ -154,7 +148,7 @@ const handleRightClick = (event: MouseEvent, file: File) => {
       v-if="fileStore.fileView === 'icon'"
       :width="width"
       :multiple="!!controlState"
-      :data="data"
+      :selected="data.selected"
       @doubleClick="handleDoubleClick"
       @rightClick="handleRightClick"
     />
@@ -162,7 +156,7 @@ const handleRightClick = (event: MouseEvent, file: File) => {
     <!-- 列表视图 -->
     <AppListView
       v-if="fileStore.fileView === 'list'"
-      :data="data"
+      :selected="data.selected"
       @doubleClick="handleDoubleClick"
       @rightClick="handleRightClick"
     />

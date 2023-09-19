@@ -20,23 +20,25 @@ const emits = defineEmits(['doubleClick', 'rightClick'])
 
 const props = defineProps<{
   width: number
-  data: {
-    fileList: Array<File>
-    selected: number | Array<number>
-  }
+  selected: number | Array<number>
   multiple: boolean
 }>()
 
-const data = computed(() => props.data)
+const selected = computed(() => props.selected)
 
 window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 </script>
 
 <template>
   <div v-if="width" :style="{ 'padding-left': `${((width - 32) % 158) / 2 + 15}px` }">
-    <v-btn-toggle v-model="data.selected" :density="null" :multiple="multiple" class="pa-5">
+    <v-btn-toggle v-model="selected" :density="null" :multiple="multiple" class="pa-5">
       <v-row>
-        <v-col v-for="(iterator, index) in data.fileList" :key="index" class="px-1" cols="auto">
+        <v-col
+          v-for="(iterator, index) in fileStore.fileList"
+          :key="index"
+          class="px-1"
+          cols="auto"
+        >
           <!-- 渲染文件-->
           <AppFile
             :file-item="iterator"

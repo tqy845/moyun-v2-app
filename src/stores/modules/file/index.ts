@@ -22,7 +22,6 @@ export const useFileStore = defineStore('fileStore', {
       const { fileList } = data
       const _fileList: Array<File> = []
       fileList.forEach((item) => {
-        console.log(item)
         _fileList.push(
           new File({
             icon: fileUtils.getIcon(item),
@@ -30,7 +29,17 @@ export const useFileStore = defineStore('fileStore', {
           })
         )
       })
-      return _fileList
+      this.fileList = this.tempFileList = _fileList
+      return this.fileList
+    },
+    /**
+     * 文件过滤
+     */
+    filter(name: string) {
+      console.log('过滤', name)
+      this.fileList = name
+        ? this.tempFileList.filter((file: File) => file.name === name)
+        : this.tempFileList
     }
   },
 

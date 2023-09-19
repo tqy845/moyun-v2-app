@@ -5,8 +5,7 @@
   @description “上边菜单栏”组件
 -->
 <script lang="ts" setup>
-import { AppLanguage } from '@/components/common'
-import AppFileView from '@/components/common/AppFileView.vue'
+import { AppLanguage, AppFileView, AppFileSearch } from '@/components/common'
 
 const props = defineProps({
   breadcrumbItems: {
@@ -26,10 +25,12 @@ const props = defineProps({
       <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
     </template>
 
+    <!-- 更多操作 -->
     <template v-slot:prepend>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
     </template>
 
+    <!-- 面包屑 -->
     <v-app-bar-title>
       <v-breadcrumbs v-bind="$attrs"></v-breadcrumbs>
     </v-app-bar-title>
@@ -37,10 +38,8 @@ const props = defineProps({
     <!-- 右侧分栏 -->
     <v-spacer></v-spacer>
 
-    <!-- 搜索 -->
-    <v-btn icon>
-      <v-icon>mdi-magnify</v-icon>
-    </v-btn>
+    <!-- 文件搜索 -->
+    <AppFileSearch />
 
     <!-- 视图切换 -->
     <AppFileView />

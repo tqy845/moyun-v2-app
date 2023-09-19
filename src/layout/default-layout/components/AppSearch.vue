@@ -101,6 +101,7 @@ const data = reactive({
       <v-card title="搜索">
         <v-card-text>
           <v-autocomplete
+            autofocus
             :items="data.items"
             auto-select-first
             class="flex-full-width"

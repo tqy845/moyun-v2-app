@@ -1,5 +1,6 @@
 import FileSaver from 'file-saver'
 import { fileDownloadByName } from '@/api'
+import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
 import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
 /**
@@ -34,10 +35,30 @@ export class File {
    */
   extension: string
 
+  /**
+   * 路径
+   */
   path: string
+
+  /**
+   * 是否为目录
+   */
   isDirectory: boolean
+
+  /**
+   * 大小
+   */
   size: number
+
+  /**
+   * 更新时间
+   */
   lastModified: Date
+
+  /**
+   * 拼音
+   */
+  pinyin: string
 
   /**
    * 下载进度或状态
@@ -56,6 +77,7 @@ export class File {
     this.isDirectory = params.isDirectory
     this.size = params.size
     this.lastModified = params.lastModified
+    this.pinyin = pinyin(params.name, { toneType: 'none' }) // 'han yu pin yin'
   }
 
   /**

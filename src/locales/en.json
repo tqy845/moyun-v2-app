@@ -43,5 +43,6 @@
   "menu.trashcan.text": "Trash Can",
   "menu.file.text": "File",
   "menu.synchro.disk.text": "SynchroDisk(Local)",
-  "rooms.text": "Rooms"
+  "rooms.text": "Rooms",
+  "$vuetify.noDataText": "No Data Found"
 }

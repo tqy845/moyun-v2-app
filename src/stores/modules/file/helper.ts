@@ -11,6 +11,11 @@ export interface FileStore {
    */
   fileList: Array<File>
   /**
+   * 临时文件信息列表
+   * @type {Array<File>}
+   */
+  tempFileList: Array<File>
+  /**
    * 文件视图
    * @type {'icon' | 'list'}
    */
@@ -30,6 +35,7 @@ export interface FileStore {
 export const getFileDefaultSettings = (): FileStore => {
   return {
     fileList: [],
+    tempFileList: [],
     fileView: 'icon',
     fileItemSize: 121
   }

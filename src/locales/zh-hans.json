@@ -43,5 +43,6 @@
   "menu.trashcan.text": "垃圾桶",
   "menu.file.text": "文件",
   "menu.synchro.disk.text": "同步盘（本地）",
-  "rooms.text": "房间"
+  "rooms.text": "房间",
+  "$vuetify.noDataText": "没有找到数据"
 }
