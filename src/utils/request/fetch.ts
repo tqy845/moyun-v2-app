@@ -14,6 +14,7 @@ const fetchRequest = async <T = any>(
     url: string
     responseType?: 'arraybuffer' | 'blob' | 'json'
     onProgress?: (progress: number) => void
+    data?: any
   } & RequestInit
 ): Promise<ResponseType<T>> => {
   try {

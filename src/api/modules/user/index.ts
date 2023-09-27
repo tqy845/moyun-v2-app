@@ -31,11 +31,11 @@ export const registerByAccount = <T = any>(params: { email: string; password: st
  * @param {User} param - 用户对象
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const loginByAccount = <T = any>(param: User) => {
+export const loginByAccount = <T = any>(user: User) => {
   return tauriRequest<T>({
     url: '/login',
     method: 'POST',
-    data: param
+    data: user
   })
 }
 
@@ -44,11 +44,11 @@ export const loginByAccount = <T = any>(param: User) => {
  * @param param - 用户对象
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const logoutForUser = <T = any>(param: User) => {
+export const logoutForUser = <T = any>(user: User) => {
   return tauriRequest<T>({
     url: '/system/user/logout',
     method: 'DELETE',
-    data: param
+    data: user
   })
 }
 

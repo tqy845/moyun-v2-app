@@ -118,3 +118,13 @@ export class Folder extends File {
     super(params)
   }
 }
+
+/**
+ * File Chunk
+ */
+export interface FileChunk {
+  start: number
+  end: number
+  index: number
+  hash: string
+}

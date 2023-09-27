@@ -6,20 +6,53 @@ import { fileDownloadByName } from '@/api'
 import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
 import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
-import { File as _File, FileProperties } from '@/types/models'
+import { File as _File, FileChunk, FileProperties } from '@/types/models'
 import { FILE_ICON_TYPE } from '@/types/enums'
 import { useFileStore } from '@/stores'
-import { getChuanks } from './helper'
+
+const CHUNK_ITEM_SIZE = 1024 * 1024 * 10 // 单个分片大小
+const THREAD_COUNT = navigator.hardwareConcurrency || 4
 
 /**
  * 文件上传
  */
-const upload = (fileList: Array<File>) => {
-  console.log('file = ', fileList)
+const upload = async (fileList: Array<File>) => {
+  // console.log('file = ', fileList)
   for (const file of fileList) {
-    // 切片
-    const fileChunks = getChuanks(file)
-    console.log('fileChunks = ', fileChunks)
+    const result: Array<FileChunk> = []
+    // 总分片数量
+    const totalChunkCount = Math.ceil(file.size / CHUNK_ITEM_SIZE)
+    const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
+    let finishCount = 0
+
+    for (let i = 0; i < THREAD_COUNT; i++) {
+      // 创建新线程
+      const worker = new Worker(new URL('./worker.ts', import.meta.url), {
+        type: 'module'
+      })
+      // 计算每个线程的开始索引和结束索引
+      const startIndex = i * workerChunkCount
+      let endIndex = startIndex + workerChunkCount
+      if (endIndex > totalChunkCount) {
+        endIndex = totalChunkCount
+      }
+      worker.postMessage({
+        file,
+        CHUNK_ITEM_SIZE,
+        startIndex,
+        endIndex
+      })
+      worker.onmessage = (e) => {
+        // for (let i = startIndex; i < endIndex; i++) {
+        //   result[i] = e.data[i - startIndex]
+        // }
+        // worker.terminate()
+        finishCount++
+        if (finishCount === THREAD_COUNT) {
+          console.log('finish...', result)
+        }
+      }
+    }
   }
 }
 

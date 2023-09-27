@@ -46,7 +46,7 @@
     "src/**/**/*.vue",
     "src/**/**/**/*.vue",
     "src/**/**/**/**/*.vue"
-, "src/utils/functions/file/worker.js"  ],
+, "src/utils/functions/file/worker.ts"  ],
   "references": [
     {
       "path": "./tsconfig.node.json"
