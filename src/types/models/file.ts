@@ -7,7 +7,7 @@ import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
  * 文件属性
  */
 export interface FileProperties {
-  name: string
+  fileName: string
   path: string
   isDirectory: boolean
   size: number
@@ -70,14 +70,14 @@ export class File {
    * @param params 文件属性，包括名称、图标和类型。
    */
   constructor(params: FileProperties) {
-    this.name = params.name
+    this.name = params.fileName
     this.icon = params.icon || ''
     this.extension = params.extension
     this.path = params.path
     this.isDirectory = params.isDirectory
     this.size = params.size
     this.lastModified = params.lastModified
-    this.pinyin = pinyin(params.name, { toneType: 'none' }) // 'han yu pin yin'
+    this.pinyin = pinyin(params.fileName, { toneType: 'none' }) // 'han yu pin yin'
   }
 
   /**
