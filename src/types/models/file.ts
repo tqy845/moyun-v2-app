@@ -1,4 +1,3 @@
-import FileSaver from 'file-saver'
 import { fileDownloadByName } from '@/api'
 import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
