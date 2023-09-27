@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import { IconBiometric } from '@/components/icons'
 import { AppPromiseButton as cBtn } from '@/components/custom'
-import { touchIDRegistered } from '@/utils/functions'
+import { touchUtils } from '@/utils/functions'
 import { useRouter } from 'vue-router'
 import { useUserStore, useAppStore, type User } from '@/stores'
 import { AppLoginByAccount } from './components'
@@ -91,7 +91,7 @@ const onLoginByTouchID = async () => {
   if (!userStore.user.username) {
     console.log('您还没有登录过此设备，暂无法使用该功能~')
   }
-  console.log(await touchIDRegistered('tanqiyuan', '123456', 'teijeiawjtlaei'))
+  console.log(await touchUtils.touchIDRegistered('tanqiyuan', '123456', 'teijeiawjtlaei'))
 
   // if (await userStore.userLoginByTouch({})) {
   //   toProfile()
