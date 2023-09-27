@@ -6,6 +6,7 @@
 -->
 <script lang="ts" setup>
 import { reactive } from 'vue'
+import { fileUtils } from '@/utils/functions'
 
 const cs = reactive({
   dialog: {
@@ -16,10 +17,6 @@ const cs = reactive({
 const data = reactive({
   fileList: []
 })
-
-const handleUpload = (file: any) => {
-  console.log('handleUpload', file)
-}
 </script>
 
 <template>
@@ -41,7 +38,7 @@ const handleUpload = (file: any) => {
             prepend-icon="mdi-paperclip"
             variant="outlined"
             :show-size="1000"
-            @update:modelValue="handleUpload"
+            @update:modelValue="fileUtils.upload"
           >
             <template v-slot:selection="{ fileNames }">
               <template v-for="(fileName, index) in fileNames" :key="fileName">
