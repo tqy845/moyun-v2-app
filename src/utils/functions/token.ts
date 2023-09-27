@@ -15,7 +15,7 @@ const cookie = useCookies()
  * @function
  * @returns {string | null} 令牌值，如果不存在则返回 null
  */
-export const getToken = (): string | null => {
+const getToken = (): string | null => {
   return cookie.get(TOKEN_KEY)
 }
 
@@ -24,7 +24,7 @@ export const getToken = (): string | null => {
  * @function
  * @param {string} token - 要存储的令牌值
  */
-export const setToken = (token: string) => {
+const setToken = (token: string) => {
   return cookie.set(TOKEN_KEY, token)
 }
 
@@ -32,6 +32,14 @@ export const setToken = (token: string) => {
  * 从 Cookie 中移除存储的令牌值
  * @function
  */
-export const removeToken = () => {
+const removeToken = () => {
   return cookie.remove(TOKEN_KEY)
 }
+
+const tokenUtils = {
+  getToken,
+  setToken,
+  removeToken
+}
+
+export default tokenUtils

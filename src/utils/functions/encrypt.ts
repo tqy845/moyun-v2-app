@@ -25,7 +25,7 @@ const PRIVATE_KEY =
  * @param {string} text - 要加密的文本
  * @returns {string} 加密后的文本
  */
-export const encrypt = (text: string): string => {
+const encrypt = (text: string): string => {
   const encryptor = new JSEncrypt()
   encryptor.setPublicKey(PUBLIC_KEY) // 设置公钥
   return encryptor.encrypt(text) // 对数据进行加密
@@ -36,8 +36,15 @@ export const encrypt = (text: string): string => {
  * @param {string} text - 要解密的文本
  * @returns {string} 解密后的文本
  */
-export const decrypt = (text: string): string => {
+const decrypt = (text: string): string => {
   const encryptor = new JSEncrypt()
   encryptor.setPrivateKey(PRIVATE_KEY) // 设置私钥
   return encryptor.decrypt(text) // 对数据进行解密
 }
+
+const cryptUtils = {
+  encrypt,
+  decrypt
+}
+
+export default cryptUtils
