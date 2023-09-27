@@ -16,6 +16,10 @@ const cs = reactive({
 const data = reactive({
   fileList: []
 })
+
+const handleUpload = (file: any) => {
+  console.log('handleUpload', file)
+}
 </script>
 
 <template>
@@ -37,6 +41,7 @@ const data = reactive({
             prepend-icon="mdi-paperclip"
             variant="outlined"
             :show-size="1000"
+            @update:modelValue="handleUpload"
           >
             <template v-slot:selection="{ fileNames }">
               <template v-for="(fileName, index) in fileNames" :key="fileName">
