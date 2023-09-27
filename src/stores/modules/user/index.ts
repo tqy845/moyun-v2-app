@@ -5,7 +5,7 @@
 import { defineStore } from 'pinia'
 import { getUserDefaultSettings, User, UserStore } from './helper'
 import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
-import { encrypt } from '@/utils/functions'
+import { cryptUtils } from '@/utils/functions'
 import { useAppStore } from '@/stores'
 
 export const useUserStore = defineStore('userStore', {
@@ -40,7 +40,7 @@ export const useUserStore = defineStore('userStore', {
     async registerByAccount(user: User) {
       return await registerByAccount<{ token?: string }>({
         email: user.email,
-        password: encrypt(user.password)
+        password: cryptUtils.encrypt(user.password)
       })
     },
 
