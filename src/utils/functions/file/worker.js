@@ -1,23 +1,16 @@
-self.addEventListener('message', (event) => {
-  const { totalChunks, fileName } = event.data
-  const chunks = new Array(totalChunks)
-  const receivedChunks = new Array(totalChunks).fill(false)
+onmessage = (event) => {
+  const taskData = event.data
 
-  self.postMessage('Worker线程已启动，正在执行文件分片')
+  console.log('执行')
+  // 执行分片任务
+  const result = performChunkTask(taskData)
 
-  self.addEventListener('message', (event) => {
-    const { chunk, chunkNumber } = event.data
-    chunks[chunkNumber] = chunk
-    receivedChunks[chunkNumber] = true
+  // 向主线程返回结果
+  postMessage(result)
+}
 
-    self.postMessage(event)
-
-    // if (receivedChunks.every(Boolean)) {
-    //   const mergedFile = new Blob(chunks, { type: chunks[0].type })
-    //   const downloadLink = document.createElement('a')
-    //   downloadLink.href = URL.createObjectURL(mergedFile)
-    //   downloadLink.download = fileName
-    //   downloadLink.click()
-    // }
-  })
-})
+function performChunkTask(data) {
+  // 执行分片任务的代码
+  // 返回结果
+  return 'Task completed'
+}

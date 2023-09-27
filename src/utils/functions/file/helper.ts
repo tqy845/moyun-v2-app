@@ -7,7 +7,7 @@ export const getChuanks = (file: File) => {
   const totalChunks = Math.ceil(file.size / chunkSize) // 总分片数量
   let currentChunk = 0
 
-  const worker = new Worker('./worker.js')
+  const worker = new Worker(new URL('./worker.js', import.meta.url))
 
   worker.postMessage({
     totalChunks,
