@@ -5,7 +5,7 @@
   @description “上边菜单栏”组件
 -->
 <script lang="ts" setup>
-import { AppLanguage, AppFileView, AppFileSearch } from '@/components/common'
+import { AppLanguage, AppFileView, AppFileSearch, AppFileUpload } from '@/components/common'
 
 const props = defineProps({
   breadcrumbItems: {
@@ -40,6 +40,9 @@ const props = defineProps({
 
     <!-- 文件搜索 -->
     <AppFileSearch />
+
+    <!-- 文件上传 -->
+    <AppFileUpload />
 
     <!-- 视图切换 -->
     <AppFileView />
