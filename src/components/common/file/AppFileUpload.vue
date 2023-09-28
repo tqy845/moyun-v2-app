@@ -7,6 +7,9 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { fileUtils } from '@/utils/functions'
+import { useAppStore } from '@/stores'
+
+const appStore = useAppStore()
 
 const cs = reactive({
   dialog: {
@@ -20,46 +23,61 @@ const data = reactive({
 </script>
 
 <template>
-  <v-btn icon>
+  <v-btn icon @click="cs.dialog.show = true">
     <v-icon>mdi-cloud-upload</v-icon>
-    <v-dialog v-model="cs.dialog.show" activator="parent" width="auto">
-      <v-card min-width="500" min-height="400" max-width="800" max-height="600">
-        <v-card-title> 文件上传 </v-card-title>
-        <v-card-item class="pa-5">
-          <!-- <v-file-input show-size counter multiple label="点击或拖住文件到此处"></v-file-input> -->
-          <v-file-input
-            class="ma-5"
-            v-model="data.fileList"
-            color="deep-purple-accent-4"
-            counter
-            label="File input"
-            multiple
-            placeholder="请选择文件"
-            prepend-icon="mdi-paperclip"
-            variant="outlined"
-            :show-size="1000"
-            @update:modelValue="fileUtils.upload"
+    <v-dialog
+      v-model="cs.dialog.show"
+      :fullscreen="appStore.app.settings['uploadDialogFullscreen']"
+      :scrim="false"
+      transition="dialog-bottom-transition"
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="cs.dialog.show = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>文件上传</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn variant="text" @click="cs.dialog.show = false"> Save </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-list lines="two" subheader>
+          <v-list-subheader>User Controls</v-list-subheader>
+          <v-list-item
+            title="Content filtering"
+            subtitle="Set the content filtering level to restrict apps that can be downloaded"
+          ></v-list-item>
+          <v-list-item
+            title="Password"
+            subtitle="Require password for purchase or use password to restrict purchase"
+          ></v-list-item>
+        </v-list>
+        <v-divider></v-divider>
+        <v-list lines="two" subheader>
+          <v-list-subheader>General</v-list-subheader>
+          <v-list-item
+            title="Notifications"
+            subtitle="Notify me about updates to apps or games that I downloaded"
           >
-            <template v-slot:selection="{ fileNames }">
-              <template v-for="(fileName, index) in fileNames" :key="fileName">
-                <v-chip
-                  v-if="index < 2"
-                  color="deep-purple-accent-4"
-                  label
-                  size="small"
-                  class="me-2"
-                >
-                  {{ fileName }}
-                </v-chip>
-
-                <span v-else-if="index === 2" class="text-overline text-grey-darken-3 mx-2">
-                  +{{ data.fileList.length - 2 }} File(s)
-                </span>
-              </template>
+            <template v-slot:prepend>
+              <v-checkbox v-model="notifications"></v-checkbox>
             </template>
-          </v-file-input>
-        </v-card-item>
-        <!-- <v-card-text> 点击或拖拽文件到此处 </v-card-text> -->
+          </v-list-item>
+          <v-list-item
+            title="Sound"
+            subtitle="Auto-update apps at any time. Data charges may apply"
+          >
+            <template v-slot:prepend>
+              <v-checkbox v-model="sound"></v-checkbox>
+            </template>
+          </v-list-item>
+          <v-list-item title="Auto-add widgets" subtitle="Automatically add home screen widgets">
+            <template v-slot:prepend>
+              <v-checkbox v-model="widgets"></v-checkbox>
+            </template>
+          </v-list-item>
+        </v-list>
       </v-card>
     </v-dialog>
   </v-btn>

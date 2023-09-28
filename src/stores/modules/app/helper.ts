@@ -12,6 +12,10 @@ export interface App {
    * @type {number}
    */
   delay: number
+  /**
+   * 偏好设置
+   */
+  settings: { [key: string]: any }
 }
 
 /**
@@ -58,7 +62,10 @@ export interface AppStore {
 export const getAppDefaultSettings = (): AppStore => {
   return {
     app: {
-      delay: import.meta.env.VITE_APP_BASE_DELAY
+      delay: import.meta.env.VITE_APP_BASE_DELAY,
+      settings: {
+        uploadDialogFullscreen: false // 上传弹窗全屏
+      }
     },
     messageQueue: [],
     asideMenu: {

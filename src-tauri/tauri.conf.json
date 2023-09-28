@@ -34,6 +34,9 @@
         "removeFile": true,
         "renameFile": true,
         "exists": true
+      },
+      "window": {
+        "all": true
       }
     },
     "bundle": {
@@ -68,7 +71,9 @@
         "height": 768,
         "minWidth": 900,
         "minHeight": 768,
-        "center": true
+        "center": true,
+        "decorations": false,
+        "label": "customization"
       }
     ]
   }

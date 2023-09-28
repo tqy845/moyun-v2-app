@@ -2,10 +2,14 @@
 import { RouterView } from 'vue-router'
 import { AppLanguage } from '@/components/common'
 import { AppAd } from './components'
+import { AppSystemBar } from '../components'
 </script>
 
 <template>
   <v-app>
+    <!-- 系统栏 -->
+    <AppSystemBar />
+
     <v-navigation-drawer location="right" permanent width="480">
       <v-container>
         <!-- 第一行显示 logo -->

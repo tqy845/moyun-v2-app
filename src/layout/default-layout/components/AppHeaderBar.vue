@@ -17,6 +17,10 @@ const props = defineProps({
     default: () => []
   }
 })
+
+// const toUploadPage = () => {
+//   router.push('/upload')
+// }
 </script>
 
 <template>
@@ -43,6 +47,7 @@ const props = defineProps({
 
     <!-- 文件上传 -->
     <AppFileUpload />
+    <!-- <v-btn icon @click="toUploadPage"> <v-icon>mdi-cloud-upload</v-icon> </v-btn> -->
 
     <!-- 视图切换 -->
     <AppFileView />

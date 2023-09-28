@@ -6,7 +6,8 @@
 -->
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { AppHeaderBar, AppSidebar } from './components'
+import { AppHeaderBar, AppSidebar, AppUserCard } from './components'
+import { AppSystemBar } from '../components'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores'
 
@@ -27,15 +28,6 @@ const user = reactive({
 })
 
 /**
- * 前往个人中心
- */
-const handleProfile = () => {
-  console.log('profile')
-  userStore.logout()
-  router.replace('/login')
-}
-
-/**
  * 点击外部缩放侧边栏
  */
 const handleClickOutside = () => {
@@ -46,6 +38,9 @@ const handleClickOutside = () => {
 
 <template>
   <v-app>
+    <!-- 系统栏 -->
+    <AppSystemBar />
+
     <v-navigation-drawer
       :rail="cs.asideMenu.show"
       class="border-none"
@@ -53,25 +48,20 @@ const handleClickOutside = () => {
       permanent
     >
       <v-sheet
-        class="d-flex flex-column bg-surface-variant h-screen"
+        class="d-flex flex-column bg-surface-variant h-100"
         v-click-outside="handleClickOutside"
       >
+        <!-- 个人信息 -->
         <v-sheet class="">
-          <v-list>
-            <v-list-item @click="handleProfile" :subtitle="user?.email" :title="user?.username">
-              <template #prepend>
-                <v-avatar color="surface-variant">{{ user.initials }}</v-avatar>
-              </template>
-            </v-list-item>
-          </v-list>
+          <AppUserCard />
         </v-sheet>
 
+        <!-- 菜单 -->
         <v-sheet class="flex-1 h-100" @click="cs.asideMenu.show = !cs.asideMenu.show">
           <!-- 侧边栏 -->
           <AppSidebar />
         </v-sheet>
       </v-sheet>
-      <!-- 主菜单 -->
     </v-navigation-drawer>
 
     <RouterView name="aside" />

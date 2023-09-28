@@ -7,7 +7,7 @@ import { start } from 'repl'
  * 文件属性
  */
 export interface FileProperties {
-  fileName: string
+  name: string
   path: string
   isDirectory: boolean
   size: number
@@ -70,7 +70,7 @@ export class File {
    * @param params 文件属性，包括名称、图标和类型。
    */
   constructor(params: FileProperties) {
-    this.name = params.fileName
+    this.name = params.name
     this.icon = params.icon || ''
     this.extension = params.extension
     this.path = params.path
