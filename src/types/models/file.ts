@@ -2,6 +2,7 @@ import { fileDownloadByName } from '@/api'
 import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
 import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
+import { start } from 'repl'
 /**
  * 文件属性
  */
@@ -127,7 +128,5 @@ export interface FileChunk {
   end: number
   index: number
   hash: string
-  chunkCount: number
-  fileName: string
-  file: Blob
+  chunk: Blob
 }

@@ -21,7 +21,7 @@ const fetchRequest = async <T = any>(
     const appStore = useAppStore()
     const userStore = useUserStore()
     const cookies = useCookies(['locale'])
-    const { url, responseType, onProgress, ...args } = options
+    const { url, data, responseType, onProgress, ...args } = options
     let result = {
       code: 200,
       message: 'success',
@@ -29,62 +29,38 @@ const fetchRequest = async <T = any>(
     }
 
     // 构建请求头
-    const headers: HeadersInit = {
+    const defaultHeaders: HeadersInit = {
       'Accept-Language': cookies.get('locale'),
       ResponseType: responseType || 'json'
     }
 
     if (userStore.token) {
-      headers['Authorization'] = `Bearer ${userStore.token}`
+      defaultHeaders['Authorization'] = `Bearer ${userStore.token}`
     }
 
     // 合并请求配置
+    const requestHeaders = {
+      ...defaultHeaders,
+      ...options.headers // 合并传入的 headers
+    }
+
     const requestInit: RequestInit = {
       ...args,
-      headers
+      headers: requestHeaders // 使用合并后的 headers
+    }
+
+    console.log(requestInit)
+
+    // 发送JSON数据
+    if (data) {
+      requestInit.body = JSON.stringify(data)
     }
 
     // 发起请求
     const response = await fetch(BASE_URL + url, requestInit)
 
-    // 处理文件流
-    if (onProgress && response.body) {
-      const contentDisposition = response.headers.get('content-disposition')
-      const matches =
-        (contentDisposition && contentDisposition.match(/filename="(.+)"/)) || '未知文件'
-      const reader = response.body.getReader()
-      const contentLength = Number(response.headers.get('content-length'))
-      let receivedLength = 0
-      const chunks: Uint8Array[] = []
-      requestAnimationFrame(() => onProgress(0))
-      while (reader) {
-        const { done, value } = await reader.read()
-        if (done) {
-          break
-        }
-        receivedLength += value.length
-        chunks.push(value)
-        // 使用requestAnimationFrame调度下一次更新
-        requestAnimationFrame(() => {
-          // 计算并调用进度回调
-          onProgress((receivedLength / contentLength) * 100)
-        })
-      }
-      const chunksAll = new Uint8Array(receivedLength)
-      let position = 0
-      for (const chunk of chunks) {
-        chunksAll.set(chunk, position)
-        position += chunk.length
-      }
-
-      await writeBinaryFile(matches[1], chunksAll, {
-        dir: BaseDirectory.AppData
-      })
-      appStore.notification(`文件：${matches[1]} 已保存到 ${BaseDirectory.AppData}`, 'success')
-    } else {
-      // 处理其他响应数据
-      result = await response.json()
-    }
+    // 处理响应数据
+    result = await response.json()
 
     // 拦截数据
     console.log('Response:', result)

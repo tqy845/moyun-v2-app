@@ -8,7 +8,7 @@ import { invoke } from '@tauri-apps/api'
 import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
 import { File as _File, FileChunk, FileProperties } from '@/types/models'
 import { FILE_ICON_TYPE } from '@/types/enums'
-import { useFileStore } from '@/stores'
+import { useAppStore, useFileStore } from '@/stores'
 
 const CHUNK_SIZE = 1024 * 1024 * 10 // 单个分片大小
 const THREAD_COUNT = navigator.hardwareConcurrency || 4
@@ -18,52 +18,69 @@ const THREAD_COUNT = navigator.hardwareConcurrency || 4
  */
 const upload = async (fileList: Array<File>) => {
   const fileStore = useFileStore()
-  // console.log('file = ', fileList)
+  const appStore = useAppStore()
   for (const file of fileList) {
-    // 总分片数量
     const totalChunkCount = Math.ceil(file.size / CHUNK_SIZE)
-    // 各worker线程需要处理的chunk数量
     const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
-    // 用于存储worker线程对象的数组
     const workers: Array<Worker> = []
-    // 累计已完成chunk的数量
-    let finishChunkCount = 0
+
+    // 使用 Promise 来跟踪每个线程的上传
+    const uploadPromises = []
 
     for (let i = 0; i < THREAD_COUNT; i++) {
-      // 创建新线程
       const worker = new Worker(new URL('./worker.ts', import.meta.url), {
         type: 'module'
       })
-      // 计算每个线程的开始索引和结束索引
       const startIndex = i * workerChunkCount
       let endIndex = startIndex + workerChunkCount
       if (endIndex > totalChunkCount) {
         endIndex = totalChunkCount
+        break
       }
-      // 给线程发送数据
-      worker.postMessage({
-        file,
-        CHUNK_SIZE,
-        startIndex,
-        endIndex,
-        totalChunkCount
+
+      // 为每个线程的上传创建一个 Promise
+      const uploadPromise = new Promise((resolve) => {
+        worker.onmessage = async (e) => {
+          const { chunk, ...args } = e.data
+          const formData = new FormData()
+          formData.append('file', chunk, `chunk_${i}`)
+          formData.append('chunkSize', String(CHUNK_SIZE))
+          for (const key in args) {
+            if (Object.prototype.hasOwnProperty.call(args, key)) {
+              const element = args[key]
+              formData.append(key, element)
+            }
+          }
+
+          if (await fileStore.uploadChunk(formData)) {
+            console.log('线程 ' + i + ' 的分片上传成功')
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        }
+
+        worker.postMessage({
+          file,
+          CHUNK_SIZE,
+          startIndex,
+          endIndex,
+          totalChunkCount
+        })
       })
 
-      worker.onmessage = (e) => {
-        const chunk = e.data
-        finishChunkCount++
-        // console.log('chunk = ', chunk, finishChunkCount, workerChunkCount, totalChunkCount)
-        // 上传分片
-        fileStore.uploadChunk(chunk)
-
-        if (finishChunkCount === totalChunkCount) {
-          // 关闭所有worker线程
-          workers.forEach((w) => w.terminate())
-        }
-      }
-      // 将worker对象添加到数组中
+      uploadPromises.push(uploadPromise)
       workers.push(worker)
     }
+
+    // 等待所有线程的上传完成
+    await Promise.all(uploadPromises)
+
+    // 终止所有线程
+    workers.forEach((w) => w.terminate())
+
+    console.log('文件 ' + file.name + ' 上传完成')
+    appStore.notification('文件 ' + file.name + ' 上传完成')
   }
 }
 

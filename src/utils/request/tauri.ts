@@ -13,11 +13,11 @@ const cookies = useCookies(['locale'])
  * @param options 请求配置
  */
 const tauriRequest = async <T = any>(
-  options: { url: string; data?: Object } & FetchOptions
+  options: { url: string; data?: Object; form?: { [key: string]: any } } & FetchOptions
 ): Promise<ResponseType<T>> => {
   const appStore = useAppStore()
   const userStore = useUserStore()
-  const { url, data, ...args } = options
+  const { url, data, form, ...args } = options
   let result: ResponseType<T> = {
     code: 200,
     message: 'success',
@@ -34,7 +34,7 @@ const tauriRequest = async <T = any>(
     args.headers.Authorization = `Bearer ${userStore.token}`
   }
   /**
-   * Body：JSON
+   * 拼接请求参数
    */
   if (data) {
     args.body = Body.json(data)

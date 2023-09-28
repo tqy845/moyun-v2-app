@@ -9,7 +9,6 @@ export const createChunk = (
   file: File,
   index: number,
   chunkSize: number,
-  totalChunkCount: number
 ) => {
   return new Promise<FileChunk>((resolve) => {
     const start = index * chunkSize
@@ -17,6 +16,7 @@ export const createChunk = (
     const spark = new SparkMD5.ArrayBuffer()
     const fileReader = new FileReader()
     const chunk = file.slice(start, end)
+
     fileReader.onload = (e) => {
       spark.append(e.target?.result as ArrayBuffer)
       resolve({
@@ -24,9 +24,7 @@ export const createChunk = (
         end,
         index,
         hash: spark.end(),
-        chunkCount: totalChunkCount,
-        file: chunk,
-        fileName: file.name
+        chunk
       })
     }
     fileReader.readAsArrayBuffer(chunk)

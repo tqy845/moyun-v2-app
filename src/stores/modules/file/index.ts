@@ -44,9 +44,10 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 文件块上传
      */
-    async uploadChunk(chunk: FileChunk) {
-      console.log('上传块', chunk)
-      console.log(await uploadFileChunk(chunk))
+    async uploadChunk(formData: FormData) {
+      // console.log('上传块', formData)
+      const { code } = await uploadFileChunk(formData)
+      return code === 200
     }
   },
 
