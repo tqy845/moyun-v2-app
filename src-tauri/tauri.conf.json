@@ -73,7 +73,8 @@
         "minHeight": 768,
         "center": true,
         "decorations": false,
-        "label": "customization"
+        "label": "customization",
+        "fileDropEnabled": false
       }
     ]
   }

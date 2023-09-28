@@ -1,6 +1,10 @@
 <!-- App -->
 <script lang="ts" setup>
 import { AppNotification } from '@/components/custom'
+
+window.addEventListener('drop', (e) => e.preventDefault(), false)
+window.addEventListener('dragover', (e) => e.preventDefault(), false)
+window.addEventListener('contextmenu', (e) => e.preventDefault(), false)
 </script>
 
 <template>
