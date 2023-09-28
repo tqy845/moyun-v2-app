@@ -4,8 +4,8 @@
 
 import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
-import { fetchFileList } from '@/api'
-import { File, FileProperties } from '@/types/models'
+import { fetchFileList, uploadFileChunk } from '@/api'
+import { File, FileChunk, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
 
 export const useFileStore = defineStore('fileStore', {
@@ -40,6 +40,13 @@ export const useFileStore = defineStore('fileStore', {
       this.fileList = name
         ? this.tempFileList.filter((file: File) => file.name === name)
         : this.tempFileList
+    },
+    /**
+     * 文件块上传
+     */
+    async uploadChunk(chunk: FileChunk) {
+      console.log('上传块', chunk)
+      console.log(await uploadFileChunk(chunk))
     }
   },
 

@@ -1,13 +1,12 @@
-import { createChunk, uploadChunk } from './helper'
+import { createChunk } from './helper'
+
+// 多线程切片
 self.onmessage = async (event) => {
-  const { file, CHUNK_ITEM_SIZE, startIndex, endIndex } = event.data
-  const proms = []
+  const { file, startIndex, endIndex, CHUNK_SIZE } = event.data
   for (let i = startIndex; i < endIndex; i++) {
     // 切片
-    // proms.push(createChunk(file, i, CHUNK_ITEM_SIZE))
-    const chunk = await createChunk(file, i, CHUNK_ITEM_SIZE)
-    uploadChunk(chunk)
+    const chunk = await createChunk(file, i, CHUNK_SIZE)
+    // 返回切片数据
+    self.postMessage(chunk)
   }
-  // const chunks = await Promise.all(proms)
-  // postMessage(chunk)
 }

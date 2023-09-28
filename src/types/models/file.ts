@@ -127,4 +127,7 @@ export interface FileChunk {
   end: number
   index: number
   hash: string
+  chunkCount: number
+  fileName: string
+  file: Blob
 }

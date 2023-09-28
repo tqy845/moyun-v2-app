@@ -10,20 +10,24 @@ import { File as _File, FileChunk, FileProperties } from '@/types/models'
 import { FILE_ICON_TYPE } from '@/types/enums'
 import { useFileStore } from '@/stores'
 
-const CHUNK_ITEM_SIZE = 1024 * 1024 * 10 // 单个分片大小
+const CHUNK_SIZE = 1024 * 1024 * 10 // 单个分片大小
 const THREAD_COUNT = navigator.hardwareConcurrency || 4
 
 /**
  * 文件上传
  */
 const upload = async (fileList: Array<File>) => {
+  const fileStore = useFileStore()
   // console.log('file = ', fileList)
   for (const file of fileList) {
-    const result: Array<FileChunk> = []
     // 总分片数量
-    const totalChunkCount = Math.ceil(file.size / CHUNK_ITEM_SIZE)
+    const totalChunkCount = Math.ceil(file.size / CHUNK_SIZE)
+    // 各worker线程需要处理的chunk数量
     const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
-    let finishCount = 0
+    // 用于存储worker线程对象的数组
+    const workers: Array<Worker> = []
+    // 累计已完成chunk的数量
+    let finishChunkCount = 0
 
     for (let i = 0; i < THREAD_COUNT; i++) {
       // 创建新线程
@@ -36,22 +40,29 @@ const upload = async (fileList: Array<File>) => {
       if (endIndex > totalChunkCount) {
         endIndex = totalChunkCount
       }
+      // 给线程发送数据
       worker.postMessage({
         file,
-        CHUNK_ITEM_SIZE,
+        CHUNK_SIZE,
         startIndex,
-        endIndex
+        endIndex,
+        totalChunkCount
       })
+
       worker.onmessage = (e) => {
-        // for (let i = startIndex; i < endIndex; i++) {
-        //   result[i] = e.data[i - startIndex]
-        // }
-        // worker.terminate()
-        finishCount++
-        if (finishCount === THREAD_COUNT) {
-          console.log('finish...', result)
+        const chunk = e.data
+        finishChunkCount++
+        // console.log('chunk = ', chunk, finishChunkCount, workerChunkCount, totalChunkCount)
+        // 上传分片
+        fileStore.uploadChunk(chunk)
+
+        if (finishChunkCount === totalChunkCount) {
+          // 关闭所有worker线程
+          workers.forEach((w) => w.terminate())
         }
       }
+      // 将worker对象添加到数组中
+      workers.push(worker)
     }
   }
 }

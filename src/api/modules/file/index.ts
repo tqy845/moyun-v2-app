@@ -17,7 +17,7 @@ export const fetchFileList = <T = any>() => {
  * @param {string} fileName 文件名
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const fileChunkUpload = <T = any>(chunk: FileChunk) => {
+export const uploadFileChunk = <T = any>(chunk: FileChunk) => {
   return tauriRequest<T>({
     url: `/system/user/file/chunk`,
     method: 'POST',
