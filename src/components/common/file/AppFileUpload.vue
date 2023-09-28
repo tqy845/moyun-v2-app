@@ -81,6 +81,12 @@ const handleExpansion = (itemList: Array<string>) => {
   console.log(itemList)
   cs.selected = itemList
 }
+
+const handleCancel = (item) => {
+  console.log('item =', item)
+
+  data.fileList = data.fileList.filter((it) => it.file.name !== item.file.name)
+}
 </script>
 
 <template>
@@ -151,6 +157,7 @@ const handleExpansion = (itemList: Array<string>) => {
                   <th class="text-left">No</th>
                   <th class="text-left">文件名</th>
                   <th class="text-left">进度</th>
+                  <th class="text-left">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -166,6 +173,11 @@ const handleExpansion = (itemList: Array<string>) => {
                       <strong class="text-white text-overline"
                         >{{ Math.ceil(item.progress) }}%</strong
                       ></v-progress-linear
+                    >
+                  </td>
+                  <td width="100">
+                    <v-btn size="small" color="primary" rounded="xl" @click="handleCancel(item)"
+                      >取消</v-btn
                     >
                   </td>
                 </tr>
