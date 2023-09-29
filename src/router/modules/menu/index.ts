@@ -2,8 +2,8 @@
  * File Routes
  */
 import type { RouteRecordRaw } from 'vue-router'
-import { DefaultLayout, DefaultMenu, DefaultBlank } from '@/layout'
-import { File, Welcome, TrashCan, SynchroDisk } from '@/views'
+import { DefaultLayout, Menu, Blank } from '@/layout'
+import { File, Welcome, TrashCan, SynchroDisk, Setting } from '@/views'
 
 // Route rule definition
 export const routeMenu: Readonly<RouteRecordRaw[]> = [
@@ -26,21 +26,21 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
       {
         path: '',
         components: {
-          aside: DefaultMenu,
-          default: DefaultBlank
+          aside: Menu,
+          default: Blank
         }
       },
       {
         path: 'file',
         components: {
-          aside: DefaultMenu,
+          aside: Menu,
           default: File
         }
       },
       {
         path: 'trash-can',
         components: {
-          aside: DefaultMenu,
+          aside: Menu,
           default: TrashCan
         }
       },
@@ -48,7 +48,7 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
       {
         path: 'synchro-disk',
         components: {
-          aside: DefaultMenu,
+          aside: Menu,
           default: SynchroDisk
         }
       }
@@ -63,8 +63,8 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
       {
         path: '',
         components: {
-          aside: DefaultMenu,
-          default: DefaultBlank
+          aside: Menu,
+          default: Setting
         }
       }
     ]
@@ -78,14 +78,14 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
       {
         path: '',
         components: {
-          aside: DefaultMenu,
-          default: DefaultBlank
+          aside: Menu,
+          default: Blank
         }
       },
       {
         path: 'file',
         components: {
-          aside: DefaultMenu,
+          aside: Menu,
           default: File
         }
       }
