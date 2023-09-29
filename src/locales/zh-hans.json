@@ -44,6 +44,6 @@
   "menu.file.text": "文件",
   "menu.synchro.disk.text": "同步盘（本地）",
   "rooms.text": "房间",
-  "$vuetify.noDataText": "没有找到数据",
+  "$vuetify.noDataText": "没有数据",
   "$vuetify.fileInput.counterSize": "共{0}个文件，共{1}"
 }
