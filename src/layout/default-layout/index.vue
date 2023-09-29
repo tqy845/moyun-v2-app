@@ -6,7 +6,7 @@
 -->
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { AppHeaderBar, AppSidebar, AppUserCard } from './components'
+import { AppSidebar, AppUserCard } from './components'
 import { AppSystemBar } from '../components'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores'
@@ -68,7 +68,7 @@ const handleClickOutside = () => {
 
     <v-main>
       <!-- 头部菜单栏 -->
-      <AppHeaderBar />
+      <RouterView name="header" />
 
       <!-- 内容区域 -->
       <RouterView />

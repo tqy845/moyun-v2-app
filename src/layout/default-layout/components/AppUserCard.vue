@@ -27,13 +27,6 @@ const user = reactive({
 })
 
 /**
- * 前往个人中心
- */
-const handleProfile = () => {
-  console.log('profile')
-}
-
-/**
  * 退出
  */
 const handleLogout = () => {

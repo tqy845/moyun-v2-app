@@ -2,7 +2,7 @@
  * File Routes
  */
 import type { RouteRecordRaw } from 'vue-router'
-import { DefaultLayout, Menu, Blank } from '@/layout'
+import { DefaultLayout, Menu, Blank, Header } from '@/layout'
 import { File, Welcome, TrashCan, SynchroDisk, Setting } from '@/views'
 
 // Route rule definition
@@ -27,6 +27,7 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
         path: '',
         components: {
           aside: Menu,
+          header: Header,
           default: Blank
         }
       },
@@ -34,6 +35,7 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
         path: 'file',
         components: {
           aside: Menu,
+          header: Header,
           default: File
         }
       },
@@ -41,6 +43,7 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
         path: 'trash-can',
         components: {
           aside: Menu,
+          header: Header,
           default: TrashCan
         }
       },
@@ -49,6 +52,7 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
         path: 'synchro-disk',
         components: {
           aside: Menu,
+          header: Header,
           default: SynchroDisk
         }
       }
