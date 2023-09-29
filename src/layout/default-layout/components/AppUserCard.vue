@@ -40,6 +40,7 @@ const handleLogout = () => {
  */
 const toSettingPage = () => {
   router.push('/setting')
+  cs.menu = false
 }
 </script>
 

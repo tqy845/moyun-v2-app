@@ -15,22 +15,26 @@ const cs = reactive({
 
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-toolbar-title>User Profile</v-toolbar-title>
-    </v-toolbar>
+    <v-card-title class="bg-red d-flex">
+      <v-text-field label="搜索设置" variant="outlined"></v-text-field>
+    </v-card-title>
     <div class="d-flex flex-row">
       <v-tabs v-model="cs.tab" direction="vertical" color="primary">
         <v-tab value="option-1">
-          <v-icon start> mdi-account </v-icon>
-          Option 1
+          <v-icon start> mdi-cog </v-icon>
+          基本
         </v-tab>
         <v-tab value="option-2">
-          <v-icon start> mdi-lock </v-icon>
-          Option 2
+          <v-icon start> mdi-send </v-icon>
+          传输
         </v-tab>
         <v-tab value="option-3">
-          <v-icon start> mdi-access-point </v-icon>
-          Option 3
+          <v-icon start> mdi-keyboard-settings </v-icon>
+          快捷键
+        </v-tab>
+        <v-tab value="option-4">
+          <v-icon start> mdi-sync </v-icon>
+          同步盘
         </v-tab>
       </v-tabs>
       <v-window v-model="cs.tab">
@@ -94,6 +98,24 @@ const cs = reactive({
           </v-card>
         </v-window-item>
         <v-window-item value="option-3">
+          <v-card flat>
+            <v-card-text>
+              <p>
+                Fusce a quam. Phasellus nec sem in justo pellentesque facilisis. Nam eget dui. Proin
+                viverra, ligula sit amet ultrices semper, ligula arcu tristique sapien, a accumsan
+                nisi mauris ac eros. In dui magna, posuere eget, vestibulum et, tempor auctor,
+                justo.
+              </p>
+
+              <p class="mb-0">
+                Cras sagittis. Phasellus nec sem in justo pellentesque facilisis. Proin sapien
+                ipsum, porta a, auctor quis, euismod ut, mi. Donec quam felis, ultricies nec,
+                pellentesque eu, pretium quis, sem. Nam at tortor in tellus interdum sagittis.
+              </p>
+            </v-card-text>
+          </v-card>
+        </v-window-item>
+        <v-window-item value="option-4">
           <v-card flat>
             <v-card-text>
               <p>
