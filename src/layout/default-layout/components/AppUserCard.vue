@@ -33,10 +33,20 @@ const handleProfile = () => {
   console.log('profile')
 }
 
+/**
+ * 退出
+ */
 const handleLogout = () => {
   userStore.logout()
   router.replace('/login')
   cs.menu = false
+}
+
+/**
+ * 前往设置页面
+ */
+const toSettingPage = () => {
+  router.push('/setting')
 }
 </script>
 
@@ -72,11 +82,11 @@ const handleLogout = () => {
       <v-divider></v-divider>
 
       <v-list>
-        <v-list-item rounded="xl">
+        <v-list-item value="setting" @click="toSettingPage">
           <template v-slot:prepend>
             <v-icon icon="mdi-cog"></v-icon>
           </template>
-          <v-list-item-title>偏好设置</v-list-item-title>
+          <v-list-item-title> 偏好设置 </v-list-item-title>
         </v-list-item>
 
         <v-list-item>

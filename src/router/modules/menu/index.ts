@@ -55,6 +55,21 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
     ]
   },
   {
+    path: '/setting',
+    components: {
+      default: DefaultLayout
+    },
+    children: [
+      {
+        path: '',
+        components: {
+          aside: DefaultMenu,
+          default: DefaultBlank
+        }
+      }
+    ]
+  },
+  {
     path: '/school',
     components: {
       default: DefaultLayout
