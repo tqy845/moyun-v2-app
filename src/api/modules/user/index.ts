@@ -45,7 +45,7 @@ export const loginByAccount = <T = any>(user: User) => {
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const logoutForUser = <T = any>(user: User) => {
-  return tauriRequest<T>({
+  return fetchRequest<T>({
     url: '/system/user/logout',
     method: 'DELETE',
     data: user
