@@ -50,6 +50,7 @@ const upload = async (fileList: Array<File>) => {
     } else if (uploadQueue.length === 0) {
       console.log('所有任务已完成')
       clearInterval(timer)
+      fileStore.list()
     }
     console.log('扫描上传任务')
   }, 1000)

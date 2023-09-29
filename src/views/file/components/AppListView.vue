@@ -34,7 +34,7 @@ window.addEventListener('wheel', fileUtils.listViewMouseWheel)
     :headers="headers"
     :items="fileStore.fileList"
     class="elevation-1"
-    :height="height - 100"
+    :height="height - 130"
     item-value="name"
   >
     <template v-slot:item.name="{ item }">
