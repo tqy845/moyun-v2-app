@@ -1,4 +1,4 @@
-import { File } from '@/types/models'
+import { UploadChunk, BasicFile } from '@/types/models'
 
 /**
  * 文件存储对象接口
@@ -7,14 +7,22 @@ import { File } from '@/types/models'
 export interface FileStore {
   /**
    * 文件信息列表
-   * @type {Array<File>}
+   * @type {Array<BasicFile>}
    */
-  fileList: Array<File>
+  fileList: Array<BasicFile>
+
   /**
    * 临时文件信息列表
-   * @type {Array<File>}
+   * @type {Array<BasicFile>}
    */
-  tempFileList: Array<File>
+  tempFileList: Array<BasicFile>
+
+  /**
+   * 文件上传列表
+   * @type {Array<UploadChunk>}
+   */
+  fileUploadList: Array<UploadChunk>
+
   /**
    * 文件视图
    * @type {'icon' | 'list'}
@@ -36,6 +44,7 @@ export const getFileDefaultSettings = (): FileStore => {
   return {
     fileList: [],
     tempFileList: [],
+    fileUploadList: [],
     fileView: 'icon',
     fileItemSize: 121
   }

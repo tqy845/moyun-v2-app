@@ -5,7 +5,7 @@
 import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
 import { fetchFileList, uploadFileChunk } from '@/api'
-import { File, FileChunk, FileProperties } from '@/types/models'
+import { BasicFile, FileChunk, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
 
 export const useFileStore = defineStore('fileStore', {
@@ -20,10 +20,10 @@ export const useFileStore = defineStore('fileStore', {
         fileList: Array<FileProperties>
       }>()
       const { fileList } = data
-      const _fileList: Array<File> = []
+      const _fileList: Array<BasicFile> = []
       fileList.forEach((item) => {
         _fileList.push(
-          new File({
+          new BasicFile({
             icon: fileUtils.getIcon(item),
             ...item
           })
@@ -38,7 +38,7 @@ export const useFileStore = defineStore('fileStore', {
     filter(name: string) {
       console.log('过滤', name)
       this.fileList = name
-        ? this.tempFileList.filter((file: File) => file.name === name)
+        ? this.tempFileList.filter((file: BasicFile) => file.name === name)
         : this.tempFileList
     },
     /**

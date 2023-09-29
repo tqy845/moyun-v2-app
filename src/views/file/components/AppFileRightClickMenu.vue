@@ -6,11 +6,11 @@
 -->
 
 <script lang="ts" setup>
-import { File } from '@/types/models'
+import { BasicFile } from '@/types/models'
 
 const props = defineProps({
   file: {
-    type: File,
+    type: BasicFile,
     required: true
   }
 })

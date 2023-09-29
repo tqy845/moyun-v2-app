@@ -7,25 +7,33 @@
 <script lang="ts" setup>
 import { onUpdated, onMounted, reactive, ref } from 'vue'
 import { fileUtils } from '@/utils/functions'
-import { useAppStore } from '@/stores'
+import { useAppStore, useFileStore } from '@/stores'
+import { UploadChunk } from '@/types/models'
 
 const fileInputRef = ref<HTMLInputElement>()
+const tableRef = ref()
 
 const appStore = useAppStore()
+const fileStore = useFileStore()
 
-const cs = reactive({
+const cs = reactive<{
+  dialog: { show: boolean }
+  upload: Array<string>
+  tableHeight: number
+}>({
   dialog: {
     show: false
   },
   upload: ['upload-area'],
-  selected: []
+  tableHeight: 150
 })
 
-const data = reactive<{
-  fileList: Array<{ file: File; progress: number }>
-}>({
-  fileList: []
-})
+/**
+ * 展开/收起上传区域
+ */
+const handleExpansion = () => {
+  cs.tableHeight = tableRef.value.height === 150 ? 370 : 150
+}
 
 /**
  * 拖拽上传
@@ -34,27 +42,7 @@ const data = reactive<{
 const handleFileDrop = (event: any) => {
   event.preventDefault()
   const fileList = event.dataTransfer.files as Array<File>
-  fileList.forEach((item) => {
-    data.fileList.push({
-      file: item,
-      progress: 0
-    })
-  })
-}
-
-const updateProgress = (file) => {
-  const min = 1
-  const max = 5
-  const randomInteger = Math.floor(Math.random() * (max - min + 1)) + min
-  file.progress += randomInteger
-  console.log('进度', file.progress)
-
-  // 如果文件尚未上传完成，继续更新进度
-  if (file.progress < 100) {
-    setTimeout(() => {
-      updateProgress(file)
-    }, randomInteger * 1000)
-  }
+  fileUtils.upload(fileList)
 }
 
 /**
@@ -64,28 +52,17 @@ const updateProgress = (file) => {
 const handleFileSelect = (event: any) => {
   event.preventDefault()
   const fileList = event.target.files as Array<File>
-  for (const iterator of fileList) {
-    const _file = {
-      file: iterator,
-      progress: 0
-    }
-
-    // 启动进度更新
-    updateProgress(_file)
-
-    data.fileList.push(_file)
-  }
+  fileUtils.upload(fileList)
 }
 
-const handleExpansion = (itemList: Array<string>) => {
-  console.log(itemList)
-  cs.selected = itemList
-}
-
-const handleCancel = (item) => {
-  console.log('item =', item)
-
-  data.fileList = data.fileList.filter((it) => it.file.name !== item.file.name)
+/**
+ * 取消下载
+ * @param item UploadChunk 文件
+ */
+const handleCancel = (item: UploadChunk) => {
+  fileStore.fileUploadList = fileStore.fileUploadList.filter(
+    (it) => it.file.name !== item.file.name
+  )
 }
 </script>
 
@@ -149,36 +126,72 @@ const handleCancel = (item) => {
         </v-list>-->
         <v-divider></v-divider>
         <v-list lines="two" subheader>
-          <v-list-subheader class="w-100"> 上传列表 </v-list-subheader>
-          <v-list-item
-            ><v-table density="compact" :height="cs.selected.length ? 150 : 370" fixed-header>
+          <!-- <v-list-subheader class="w-100"> 上传列表 </v-list-subheader> -->
+          <v-list-item>
+            <v-table ref="tableRef" density="compact" :height="cs.tableHeight" fixed-header>
               <thead>
                 <tr>
                   <th class="text-left">No</th>
                   <th class="text-left">文件名</th>
+                  <th class="text-left">大小</th>
                   <th class="text-left">进度</th>
                   <th class="text-left">操作</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in data.fileList" :key="index">
+                <tr
+                  v-for="(item, index) in fileStore.fileUploadList"
+                  :key="index"
+                  :class="[item.file.name]"
+                >
                   <td>{{ index + 1 }}</td>
                   <td>{{ item.file.name }}</td>
-                  <td width="350">
+                  <td>{{ fileUtils.formatSize(item.file.size) }}</td>
+                  <td style="min-width: 150px">
                     <v-progress-linear
-                      :model-value="item.progress"
-                      :indeterminate="!item.progress"
+                      :model-value="item.power"
+                      :indeterminate="!item.power"
                       height="10"
                     >
-                      <strong class="text-white text-overline"
-                        >{{ Math.ceil(item.progress) }}%</strong
-                      ></v-progress-linear
+                      <strong class="text-white text-overline">{{
+                        typeof item.power === 'number' ? Math.ceil(item.power) + '%' : item.power
+                      }}</strong></v-progress-linear
                     >
                   </td>
-                  <td width="100">
-                    <v-btn size="small" color="primary" rounded="xl" @click="handleCancel(item)"
-                      >取消</v-btn
-                    >
+                  <td width="150">
+                    <v-tooltip text="取消上传" location="bottom">
+                      <template v-slot:activator="{ props }">
+                        <v-btn
+                          v-bind="props"
+                          size="x-small"
+                          color="warning"
+                          icon="mdi-upload-off"
+                          class="mr-1"
+                          :disabled="item.power === 100"
+                          @click="handleCancel(item)"
+                        ></v-btn>
+                      </template>
+                    </v-tooltip>
+                    <!-- <v-tooltip text="移除记录" location="bottom">
+                      <template v-slot:activator="{ props }">
+                        <v-btn
+                          v-bind="props"
+                          size="x-small"
+                          color="error"
+                          icon="mdi-file-remove"
+                          class="ml-1"
+                        ></v-btn>
+                      </template>
+                    </v-tooltip> -->
+                    <!-- <v-btn
+                        size="small"
+                        color="primary"
+                        rounded="xl"
+                        >取消</v-btn
+                      >
+                      <v-btn size="small" color="primary" rounded="xl" @click="handleCancel(item)"
+                        >移除</v-btn
+                      > -->
                   </td>
                 </tr>
               </tbody>

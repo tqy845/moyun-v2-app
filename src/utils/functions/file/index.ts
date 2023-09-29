@@ -6,9 +6,10 @@ import { fileDownloadByName } from '@/api'
 import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
 import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
-import { File as _File, FileChunk, FileProperties } from '@/types/models'
+import { FileProperties, UploadChunk } from '@/types/models'
 import { FILE_ICON_TYPE } from '@/types/enums'
 import { useAppStore, useFileStore } from '@/stores'
+import { determineMaxChunks } from './helper'
 
 const CHUNK_SIZE = 1024 * 1024 * 10 // 单个分片大小
 const THREAD_COUNT = navigator.hardwareConcurrency || 4
@@ -19,68 +20,92 @@ const THREAD_COUNT = navigator.hardwareConcurrency || 4
 const upload = async (fileList: Array<File>) => {
   const fileStore = useFileStore()
   const appStore = useAppStore()
-  for (const file of fileList) {
-    const totalChunkCount = Math.ceil(file.size / CHUNK_SIZE)
-    const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
-    const workers: Array<Worker> = []
 
-    // 使用 Promise 来跟踪每个线程的上传
-    const uploadPromises = []
+  // 过滤已存在的
+  const fileNameList = fileStore.fileUploadList.map((it) => it.file.name)
+  for (const iterator of fileList) {
+    if (!fileNameList.includes(iterator.name)) {
+      fileStore.fileUploadList = [
+        {
+          power: 0,
+          file: iterator
+        },
+        ...fileStore.fileUploadList
+      ]
+    }
+  }
 
-    for (let i = 0; i < THREAD_COUNT; i++) {
-      const worker = new Worker(new URL('./worker.ts', import.meta.url), {
-        type: 'module'
-      })
-      const startIndex = i * workerChunkCount
-      let endIndex = startIndex + workerChunkCount
-      if (endIndex > totalChunkCount) {
-        endIndex = totalChunkCount
-        break
-      }
+  // 开始上传
+  for (const basicFile of fileStore.fileUploadList) {
+    // 过滤已上传的
+    if (basicFile.status == 'complete') continue
+    uploadChunk(basicFile)
+  }
+}
 
-      // 为每个线程的上传创建一个 Promise
-      const uploadPromise = new Promise((resolve) => {
-        worker.onmessage = async (e) => {
-          const { chunk, ...args } = e.data
-          const formData = new FormData()
-          formData.append('file', chunk, `chunk_${i}`)
-          formData.append('chunkSize', String(CHUNK_SIZE))
-          for (const key in args) {
-            if (Object.prototype.hasOwnProperty.call(args, key)) {
-              const element = args[key]
-              formData.append(key, element)
-            }
-          }
+/**
+ * 上传分片
+ * @param chunk 分片
+ */
+export const uploadChunk = (uploadChunk: UploadChunk) => {
+  const fileStore = useFileStore()
+  const appStore = useAppStore()
 
-          if (await fileStore.uploadChunk(formData)) {
-            console.log('线程 ' + i + ' 的分片上传成功')
-            resolve(true)
-          } else {
-            resolve(false)
-          }
-        }
+  const { file } = uploadChunk
+  // 计算 totalChunkCount，但限制最大值
+  const totalChunkCount = determineMaxChunks(file.size)
+  const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
+  let uploadedChunkCount = 0 // 用于跟踪已上传的分片数量
 
-        worker.postMessage({
-          file,
-          CHUNK_SIZE,
-          startIndex,
-          endIndex,
-          totalChunkCount
-        })
-      })
+  for (let i = 0; i < THREAD_COUNT; i++) {
+    const worker = new Worker(new URL('./worker.ts', import.meta.url), {
+      type: 'module'
+    })
 
-      uploadPromises.push(uploadPromise)
-      workers.push(worker)
+    const startIndex = i * workerChunkCount
+    let endIndex = startIndex + workerChunkCount
+    if (endIndex > totalChunkCount) {
+      endIndex = totalChunkCount
     }
 
-    // 等待所有线程的上传完成
-    await Promise.all(uploadPromises)
+    worker.onmessage = async (e) => {
+      const { chunk, ...args } = e.data
+      const formData = new FormData()
+      formData.append('file', chunk, `chunk_${i}`)
+      formData.append('chunkSize', String(CHUNK_SIZE))
+      for (const key in args) {
+        if (Object.hasOwn(args, key)) {
+          const element = args[key]
+          formData.append(key, element)
+        }
+      }
+      if (await fileStore.uploadChunk(formData)) {
+        // console.log('线程 ' + i + ' 的分片上传成功')
+        uploadedChunkCount++ // 分片上传成功，增加已上传分片的数量
 
-    // 终止所有线程
-    workers.forEach((w) => w.terminate())
+        const progress = (uploadedChunkCount / totalChunkCount) * 100
+        uploadChunk.power = progress // 设置文件上传进度
 
-    console.log('文件 ' + file.name + ' 上传完成')
-    appStore.notification('文件 ' + file.name + ' 上传完成')
+        if (uploadedChunkCount === totalChunkCount) {
+          uploadChunk.status = 'complete'
+          // console.log('文件 ' + file.name + ' 上传完成')
+          appStore.notification('文件 ' + file.name + ' 上传完成')
+          worker.terminate()
+        }
+      } else {
+        uploadChunk.status = 'error'
+        // console.log('文件 ' + file.name + ' 上传失败')
+        appStore.notification('文件 ' + file.name + ' 上传失败')
+      }
+    }
+
+    worker.postMessage({
+      file,
+      CHUNK_SIZE,
+      startIndex,
+      endIndex,
+      totalChunkCount
+    })
   }
 }
 

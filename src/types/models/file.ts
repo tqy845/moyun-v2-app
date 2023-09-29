@@ -17,9 +17,26 @@ export interface FileProperties {
 }
 
 /**
+ * 文件上传属性
+ */
+export interface UploadChunk {
+  /**
+   * 上传进度或状态
+   */
+  power?: number
+
+  status?: 'complete' | 'error'
+
+  /**
+   * 文件
+   */
+  file: File
+}
+
+/**
  * 文件类
  */
-export class File {
+export class BasicFile {
   /**
    * 文件名
    */
@@ -71,13 +88,13 @@ export class File {
    */
   constructor(params: FileProperties) {
     this.name = params.name
-    this.icon = params.icon || ''
+    this.icon = params.icon ?? ''
     this.extension = params.extension
     this.path = params.path
     this.isDirectory = params.isDirectory
     this.size = params.size
     this.lastModified = params.lastModified
-    this.pinyin = pinyin(params.fileName, { toneType: 'none' }) // 'han yu pin yin'
+    this.pinyin = pinyin(params.name, { toneType: 'none' }) // 'han yu pin yin'
   }
 
   /**
@@ -110,7 +127,7 @@ export class File {
 /**
  * 文件夹的类，继承自 File
  */
-export class Folder extends File {
+export class Folder extends BasicFile {
   /**
    * 创建一个新的 Folder 实例
    * @param params 文件夹属性，包括名称、图标和类型。
@@ -121,7 +138,7 @@ export class Folder extends File {
 }
 
 /**
- * File Chunk
+ * 文件块
  */
 export interface FileChunk {
   start: number
