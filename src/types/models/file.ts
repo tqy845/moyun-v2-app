@@ -25,7 +25,7 @@ export interface UploadChunk {
    */
   power?: number
 
-  status?: 'complete' | 'error'
+  status?: 'complete' | 'error' | 'await' | 'uploading' | 'init'
 
   /**
    * 文件

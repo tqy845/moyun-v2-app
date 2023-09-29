@@ -21,25 +21,58 @@ const upload = async (fileList: Array<File>) => {
   const fileStore = useFileStore()
   const appStore = useAppStore()
 
-  // 过滤已存在的
+  // 过滤已存在的文件
   const fileNameList = fileStore.fileUploadList.map((it) => it.file.name)
+
   for (const iterator of fileList) {
+    console.log(fileNameList, iterator.name)
+
     if (!fileNameList.includes(iterator.name)) {
       fileStore.fileUploadList = [
         {
           power: 0,
-          file: iterator
+          file: iterator,
+          status: 'await'
         },
         ...fileStore.fileUploadList
       ]
     }
   }
 
-  // 开始上传
-  for (const basicFile of fileStore.fileUploadList) {
-    // 过滤已上传的
-    if (basicFile.status == 'complete') continue
-    uploadChunk(basicFile)
+  // 创建一个队列来管理文件上传
+  const uploadQueue: Array<Promise<boolean>> = []
+  let count = 0
+
+  // 将文件添加到队列
+  const timer = setInterval(async () => {
+    if (count < fileStore.fileUploadList.length) {
+      execTask()
+    } else if (uploadQueue.length === 0) {
+      console.log('所有任务已完成')
+      clearInterval(timer)
+    }
+    console.log('扫描上传任务')
+  }, 1000)
+
+  const execTask = () => {
+    while (uploadQueue.length < appStore.app.settings['maxUploadCount']) {
+      if (count >= fileStore.fileUploadList.length) break
+      let basicFile = fileStore.fileUploadList[count++]
+
+      while (basicFile.status !== 'await' && count < fileStore.fileUploadList.length) {
+        basicFile = fileStore.fileUploadList[count]
+        if (count < fileStore.fileUploadList.length) count++
+      }
+
+      if (basicFile.status === 'await') {
+        uploadQueue.push(
+          uploadChunk(basicFile).finally(() => {
+            uploadQueue.shift()
+            execTask()
+          })
+        )
+      }
+    }
   }
 }
 
@@ -48,65 +81,72 @@ const upload = async (fileList: Array<File>) => {
  * @param chunk 分片
  */
 export const uploadChunk = (uploadChunk: UploadChunk) => {
-  const fileStore = useFileStore()
-  const appStore = useAppStore()
+  return new Promise<boolean>((resolve, reject) => {
+    const fileStore = useFileStore()
+    const appStore = useAppStore()
 
-  const { file } = uploadChunk
-  // 计算 totalChunkCount，但限制最大值
-  const totalChunkCount = determineMaxChunks(file.size)
-  const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
-  let uploadedChunkCount = 0 // 用于跟踪已上传的分片数量
+    uploadChunk.status = 'init'
+    const { file } = uploadChunk
 
-  for (let i = 0; i < THREAD_COUNT; i++) {
-    const worker = new Worker(new URL('./worker.ts', import.meta.url), {
-      type: 'module'
-    })
+    // 计算 totalChunkCount，但限制最大值
+    const totalChunkCount = determineMaxChunks(file.size)
+    const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
+    let uploadedChunkCount = 0 // 用于跟踪已上传的分片数量
 
-    const startIndex = i * workerChunkCount
-    let endIndex = startIndex + workerChunkCount
-    if (endIndex > totalChunkCount) {
-      endIndex = totalChunkCount
-    }
+    for (let i = 0; i < THREAD_COUNT; i++) {
+      const worker = new Worker(new URL('./worker.ts', import.meta.url), {
+        type: 'module'
+      })
 
-    worker.onmessage = async (e) => {
-      const { chunk, ...args } = e.data
-      const formData = new FormData()
-      formData.append('file', chunk, `chunk_${i}`)
-      formData.append('chunkSize', String(CHUNK_SIZE))
-      for (const key in args) {
-        if (Object.hasOwn(args, key)) {
-          const element = args[key]
-          formData.append(key, element)
+      const startIndex = i * workerChunkCount
+      let endIndex = startIndex + workerChunkCount
+      if (endIndex > totalChunkCount) {
+        endIndex = totalChunkCount
+      }
+
+      worker.onmessage = async (e) => {
+        uploadChunk.status = 'uploading'
+        const { chunk, ...args } = e.data
+        const formData = new FormData()
+        formData.append('file', chunk, `chunk_${i}`)
+        formData.append('chunkSize', String(CHUNK_SIZE))
+        for (const key in args) {
+          if (Object.hasOwn(args, key)) {
+            const element = args[key]
+            formData.append(key, element)
+          }
+        }
+        if (await fileStore.uploadChunk(formData)) {
+          // console.log('线程 ' + i + ' 的分片上传成功')
+          uploadedChunkCount++ // 分片上传成功，增加已上传分片的数量
+
+          const progress = (uploadedChunkCount / totalChunkCount) * 100
+          uploadChunk.power = progress // 设置文件上传进度
+
+          if (uploadedChunkCount === totalChunkCount) {
+            uploadChunk.status = 'complete'
+            // console.log('文件 ' + file.name + ' 上传完成')
+            appStore.notification('文件 ' + file.name + ' 上传完成')
+            worker.terminate()
+            resolve(true)
+          }
+        } else {
+          uploadChunk.status = 'error'
+          // console.log('文件 ' + file.name + ' 上传失败')
+          appStore.notification('文件 ' + file.name + ' 上传失败')
+          reject(false)
         }
       }
-      if (await fileStore.uploadChunk(formData)) {
-        // console.log('线程 ' + i + ' 的分片上传成功')
-        uploadedChunkCount++ // 分片上传成功，增加已上传分片的数量
 
-        const progress = (uploadedChunkCount / totalChunkCount) * 100
-        uploadChunk.power = progress // 设置文件上传进度
-
-        if (uploadedChunkCount === totalChunkCount) {
-          uploadChunk.status = 'complete'
-          // console.log('文件 ' + file.name + ' 上传完成')
-          appStore.notification('文件 ' + file.name + ' 上传完成')
-          worker.terminate()
-        }
-      } else {
-        uploadChunk.status = 'error'
-        // console.log('文件 ' + file.name + ' 上传失败')
-        appStore.notification('文件 ' + file.name + ' 上传失败')
-      }
+      worker.postMessage({
+        file,
+        CHUNK_SIZE,
+        startIndex,
+        endIndex,
+        totalChunkCount
+      })
     }
-
-    worker.postMessage({
-      file,
-      CHUNK_SIZE,
-      startIndex,
-      endIndex,
-      totalChunkCount
-    })
-  }
+  })
 }
 
 /**

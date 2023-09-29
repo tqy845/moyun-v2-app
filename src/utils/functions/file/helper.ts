@@ -1,13 +1,9 @@
-import { UploadChunk, FileChunk } from '@/types/models'
+import { FileChunk } from '@/types/models'
 import SparkMD5 from 'spark-md5'
-import { useAppStore, useFileStore } from '@/stores'
 
 const MAX_CHUNKS_SMALL_FILE = 1 // 针对小文件的最大分片数
 const MAX_CHUNKS_MEDIUM_FILE = 50 // 针对中等文件的最大分片数
 const MAX_CHUNKS_LARGE_FILE = 100 // 针对大文件的最大分片数
-
-const CHUNK_SIZE = 1024 * 1024 * 10 // 单个分片大小
-const THREAD_COUNT = navigator.hardwareConcurrency || 4
 
 /**
  * 文件分片

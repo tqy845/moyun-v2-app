@@ -41,8 +41,10 @@ const handleExpansion = () => {
  */
 const handleFileDrop = (event: any) => {
   event.preventDefault()
-  const fileList = event.dataTransfer.files as Array<File>
-  fileUtils.upload(fileList)
+  const fileObject = event.dataTransfer.files as {}
+  fileUtils.upload(Object.values(fileObject))
+  cs.upload = []
+  handleExpansion()
 }
 
 /**
@@ -51,8 +53,10 @@ const handleFileDrop = (event: any) => {
  */
 const handleFileSelect = (event: any) => {
   event.preventDefault()
-  const fileList = event.target.files as Array<File>
-  fileUtils.upload(fileList)
+  const fileObject = event.target.files as {}
+  fileUtils.upload(Object.values(fileObject))
+  cs.upload = []
+  handleExpansion()
 }
 
 /**
@@ -91,7 +95,7 @@ const handleCancel = (item: UploadChunk) => {
         <v-expansion-panels multiple v-model="cs.upload" @update:modelValue="handleExpansion">
           <v-expansion-panel title="上传文件" value="upload-area">
             <template #text>
-              <div class="file-upload px-3">
+              <div class="file-upload py-3">
                 <div
                   class="file-drop-area pa-12"
                   @dragover.prevent
@@ -149,9 +153,11 @@ const handleCancel = (item: UploadChunk) => {
                   <td>{{ fileUtils.formatSize(item.file.size) }}</td>
                   <td style="min-width: 150px">
                     <v-progress-linear
+                      :buffer-value="item.power"
                       :model-value="item.power"
-                      :indeterminate="!item.power"
-                      height="10"
+                      height="12"
+                      :indeterminate="item.status === 'init'"
+                      rounded
                     >
                       <strong class="text-white text-overline">{{
                         typeof item.power === 'number' ? Math.ceil(item.power) + '%' : item.power

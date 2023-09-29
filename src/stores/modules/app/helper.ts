@@ -64,7 +64,8 @@ export const getAppDefaultSettings = (): AppStore => {
     app: {
       delay: import.meta.env.VITE_APP_BASE_DELAY,
       settings: {
-        uploadDialogFullscreen: false // 上传弹窗全屏
+        uploadDialogFullscreen: false, // 上传弹窗全屏
+        maxUploadCount: 5 // 最大伤上传并发
       }
     },
     messageQueue: [],
