@@ -57,9 +57,6 @@ export const useFileStore = defineStore('fileStore', {
         case 'document':
           result.push(...this.tempFileList.filter((item) => fileUtils.isDocument(item.extension)))
           break
-        case 'picture':
-          result.push(...this.tempFileList.filter((item) => fileUtils.isPicture(item.extension)))
-          break
         case 'media':
           result.push(...this.tempFileList.filter((item) => fileUtils.isMedia(item.extension)))
           break

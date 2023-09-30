@@ -268,22 +268,29 @@ const isDocument = (extension: string) => {
 }
 
 /**
- * 是否为图片类型
+ * 是否为多媒体类型
  * @param extension 文件后缀名
- * @description 判断是否为图片类型
- */
-const isPicture = (extension: string) => {
-  const pictureExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp', 'tiff']
-  return pictureExtensions.includes(extension.toLowerCase()) // 忽略大小写
-}
-
-/**
- * 是否为音/视频类型
- * @param extension 文件后缀名
- * @description 判断是否为音/视频类型
+ * @description 判断是否为多媒体类型
  */
 const isMedia = (extension: string) => {
-  const mediaExtensions = ['mp3', 'wav', 'ogg', 'mp4', 'avi', 'mkv', 'mov', 'wmv']
+  const mediaExtensions = [
+    'jpg',
+    'jpeg',
+    'png',
+    'gif',
+    'bmp',
+    'svg',
+    'webp',
+    'tiff',
+    'mp3',
+    'wav',
+    'ogg',
+    'mp4',
+    'avi',
+    'mkv',
+    'mov',
+    'wmv'
+  ]
   return mediaExtensions.includes(extension.toLowerCase()) // 忽略大小写
 }
 
@@ -298,7 +305,6 @@ const fileUtils = {
   iconViewMouseWheel,
   listViewMouseWheel,
   isDocument,
-  isPicture,
   isMedia
 }
 

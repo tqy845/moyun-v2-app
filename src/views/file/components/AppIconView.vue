@@ -48,12 +48,7 @@ const data = reactive<{
       key: 'document'
     },
     {
-      label: '图片',
-      icon: 'image',
-      key: 'picture'
-    },
-    {
-      label: '音/视频',
+      label: '多媒体',
       icon: 'multimedia',
       key: 'media'
     }
