@@ -15,7 +15,6 @@ const cookies = useCookies(['locale'])
 const tauriRequest = async <T = any>(
   options: { url: string; data?: Object; form?: { [key: string]: any } } & FetchOptions
 ): Promise<ResponseType<T>> => {
-  const appStore = useAppStore()
   const userStore = useUserStore()
   const { url, data, form, ...args } = options
   let result: ResponseType<T> = {

@@ -32,6 +32,7 @@ export const createChunk = (file: File, index: number, chunkSize: number) => {
  * @param fileSize 文件大小
  */
 export const calculateFileSlices = (fileSize: number) => {
+  return 50
   if (fileSize <= 300 * 1024 * 1024) {
     return 1
   } else if (fileSize <= 3 * 1024 * 1024 * 1024) {

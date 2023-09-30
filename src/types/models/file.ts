@@ -21,16 +21,27 @@ export interface FileProperties {
  */
 export interface UploadChunk {
   /**
+   * 文件
+   */
+  file: File
+
+  /**
    * 上传进度或状态
    */
   power?: number
 
-  status?: 'complete' | 'error' | 'await' | 'uploading' | 'init'
+  /**
+   * 上传状态
+   */
+  status?: 'success' | 'error' | 'await' | 'uploading' | 'init' | 're-upload'
 
   /**
-   * 文件
+   * 文件块上传状态
    */
-  file: File
+  uploadStatus?: {
+    success: number
+    error: number
+  }
 }
 
 /**

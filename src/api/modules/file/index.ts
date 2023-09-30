@@ -14,7 +14,7 @@ export const fetchFileList = <T = any>() => {
 
 /**
  * 上传文件（分片）
- * @param {string} fileName 文件名
+ * @param {string} formData 包含分片的表单
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const uploadFileChunk = <T = any>(formData: FormData) => {

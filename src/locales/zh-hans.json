@@ -64,7 +64,9 @@
   "file.upload.uploadList.fileSize.text": "大小",
   "file.upload.uploadList.fileProgress.text": "进度",
   "file.upload.uploadList.fileAction.text": "操作",
+  "file.upload.uploadList.fileAction.reupload.text": "重新上传",
   "file.upload.uploadList.fileAction.cancel.text": "取消上传",
+  "file.upload.uploadList.fileAction.remove.text": "删除文件",
   "file.upload.autoHideUploadArea": "上传时隐藏上传区域",
   "file.upload.autoCloseDialog": "上传完毕后关闭对话框",
 

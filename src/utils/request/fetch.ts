@@ -65,10 +65,6 @@ const fetchRequest = async <T = any>(
     // 拦截数据
     console.log('Response:', result)
 
-    if (result.code !== 200) {
-      appStore.notification(result.message, 'error')
-    }
-
     return result
   } catch (err) {
     console.error(err)

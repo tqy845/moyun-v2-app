@@ -17,26 +17,43 @@ const THREAD_COUNT = navigator.hardwareConcurrency || 4
 /**
  * 文件上传
  */
-const upload = async (fileList: Array<File>) => {
+const upload = async (fileList: Array<UploadChunk>) => {
   const fileStore = useFileStore()
   const appStore = useAppStore()
+
+  console.log('fileList = ', fileList)
 
   return new Promise<Boolean>((resolve) => {
     // 过滤已存在的文件
     const fileNameList = fileStore.fileUploadList.map((it) => it.file.name)
 
     for (const iterator of fileList) {
-      console.log(fileNameList, iterator.name)
+      const { file } = iterator
+      console.log(fileNameList, file.name)
 
-      if (!fileNameList.includes(iterator.name)) {
+      if (!fileNameList.includes(file.name)) {
+        // 新任务
         fileStore.fileUploadList = [
           {
             power: 0,
-            file: iterator,
-            status: 'await'
+            file: file,
+            status: 'await',
+            uploadStatus: {
+              success: 0,
+              error: 0
+            }
           },
           ...fileStore.fileUploadList
         ]
+      }
+      // 重新上传
+      else if (iterator.status === 're-upload') {
+        iterator.power = 0
+        iterator.status = 'await'
+        iterator.uploadStatus = {
+          success: 0,
+          error: 0
+        }
       }
     }
 
@@ -71,9 +88,15 @@ const upload = async (fileList: Array<File>) => {
           uploadQueue.push(
             uploadChunk(basicFile)
               .then((response) => {
+                if (basicFile.uploadStatus) {
+                  basicFile.uploadStatus.success++
+                }
                 console.log(response)
               })
               .catch((error) => {
+                if (basicFile.uploadStatus) {
+                  basicFile.uploadStatus.error++
+                }
                 console.error('报错 = ', error)
               })
               .finally(() => {
@@ -136,16 +159,18 @@ export const uploadChunk = (uploadChunk: UploadChunk) => {
           uploadChunk.power = progress // 设置文件上传进度
 
           if (uploadedChunkCount === totalChunkCount) {
-            uploadChunk.status = 'complete'
+            if (uploadChunk.uploadStatus?.error) {
+              uploadChunk.status = 'error'
+            } else {
+              uploadChunk.status = 'success'
+            }
             // console.log('文件 ' + file.name + ' 上传完成')
-            appStore.notification('文件 ' + file.name + ' 上传完成')
             worker.terminate()
             resolve(true)
           }
         } else {
           uploadChunk.status = 'error'
           // console.log('文件 ' + file.name + ' 上传失败')
-          appStore.notification('文件 ' + file.name + ' 上传失败')
           reject(false)
         }
       }

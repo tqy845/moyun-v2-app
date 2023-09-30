@@ -8,7 +8,7 @@
 import { computed, reactive, ref } from 'vue'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore, useFileStore } from '@/stores'
-import { UploadChunk } from '@/types/models'
+import { BasicFile, UploadChunk } from '@/types/models'
 
 const fileInputRef = ref<HTMLInputElement>()
 const tableRef = ref()
@@ -52,7 +52,7 @@ const handleExpansion = () => {
 const handleFileDrop = (event: any) => {
   event.preventDefault()
   const fileObject = event.dataTransfer.files as {}
-  handleUpload(Object.values(fileObject))
+  handleUpload(Object.values(fileObject).map((item) => ({ file: item as File })))
 }
 
 /**
@@ -62,14 +62,15 @@ const handleFileDrop = (event: any) => {
 const handleFileSelect = (event: any) => {
   event.preventDefault()
   const fileObject = event.target.files as {}
-  handleUpload(Object.values(fileObject))
+  console.log('fileObject = ', fileObject)
+  handleUpload(Object.values(fileObject).map((item) => ({ file: item as File })))
 }
 
 /**
  * 上传事件
  * @param fileList 文件列表
  */
-const handleUpload = async (fileList: Array<File>) => {
+const handleUpload = async (fileList: Array<UploadChunk>) => {
   if (appStore.app.settings['uploadAutoHideUploadArea']) {
     cs.upload = []
     handleExpansion()
@@ -80,13 +81,33 @@ const handleUpload = async (fileList: Array<File>) => {
 }
 
 /**
+ * 单击上传区域单击事件
+ */
+const handleClickArea = () => {
+  if (fileInputRef.value) {
+    fileInputRef.value.value = ''
+    fileInputRef.value.click()
+  }
+}
+
+/**
  * 取消下载
  * @param item UploadChunk 文件
  */
 const handleCancel = (item: UploadChunk) => {
+  console.log('取消下载', item)
   fileStore.fileUploadList = fileStore.fileUploadList.filter(
     (it) => it.file.name !== item.file.name
   )
+}
+
+/**
+ * 重新上传
+ */
+const handleReUpload = async (item: UploadChunk) => {
+  console.log('重新上传', item)
+  item.status = 're-upload'
+  await fileUtils.upload([item])
 }
 </script>
 
@@ -142,7 +163,7 @@ const handleCancel = (item: UploadChunk) => {
                 @dragenter.prevent
                 @dragleave.prevent
                 @drop.stop="handleFileDrop"
-                @click.stop="fileInputRef?.click()"
+                @click.stop="handleClickArea"
               >
                 <v-icon size="56">mdi-cloud-upload</v-icon>
                 <p>
@@ -188,7 +209,10 @@ const handleCancel = (item: UploadChunk) => {
                 :class="[item.file.name]"
               >
                 <td>{{ index + 1 }}</td>
-                <td>{{ item.file.name }}</td>
+                <td>
+                  {{ item.file.name }}
+                  {{ item.uploadStatus }}
+                </td>
                 <td>{{ fileUtils.formatSize(item.file.size) }}</td>
                 <td style="min-width: 150px">
                   <v-progress-linear
@@ -199,11 +223,16 @@ const handleCancel = (item: UploadChunk) => {
                     rounded
                   >
                     <strong class="text-white text-overline">{{
-                      typeof item.power === 'number' ? Math.ceil(item.power) + '%' : item.power
+                      item.uploadStatus?.error
+                        ? '失败'
+                        : typeof item.power === 'number'
+                        ? Math.ceil(item.power) + '%'
+                        : item.power
                     }}</strong></v-progress-linear
                   >
                 </td>
                 <td width="150">
+                  <!-- 取消上传 -->
                   <v-tooltip
                     :text="$t('file.upload.uploadList.fileAction.cancel.text')"
                     location="bottom"
@@ -220,26 +249,42 @@ const handleCancel = (item: UploadChunk) => {
                       ></v-btn>
                     </template>
                   </v-tooltip>
-                  <!-- <v-tooltip text="移除记录" location="bottom">
-                      <template v-slot:activator="{ props }">
-                        <v-btn
-                          v-bind="props"
-                          size="x-small"
-                          color="error"
-                          icon="mdi-file-remove"
-                          class="ml-1"
-                        ></v-btn>
-                      </template>
-                    </v-tooltip> -->
-                  <!-- <v-btn
-                        size="small"
-                        color="primary"
-                        rounded="xl"
-                        >取消</v-btn
-                      >
-                      <v-btn size="small" color="primary" rounded="xl" @click="handleCancel(item)"
-                        >移除</v-btn
-                      > -->
+
+                  <!-- 重新上传 -->
+                  <v-tooltip
+                    :text="$t('file.upload.uploadList.fileAction.reupload.text')"
+                    location="bottom"
+                  >
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        :disabled="!item.uploadStatus?.error"
+                        v-bind="props"
+                        size="x-small"
+                        color="info"
+                        icon="mdi-restart"
+                        class="mr-1"
+                        @click="handleReUpload(item)"
+                      ></v-btn>
+                    </template>
+                  </v-tooltip>
+
+                  <!-- 删除 -->
+                  <v-tooltip
+                    :text="$t('file.upload.uploadList.fileAction.remove.text')"
+                    location="bottom"
+                  >
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        v-bind="props"
+                        size="x-small"
+                        color="error"
+                        icon="mdi-delete"
+                        class="mr-1"
+                        :disabled="item.status !== 'success'"
+                        @click="handleCancel(item)"
+                      ></v-btn>
+                    </template>
+                  </v-tooltip>
                 </td>
               </tr>
             </tbody>
