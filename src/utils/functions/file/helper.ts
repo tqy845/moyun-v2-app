@@ -1,10 +1,6 @@
 import { FileChunk } from '@/types/models'
 import SparkMD5 from 'spark-md5'
 
-const MAX_CHUNKS_SMALL_FILE = 1 // 针对小文件的最大分片数
-const MAX_CHUNKS_MEDIUM_FILE = 50 // 针对中等文件的最大分片数
-const MAX_CHUNKS_LARGE_FILE = 100 // 针对大文件的最大分片数
-
 /**
  * 文件分片
  * @description 这个方法会被worker线程调用
@@ -31,12 +27,23 @@ export const createChunk = (file: File, index: number, chunkSize: number) => {
   })
 }
 
-export const determineMaxChunks = (fileSize: number) => {
-  if (fileSize < 1 * 1024 * 1024) {
-    return MAX_CHUNKS_SMALL_FILE
-  } else if (fileSize < 5 * 1024 * 1024 * 1024) {
-    return MAX_CHUNKS_MEDIUM_FILE
-  } else {
-    return MAX_CHUNKS_LARGE_FILE
+/**
+ * 最大分片限制
+ * @param fileSize 文件大小
+ */
+export const calculateFileSlices = (fileSize: number) => {
+  if (fileSize <= 300 * 1024 * 1024) {
+    return 1
+  } else if (fileSize <= 3 * 1024 * 1024 * 1024) {
+    return Math.ceil(fileSize / (600 * 1024 * 1024))
+  } else if (fileSize <= 6 * 1024 * 1024 * 1024) {
+    return Math.ceil(fileSize / (800 * 1024 * 1024))
+  } else if (fileSize <= 20 * 1024 * 1024 * 1024) {
+    return Math.ceil(fileSize / (1 * 1024 * 1024 * 1024))
+  } else if (fileSize <= 50 * 1024 * 1024 * 1024) {
+    return Math.min(50, Math.ceil(fileSize / (1 * 1024 * 1024 * 1024)))
+  } else if (fileSize <= 2000 * 1024 * 1024 * 1024) {
+    return Math.min(100, Math.ceil(fileSize / (10 * 1024 * 1024 * 1024)))
   }
+  return 100
 }

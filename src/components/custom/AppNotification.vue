@@ -5,26 +5,21 @@
   @description “全局”消息组件
 -->
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useAppStore } from '@/stores'
 
 const appStore = useAppStore()
 
-const cs = reactive<{ showDialog: boolean; messageList: Array<any> }>({
-  showDialog: true,
+const cs = reactive<{ messageList: Array<any> }>({
   messageList: []
 })
 
 appStore.$subscribe((_, state) => {
   if (state.messageQueue.length) {
-    cs.showDialog = true
     cs.messageList.push(...state.messageQueue.copyWithin(0, state.messageQueue.length))
     state.messageQueue.length = 0
     setTimeout(() => {
       cs.messageList.shift()
-      if (!cs.messageList) {
-        cs.showDialog = false
-      }
     }, cs.messageList[0]?.delay || 3000)
   }
 })
@@ -62,6 +57,7 @@ appStore.$subscribe((_, state) => {
     :timeout="cs.messageList[0]?.delay"
     location="top"
     :style="{ top: index * 60 + 'px' }"
+    vertical
   >
     {{ index + 1 + '、' + iterator.message }}
     <template v-slot:actions>

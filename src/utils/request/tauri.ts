@@ -58,9 +58,6 @@ const tauriRequest = async <T = any>(
      */
     console.log('Response:', result.data, response)
 
-    if (result.code !== 200) {
-      appStore.notification(result.message, 'error')
-    }
     return result
   } catch (error) {
     result = {

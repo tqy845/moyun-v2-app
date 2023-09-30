@@ -9,7 +9,7 @@ import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
 import { FileProperties, UploadChunk } from '@/types/models'
 import { FILE_ICON_TYPE } from '@/types/enums'
 import { useAppStore, useFileStore } from '@/stores'
-import { determineMaxChunks } from './helper'
+import { calculateFileSlices } from './helper'
 
 const CHUNK_SIZE = 1024 * 1024 * 10 // 单个分片大小
 const THREAD_COUNT = navigator.hardwareConcurrency || 4
@@ -100,7 +100,7 @@ export const uploadChunk = (uploadChunk: UploadChunk) => {
     const { file } = uploadChunk
 
     // 计算 totalChunkCount，但限制最大值
-    const totalChunkCount = determineMaxChunks(file.size)
+    const totalChunkCount = calculateFileSlices(file.size)
     const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
     let uploadedChunkCount = 0 // 用于跟踪已上传的分片数量
 
