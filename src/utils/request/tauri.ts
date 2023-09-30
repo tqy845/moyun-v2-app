@@ -47,18 +47,7 @@ const tauriRequest = async <T = any>(
    */
   const response: Response<ResponseType<T>> = await fetch(BASE_URL + url, args)
 
-  /**
-   * Stream
-   */
-  if (response.headers['content-type'] === 'application/octet-stream') {
-    const blob = new Blob([response.data as unknown as BlobPart])
-    // 返回Blob数据
-    console.log(123123123)
-
-    result.data = { blob } as T
-  } else {
-    result = response.data
-  }
+  result = response.data
 
   /**
    * Response
