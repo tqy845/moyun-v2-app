@@ -24,6 +24,12 @@ export interface FileStore {
   fileList: Array<BasicFile>
 
   /**
+   * 当前文件列表
+   * @type {Array<BasicFile>}
+   */
+  currentFileList: Array<BasicFile>
+
+  /**
    * 文件上传列表
    * @type {Array<UploadChunk>}
    */
@@ -46,6 +52,11 @@ export interface FileStore {
    * @type {number}
    */
   iconViewPageItemNumber: number
+
+  /**
+   * 分类菜单tab
+   */
+  classifyTabList: { [key: string]: number }
 }
 
 /**
@@ -61,9 +72,11 @@ export const getFileDefaultSettings = (): FileStore => {
       media: []
     },
     fileList: [],
+    currentFileList: [],
     fileUploadList: [],
     fileView: 'icon',
     fileItemSize: 121,
-    iconViewPageItemNumber: 50
+    iconViewPageItemNumber: 50,
+    classifyTabList: {}
   }
 }

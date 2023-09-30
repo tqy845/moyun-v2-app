@@ -1,3 +1,4 @@
+import { AppStore } from './../app/helper'
 /**
  * File Store
  */
@@ -7,22 +8,17 @@ import { getFileDefaultSettings, FileStore } from './helper'
 import { fetchFileList, uploadFileChunk } from '@/api'
 import { BasicFile, FileChunk, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
+import { useAppStore } from '..'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
-  getters: {
-    /**
-     * 全部文件
-     */
-    all(state) {
-      return state.fileClassify['document'].concat(state.fileClassify['media'])
-    }
-  },
+  getters: {},
   actions: {
     /**
      * 获取文件列表
      */
     async list() {
+      const appStore = useAppStore()
       this.loading = true
       const { data } = await fetchFileList<{
         fileList: Array<FileProperties>
@@ -44,6 +40,7 @@ export const useFileStore = defineStore('fileStore', {
           this.fileClassify['media'].push(_basicFile)
         }
       })
+      this.currentFileList = this.classify(appStore.app.menuIndex['appIconViewTab']?.key ?? 'all')
       this.loading = false
       return this.fileList
     },
@@ -69,14 +66,17 @@ export const useFileStore = defineStore('fileStore', {
     },
     /**
      * 文件分类
+     * @param key 分类类型
      */
     classify(key: 'all' | 'document' | 'media') {
       console.log('分类', key)
-      if (key === 'all') return this.all
+      if (key === 'all') return this.fileList
       return this.fileClassify[key]
     },
     /**
      * 文件块上传
+     * @param 包含分片的表单数据
+     * @param 网络请求标记
      */
     async uploadChunk(formData: FormData, flag: string) {
       // console.log('上传块', formData)
@@ -85,10 +85,34 @@ export const useFileStore = defineStore('fileStore', {
     },
     /**
      * 删除文件
+     * @param name 文件名
      */
     delete(name: string) {
       this.fileUploadList = this.fileUploadList.filter((it) => it.file.name !== name)
       this.fileList = this.fileList.filter((it) => it.name !== name)
+    },
+    /**
+     * 分页
+     * @param item
+     */
+    paging(item: any) {
+      console.log('分页', item)
+      const appStore = useAppStore()
+      const { iconViewPageItemNumber } = this
+      const startIndex = (item - 1) * iconViewPageItemNumber
+      const endIndex = startIndex + iconViewPageItemNumber
+      this.currentFileList = this.classify(
+        appStore.app.menuIndex['appIconViewTab']?.key ?? 'all'
+      ).slice(startIndex, endIndex)
+    },
+    /**
+     * 换页
+     * @param 页码
+     */
+    changePage(page: number) {
+      const appStore = useAppStore()
+      this.classifyTabList[appStore.app.menuIndex['appIconViewTab'].key] = page
+      this.paging(page)
     }
   },
 

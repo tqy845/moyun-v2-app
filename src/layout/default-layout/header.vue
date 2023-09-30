@@ -7,6 +7,14 @@
 <script lang="ts" setup>
 import { AppLanguage, AppFileView, AppFileSearch, AppFileUpload } from '@/components/common'
 import { reactive } from 'vue'
+import { BasicFile } from '@/types/models'
+import { AppFile } from '@/components/common'
+import { createSharedComposable, useMagicKeys, useWindowSize } from '@vueuse/core'
+import { useAppStore, useFileStore } from '@/stores'
+import { fileUtils } from '@/utils/functions'
+
+const fileStore = useFileStore()
+const appStore = useAppStore()
 
 const props = defineProps({
   breadcrumbItems: {
@@ -24,6 +32,47 @@ const cs = reactive({
     show: false
   }
 })
+
+const data = reactive<{
+  tabItems: Array<{ label: string; icon: string; key: string }>
+}>({
+  tabItems: [
+    {
+      label: 'file.view.iconLabel.secondaryMenu.all.text',
+      icon: 'file',
+      key: 'all'
+    },
+    {
+      label: 'file.view.iconLabel.secondaryMenu.document.text',
+      icon: 'briefcase',
+      key: 'document'
+    },
+    {
+      label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
+      icon: 'multimedia',
+      key: 'media'
+    }
+  ]
+})
+
+/**
+ * 切换标签
+ * @param item 标签项
+ */
+const handleChangeTab = (item: unknown) => {
+  console.log('切换标签', item)
+  const _item = item as {
+    label: string
+    icon: string
+    key: string
+    index: number
+  }
+  appStore.app.menuIndex['appIconViewTab'] = _item
+  if (!fileStore.classifyTabList[_item.key]) {
+    fileStore.classifyTabList[_item.key] = 1
+  }
+  fileStore.paging(fileStore.classifyTabList[_item.key] ?? 1)
+}
 </script>
 
 <template>
@@ -32,6 +81,26 @@ const cs = reactive({
       <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
     </template>
 
+    <!-- 二级菜单 -->
+    <v-row class="w-100 px-7" justify="start">
+      <v-tabs
+        v-model="appStore.app.menuIndex['appIconViewTab']['index']"
+        centered
+        stacked
+        show-arrows
+        color="primary"
+        @update:modelValue="handleChangeTab"
+      >
+        <v-tab
+          class="text-capitalize"
+          v-for="(item, index) in data.tabItems"
+          :key="index"
+          :value="{ ...item, index }"
+        >
+          <v-icon>mdi-{{ item.icon }}</v-icon> {{ $t(item.label) }}
+        </v-tab>
+      </v-tabs>
+    </v-row>
     <!-- 更多操作 -->
     <!-- <template v-slot:prepend>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
