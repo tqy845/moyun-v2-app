@@ -43,12 +43,13 @@ const cs = reactive<{
 const data = reactive({
   table: {
     headers: [
-      { title: 'No', align: 'start', sortable: true, key: 'no' },
+      { title: 'No', align: 'start', sortable: true, key: 'no', width: 100 },
       {
         title: t('file.upload.uploadList.fileName.text'),
         sortable: true,
         key: 'file.name',
-        align: 'center'
+        align: 'center',
+        width: 'auto'
       },
       {
         title: t('file.upload.uploadList.fileSize.text'),
@@ -290,20 +291,20 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
             </template>
             <template v-slot:item.power="{ item }">
               <v-progress-linear
-                :buffer-value="item.columns.power"
-                :model-value="item.columns.power"
+                :buffer-value="item.raw.power"
+                :model-value="item.raw.power"
                 height="12"
-                :indeterminate="item.columns.status === 'init'"
+                :indeterminate="item.raw.status === 'init'"
                 rounded
               >
                 <strong class="text-white text-overline">{{
-                  item.columns.status === 'cancel'
+                  item.raw.status === 'cancel'
                     ? $t('cancel.text')
-                    : item.columns.uploadStatus?.error
+                    : item.raw.uploadStatus?.error
                     ? $t('error.text')
-                    : typeof item.columns.power === 'number'
-                    ? Math.ceil(item.columns.power) + '%'
-                    : item.columns.power
+                    : typeof item.raw.power === 'number'
+                    ? Math.ceil(item.raw.power) + '%'
+                    : item.raw.power
                 }}</strong></v-progress-linear
               >
             </template>

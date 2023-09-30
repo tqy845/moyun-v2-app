@@ -55,7 +55,7 @@ const handleSelect = (item: number) => {
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" variant="text" @click="handleSelect(ACTION_TYPE.CANCEL)">
-          {{ $t('cancel') }}
+          {{ $t('cancel.text') }}
         </v-btn>
         <v-btn color="error" variant="text" @click="handleSelect(ACTION_TYPE.CONFIRM)">
           {{ $t('confirm.text') }}
