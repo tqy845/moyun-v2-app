@@ -52,9 +52,7 @@ const handleExpansion = () => {
 const handleFileDrop = (event: any) => {
   event.preventDefault()
   const fileObject = event.dataTransfer.files as {}
-  fileUtils.upload(Object.values(fileObject))
-  cs.upload = []
-  handleExpansion()
+  handleUpload(Object.values(fileObject))
 }
 
 /**
@@ -64,9 +62,21 @@ const handleFileDrop = (event: any) => {
 const handleFileSelect = (event: any) => {
   event.preventDefault()
   const fileObject = event.target.files as {}
-  fileUtils.upload(Object.values(fileObject))
-  cs.upload = []
-  handleExpansion()
+  handleUpload(Object.values(fileObject))
+}
+
+/**
+ * 上传事件
+ * @param fileList 文件列表
+ */
+const handleUpload = async (fileList: Array<File>) => {
+  if (appStore.app.settings['uploadAutoHideUploadArea']) {
+    cs.upload = []
+    handleExpansion()
+  }
+  if ((await fileUtils.upload(fileList)) && appStore.app.settings['uploadDialogAutoClose']) {
+    emits('update:show', false)
+  }
 }
 
 /**
@@ -91,8 +101,32 @@ const handleCancel = (item: UploadChunk) => {
   >
     <v-card>
       <v-toolbar dark color="primary">
-        <v-toolbar-title>文件上传</v-toolbar-title>
+        <v-toolbar-title>{{ $t('file.upload.title.text') }}</v-toolbar-title>
         <v-spacer></v-spacer>
+        <v-row style="width: max-content" justify="end">
+          <v-col cols="auto">
+            <v-switch
+              v-model="appStore.app.settings['uploadAutoHideUploadArea']"
+              color="success"
+              :value="true"
+              hide-details
+              inset
+            >
+              <template v-slot:label> {{ $t('file.upload.autoHideUploadArea') }} </template>
+            </v-switch>
+          </v-col>
+          <v-col cols="auto">
+            <v-switch
+              v-model="appStore.app.settings['uploadDialogAutoClose']"
+              color="success"
+              :value="true"
+              hide-details
+              inset
+            >
+              <template v-slot:label> {{ $t('file.upload.autoCloseDialog') }} </template>
+            </v-switch>
+          </v-col>
+        </v-row>
         <v-toolbar-items>
           <v-btn icon dark @click="emits('update:show', false)">
             <v-icon>mdi-close</v-icon>
@@ -101,7 +135,7 @@ const handleCancel = (item: UploadChunk) => {
       </v-toolbar>
 
       <v-expansion-panels multiple v-model="cs.upload" @update:modelValue="handleExpansion">
-        <v-expansion-panel title="上传文件" value="upload-area">
+        <v-expansion-panel :title="$t('file.upload.subtitle.text')" value="upload-area">
           <template #text>
             <div class="file-upload py-3">
               <div
@@ -114,7 +148,7 @@ const handleCancel = (item: UploadChunk) => {
               >
                 <v-icon size="56">mdi-cloud-upload</v-icon>
                 <p>
-                  <em>拖拽文件到此处或点击上传</em>
+                  <em>{{ $t('file.upload.area.text') }}</em>
                 </p>
               </div>
               <input
@@ -144,10 +178,10 @@ const handleCancel = (item: UploadChunk) => {
             <thead>
               <tr>
                 <th class="text-left">No</th>
-                <th class="text-left">文件名</th>
-                <th class="text-left">大小</th>
-                <th class="text-left">进度</th>
-                <th class="text-left">操作</th>
+                <th class="text-left">{{ $t('file.upload.uploadList.fileName.text') }}</th>
+                <th class="text-left">{{ $t('file.upload.uploadList.fileSize.text') }}</th>
+                <th class="text-left">{{ $t('file.upload.uploadList.fileProgress.text') }}</th>
+                <th class="text-left">{{ $t('file.upload.uploadList.fileAction.text') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -173,7 +207,10 @@ const handleCancel = (item: UploadChunk) => {
                   >
                 </td>
                 <td width="150">
-                  <v-tooltip text="取消上传" location="bottom">
+                  <v-tooltip
+                    :text="$t('file.upload.uploadList.fileAction.cancel.text')"
+                    location="bottom"
+                  >
                     <template v-slot:activator="{ props }">
                       <v-btn
                         v-bind="props"

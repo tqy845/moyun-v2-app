@@ -21,60 +21,63 @@ const upload = async (fileList: Array<File>) => {
   const fileStore = useFileStore()
   const appStore = useAppStore()
 
-  // 过滤已存在的文件
-  const fileNameList = fileStore.fileUploadList.map((it) => it.file.name)
+  return new Promise<Boolean>((resolve) => {
+    // 过滤已存在的文件
+    const fileNameList = fileStore.fileUploadList.map((it) => it.file.name)
 
-  for (const iterator of fileList) {
-    console.log(fileNameList, iterator.name)
+    for (const iterator of fileList) {
+      console.log(fileNameList, iterator.name)
 
-    if (!fileNameList.includes(iterator.name)) {
-      fileStore.fileUploadList = [
-        {
-          power: 0,
-          file: iterator,
-          status: 'await'
-        },
-        ...fileStore.fileUploadList
-      ]
-    }
-  }
-
-  // 创建一个队列来管理文件上传
-  const uploadQueue: Array<Promise<boolean>> = []
-  let count = 0
-
-  // 将文件添加到队列
-  const timer = setInterval(async () => {
-    if (count < fileStore.fileUploadList.length) {
-      execTask()
-    } else if (uploadQueue.length === 0) {
-      console.log('所有任务已完成')
-      clearInterval(timer)
-      fileStore.list()
-    }
-    console.log('扫描上传任务')
-  }, 1000)
-
-  const execTask = () => {
-    while (uploadQueue.length < appStore.app.settings['maxUploadCount']) {
-      if (count >= fileStore.fileUploadList.length) break
-      let basicFile = fileStore.fileUploadList[count++]
-
-      while (basicFile.status !== 'await' && count < fileStore.fileUploadList.length) {
-        basicFile = fileStore.fileUploadList[count]
-        if (count < fileStore.fileUploadList.length) count++
-      }
-
-      if (basicFile.status === 'await') {
-        uploadQueue.push(
-          uploadChunk(basicFile).finally(() => {
-            uploadQueue.shift()
-            execTask()
-          })
-        )
+      if (!fileNameList.includes(iterator.name)) {
+        fileStore.fileUploadList = [
+          {
+            power: 0,
+            file: iterator,
+            status: 'await'
+          },
+          ...fileStore.fileUploadList
+        ]
       }
     }
-  }
+
+    // 创建一个队列来管理文件上传
+    const uploadQueue: Array<Promise<boolean>> = []
+    let count = 0
+
+    // 将文件添加到队列
+    const timer = setInterval(async () => {
+      if (count < fileStore.fileUploadList.length) {
+        execTask()
+      } else if (uploadQueue.length === 0) {
+        console.log('所有任务已完成')
+        clearInterval(timer)
+        fileStore.list()
+        resolve(true)
+      }
+      console.log('扫描上传任务')
+    }, 1000)
+
+    const execTask = () => {
+      while (uploadQueue.length < appStore.app.settings['maxUploadCount']) {
+        if (count >= fileStore.fileUploadList.length) break
+        let basicFile = fileStore.fileUploadList[count++]
+
+        while (basicFile.status !== 'await' && count < fileStore.fileUploadList.length) {
+          basicFile = fileStore.fileUploadList[count]
+          if (count < fileStore.fileUploadList.length) count++
+        }
+
+        if (basicFile.status === 'await') {
+          uploadQueue.push(
+            uploadChunk(basicFile).finally(() => {
+              uploadQueue.shift()
+              execTask()
+            })
+          )
+        }
+      }
+    }
+  })
 }
 
 /**
