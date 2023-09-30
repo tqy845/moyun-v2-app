@@ -211,7 +211,6 @@ const handleReUpload = async (item: UploadChunk) => {
                 <td>{{ index + 1 }}</td>
                 <td>
                   {{ item.file.name }}
-                  {{ item.uploadStatus }}
                 </td>
                 <td>{{ fileUtils.formatSize(item.file.size) }}</td>
                 <td style="min-width: 150px">
