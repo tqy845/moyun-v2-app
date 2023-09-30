@@ -38,7 +38,7 @@ window.addEventListener('wheel', fileUtils.listViewMouseWheel)
     :loading="fileStore.loading"
     fixed-header
     :headers="headers"
-    :items="fileStore.fileList"
+    :items="fileStore.currentFileList"
     class="elevation-1"
     :height="windowSize.height.value - 180"
     item-value="name"

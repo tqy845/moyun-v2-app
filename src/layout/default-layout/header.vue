@@ -88,7 +88,7 @@ const handleChangeTab = (item: unknown) => {
         centered
         stacked
         show-arrows
-        color="primary"
+        color="yellow-darken-1"
         @update:modelValue="handleChangeTab"
       >
         <v-tab

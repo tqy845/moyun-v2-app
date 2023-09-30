@@ -49,7 +49,7 @@ export const useFileStore = defineStore('fileStore', {
      * @param name 文件名
      */
     filter(name: string) {
-      console.log('过滤', name)
+      // console.log('过滤', name)
       this.loading = true
       this.fileList = name
         ? this.fileList.filter((file: BasicFile) => file.name === name)
@@ -61,7 +61,7 @@ export const useFileStore = defineStore('fileStore', {
      * @param name 文件名
      */
     find(name: string) {
-      console.log('查找', name)
+      // console.log('查找', name)
       return this.fileList.find((file: BasicFile) => file.name === name)
     },
     /**
@@ -69,7 +69,7 @@ export const useFileStore = defineStore('fileStore', {
      * @param key 分类类型
      */
     classify(key: 'all' | 'document' | 'media') {
-      console.log('分类', key)
+      // console.log('分类', key)
       if (key === 'all') return this.fileList
       return this.fileClassify[key]
     },
@@ -88,6 +88,7 @@ export const useFileStore = defineStore('fileStore', {
      * @param name 文件名
      */
     delete(name: string) {
+      // console.log('删除文件', name)
       this.fileUploadList = this.fileUploadList.filter((it) => it.file.name !== name)
       this.fileList = this.fileList.filter((it) => it.name !== name)
     },
@@ -96,7 +97,7 @@ export const useFileStore = defineStore('fileStore', {
      * @param item
      */
     paging(item: any) {
-      console.log('分页', item)
+      // console.log('分页', item)
       const appStore = useAppStore()
       const { iconViewPageItemNumber } = this
       const startIndex = (item - 1) * iconViewPageItemNumber
