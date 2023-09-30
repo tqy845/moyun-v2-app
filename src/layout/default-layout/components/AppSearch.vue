@@ -108,7 +108,7 @@ const data = reactive({
             density="comfortable"
             item-props
             menu-icon=""
-            placeholder="Search ..."
+            :placeholder="$t('global.search.placeholder.text')"
             prepend-inner-icon="mdi-magnify"
             theme="light"
             variant="outlined"

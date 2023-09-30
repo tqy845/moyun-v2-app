@@ -49,6 +49,7 @@
 
   "global.search.title.text": "搜索",
   "global.search.text": "您的搜索结果将显示在这里",
+  "global.search.placeholder.text": "搜索...",
 
   "blank.page.button1.text": "全局搜索",
   "blank.page.button2.text": "搜索文件",

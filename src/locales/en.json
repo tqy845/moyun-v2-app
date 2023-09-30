@@ -74,6 +74,7 @@
   "file.view.iconLabel.secondaryMenu.document.text": "Documents",
   "file.view.iconLabel.secondaryMenu.multimedia.text": "Multimedia",
 
+  "global.search.placeholder.text": "Search...",
   "file.view.null.text": "No files available",
   "file.view.null.button.text1": "Click",
   "file.view.null.button.text2": "Button to start uploading instantly",

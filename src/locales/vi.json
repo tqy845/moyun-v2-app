@@ -77,7 +77,7 @@
   "file.view.null.text": "Không có tệp nào",
   "file.view.null.button.text1": "Nhấn",
   "file.view.null.button.text2": "Nút để bắt đầu tải lên ngay lập tức",
-
+  "global.search.placeholder.text": "Tìm kiếm...",
   "$vuetify.noDataText": "Không có dữ liệu",
   "$vuetify.fileInput.counterSize": "Tổng cộng {0} tệp, {1} tổng cộng",
   "$vuetify.dataFooter.itemsPerPageAll": "Hiển thị Tất cả (có thể bị giật)",

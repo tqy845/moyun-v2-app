@@ -69,6 +69,7 @@
 
   "file.view.iconLabel.text": "アイコン",
   "file.view.listLabel.text": "リスト",
+  "global.search.placeholder.text": "検索...",
 
   "file.view.iconLabel.secondaryMenu.all.text": "すべてのファイル",
   "file.view.iconLabel.secondaryMenu.document.text": "ドキュメント",
