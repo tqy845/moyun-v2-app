@@ -1,8 +1,9 @@
-import { fileDownloadByName } from '@/api'
+import { fileDownloadByName, fileDeleteByName } from '@/api'
 import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
 import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
 import { start } from 'repl'
+import { useFileStore } from '@/stores'
 /**
  * 文件属性
  */
@@ -33,7 +34,12 @@ export interface UploadChunk {
   /**
    * 上传状态
    */
-  status?: 'success' | 'error' | 'await' | 'uploading' | 'init' | 're-upload'
+  status?: 'success' | 'error' | 'await' | 'uploading' | 'init' | 're-upload' | 'cancel'
+
+  /**
+   * 删除中
+   */
+  deleting?: boolean
 
   /**
    * 文件块上传状态
@@ -132,6 +138,18 @@ export class BasicFile {
    */
   async rename(newName: string): Promise<void> {
     this.name = newName
+  }
+
+  /**
+   * 删除文件
+   */
+  async delete(): Promise<void> {
+    console.log('删除文件', this.name)
+    const fileStore = useFileStore()
+    const { code } = await fileDeleteByName(this.name)
+    if (code === 200) {
+      fileStore.delete(this.name)
+    }
   }
 }
 

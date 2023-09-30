@@ -17,11 +17,12 @@ export const fetchFileList = <T = any>() => {
  * @param {string} formData 包含分片的表单
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const uploadFileChunk = <T = any>(formData: FormData) => {
-  return tauriRequest<T>({
+export const uploadFileChunk = <T = any>(formData: FormData, flag: string) => {
+  return fetchRequest<T>({
     url: `/system/user/file/chunk`,
     method: 'PUT',
-    form: formData
+    body: formData,
+    key: flag
   })
 }
 
@@ -38,5 +39,17 @@ export const fileDownloadByName = <T = any>(fileName: string, downloadProgress: 
     onProgress: (progress) => {
       downloadProgress(progress)
     }
+  })
+}
+
+/**
+ * 删除文件
+ * @param {string} fileName 文件名
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fileDeleteByName = <T = any>(fileName: string) => {
+  return fetchRequest<T>({
+    url: `/system/user/file/${fileName}`,
+    method: 'DELETE'
   })
 }

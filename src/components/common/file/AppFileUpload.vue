@@ -9,6 +9,8 @@ import { computed, reactive, ref } from 'vue'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile, UploadChunk } from '@/types/models'
+import { AppFileUploadDeleteConfirm } from '.'
+import { ACTION_TYPE } from '@/types/enums'
 
 const fileInputRef = ref<HTMLInputElement>()
 const tableRef = ref()
@@ -96,9 +98,10 @@ const handleClickArea = () => {
  */
 const handleCancel = (item: UploadChunk) => {
   console.log('取消下载', item)
-  fileStore.fileUploadList = fileStore.fileUploadList.filter(
-    (it) => it.file.name !== item.file.name
-  )
+  appStore.requestQueue[item.file.name].forEach((it) => {
+    it.abort()
+  })
+  delete appStore.requestQueue[item.file.name]
 }
 
 /**
@@ -108,6 +111,28 @@ const handleReUpload = async (item: UploadChunk) => {
   console.log('重新上传', item)
   item.status = 're-upload'
   await fileUtils.upload([item])
+}
+
+/**
+ * 删除文件
+ * @param selected 是否删除
+ * @param item 文件
+ */
+const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
+  console.log('用户选择', selected, item)
+  if (selected === ACTION_TYPE.CONFIRM) {
+    item.deleting = true
+    // 从上传列表中移除
+    fileStore.fileUploadList = fileStore.fileUploadList.filter(
+      (it) => it.file.name !== item.file.name
+    )
+    // 从文件列表中移除
+    const _file = fileStore.find(item.file.name)
+    if (_file?.name) {
+      await _file.delete()
+    }
+    item.deleting = false
+  }
 }
 </script>
 
@@ -211,6 +236,7 @@ const handleReUpload = async (item: UploadChunk) => {
                 <td>{{ index + 1 }}</td>
                 <td>
                   {{ item.file.name }}
+                  {{ item.status }}
                 </td>
                 <td>{{ fileUtils.formatSize(item.file.size) }}</td>
                 <td style="min-width: 150px">
@@ -222,7 +248,9 @@ const handleReUpload = async (item: UploadChunk) => {
                     rounded
                   >
                     <strong class="text-white text-overline">{{
-                      item.uploadStatus?.error
+                      item.status === 'cancel'
+                        ? '取消'
+                        : item.uploadStatus?.error
                         ? '失败'
                         : typeof item.power === 'number'
                         ? Math.ceil(item.power) + '%'
@@ -243,7 +271,7 @@ const handleReUpload = async (item: UploadChunk) => {
                         color="warning"
                         icon="mdi-upload-off"
                         class="mr-1"
-                        :disabled="item.power === 100"
+                        :disabled="item.status !== 'uploading'"
                         @click="handleCancel(item)"
                       ></v-btn>
                     </template>
@@ -256,7 +284,7 @@ const handleReUpload = async (item: UploadChunk) => {
                   >
                     <template v-slot:activator="{ props }">
                       <v-btn
-                        :disabled="!item.uploadStatus?.error"
+                        :disabled="!item.uploadStatus?.error || item.deleting"
                         v-bind="props"
                         size="x-small"
                         color="info"
@@ -273,15 +301,12 @@ const handleReUpload = async (item: UploadChunk) => {
                     location="bottom"
                   >
                     <template v-slot:activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        size="x-small"
-                        color="error"
-                        icon="mdi-delete"
-                        class="mr-1"
-                        :disabled="item.status !== 'success'"
-                        @click="handleCancel(item)"
-                      ></v-btn>
+                      <span v-bind="props">
+                        <AppFileUploadDeleteConfirm
+                          :item="item"
+                          @select="handleDeleteSelect($event, item)"
+                        />
+                      </span>
                     </template>
                   </v-tooltip>
                 </td>
@@ -292,8 +317,6 @@ const handleReUpload = async (item: UploadChunk) => {
       </v-list>
     </v-card>
   </v-dialog>
-
-  <!-- <v-file-input label="File input" variant="underlined"></v-file-input> -->
 </template>
 
 <style lang="scss" scoped>

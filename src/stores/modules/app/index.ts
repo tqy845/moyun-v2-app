@@ -9,7 +9,7 @@ import {
   sendNotification
 } from '@tauri-apps/api/notification'
 import { defineStore } from 'pinia'
-import { type AppStore, getAppDefaultSettings } from './helper'
+import { AppStore, getAppDefaultSettings } from './helper'
 
 export const useAppStore = defineStore(`appStore`, {
   state: (): AppStore => getAppDefaultSettings(),

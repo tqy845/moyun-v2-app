@@ -52,10 +52,17 @@ export interface AppStore {
 
   /**
    * 侧边栏配置
+   * @type {Array<AsideMenuItem>}
    */
   asideMenu: {
     itemList: Array<AsideMenuItem>
   }
+
+  /**
+   * 请求队列 AbortController实例管理
+   * @type { [key: string]: Array<AbortController>}
+   */
+  requestQueue: { [key: string]: Array<AbortController> }
 }
 
 /**
@@ -74,6 +81,7 @@ export const getAppDefaultSettings = (): AppStore => {
       }
     },
     messageQueue: [],
+    requestQueue: {},
     asideMenu: {
       itemList: [
         {

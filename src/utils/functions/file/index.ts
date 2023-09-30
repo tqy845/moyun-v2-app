@@ -45,6 +45,7 @@ const upload = async (fileList: Array<UploadChunk>) => {
           },
           ...fileStore.fileUploadList
         ]
+        appStore.requestQueue[file.name] = []
       }
       // 重新上传
       else if (iterator.status === 're-upload') {
@@ -54,6 +55,7 @@ const upload = async (fileList: Array<UploadChunk>) => {
           success: 0,
           error: 0
         }
+        appStore.requestQueue[file.name] = []
       }
     }
 
@@ -97,6 +99,8 @@ const upload = async (fileList: Array<UploadChunk>) => {
                 if (basicFile.uploadStatus) {
                   basicFile.uploadStatus.error++
                 }
+                // 取消下载
+                basicFile.status = 'cancel'
                 console.error('报错 = ', error)
               })
               .finally(() => {
@@ -117,7 +121,6 @@ const upload = async (fileList: Array<UploadChunk>) => {
 export const uploadChunk = (uploadChunk: UploadChunk) => {
   return new Promise<boolean>((resolve, reject) => {
     const fileStore = useFileStore()
-    const appStore = useAppStore()
 
     uploadChunk.status = 'init'
     const { file } = uploadChunk
@@ -139,7 +142,9 @@ export const uploadChunk = (uploadChunk: UploadChunk) => {
       }
 
       worker.onmessage = async (e) => {
+        if (uploadChunk.status === 'cancel') return
         uploadChunk.status = 'uploading'
+
         const { chunk, ...args } = e.data
         const formData = new FormData()
         formData.append('file', chunk, `chunk_${i}`)
@@ -151,7 +156,7 @@ export const uploadChunk = (uploadChunk: UploadChunk) => {
           }
         }
 
-        if (await fileStore.uploadChunk(formData)) {
+        if (await fileStore.uploadChunk(formData, file.name)) {
           // console.log('线程 ' + i + ' 的分片上传成功')
           uploadedChunkCount++ // 分片上传成功，增加已上传分片的数量
 

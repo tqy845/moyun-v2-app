@@ -36,12 +36,21 @@ export const useFileStore = defineStore('fileStore', {
     },
     /**
      * 文件过滤
+     * @param name 文件名
      */
     filter(name: string) {
       console.log('过滤', name)
       this.fileList = name
         ? this.tempFileList.filter((file: BasicFile) => file.name === name)
         : this.tempFileList
+    },
+    /**
+     * 文件查找
+     * @param name 文件名
+     */
+    find(name: string) {
+      console.log('查找', name)
+      return this.tempFileList.find((file: BasicFile) => file.name === name)
     },
     /**
      * 文件分类
@@ -67,10 +76,18 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 文件块上传
      */
-    async uploadChunk(formData: FormData) {
+    async uploadChunk(formData: FormData, flag: string) {
       // console.log('上传块', formData)
-      const { code } = await uploadFileChunk(formData)
+      const { code } = await uploadFileChunk(formData, flag)
       return code === 200
+    },
+    /**
+     * 删除文件
+     */
+    delete(name: string) {
+      this.fileUploadList = this.fileUploadList.filter((it) => it.file.name !== name)
+      this.tempFileList = this.tempFileList.filter((it) => it.name !== name)
+      this.fileList = this.tempFileList.filter((it) => it.name !== name)
     }
   },
 
