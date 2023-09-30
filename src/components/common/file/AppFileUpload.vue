@@ -127,11 +127,9 @@ const handleCancel = (item: UploadChunk) => {
             </v-switch>
           </v-col>
         </v-row>
-        <v-toolbar-items>
-          <v-btn icon dark @click="emits('update:show', false)">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
+        <v-btn class="ml-3" icon dark @click="emits('update:show', false)">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-toolbar>
 
       <v-expansion-panels multiple v-model="cs.upload" @update:modelValue="handleExpansion">
@@ -159,17 +157,16 @@ const handleCancel = (item: UploadChunk) => {
                 @change="handleFileSelect"
               />
             </div>
+            <!-- <v-list lines="two" subheader>
+              <v-list-item
+                title="注意：单个文件大小不能超过100GB"
+                subtitle="支持分片上传、断点续传、秒传、加密上传等"
+              ></v-list-item>
+            </v-list> -->
           </template>
         </v-expansion-panel>
       </v-expansion-panels>
-      <!-- <v-list lines="two" subheader v-show="cs.uploadArea">
-          <v-list-subheader>上传文件</v-list-subheader>
-          <v-list-item> </v-list-item>
-          <v-list-item
-            title="注意：上传的文件大小不能超过100GB"
-            subtitle="支持分片上传、断点续传、秒传、加密上传等"
-          ></v-list-item>
-        </v-list>-->
+
       <v-divider></v-divider>
       <v-list lines="two" subheader>
         <!-- <v-list-subheader class="w-100"> 上传列表 </v-list-subheader> -->

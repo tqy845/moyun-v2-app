@@ -48,20 +48,28 @@ const tauriRequest = async <T = any>(
   /**
    * Request
    */
-  const response: Response<ResponseType<T>> = await fetch(BASE_URL + url, args)
+  try {
+    const response: Response<ResponseType<T>> = await fetch(BASE_URL + url, args)
 
-  result = response.data
+    result = response.data
 
-  /**
-   * Response
-   */
-  console.log('Response:', result.data, response)
+    /**
+     * Response
+     */
+    console.log('Response:', result.data, response)
 
-  if (result.code !== 200) {
-    appStore.notification(result.message, 'error')
+    if (result.code !== 200) {
+      appStore.notification(result.message, 'error')
+    }
+    return result
+  } catch (error) {
+    result = {
+      code: 500,
+      message: error as string,
+      data: {} as T
+    }
+    return result
   }
-
-  return result
 }
 
 export default tauriRequest

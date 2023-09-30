@@ -41,7 +41,7 @@ const upload = async (fileList: Array<File>) => {
     }
 
     // 创建一个队列来管理文件上传
-    const uploadQueue: Array<Promise<boolean>> = []
+    const uploadQueue: Array<Promise<unknown>> = []
     let count = 0
 
     // 将文件添加到队列
@@ -69,10 +69,17 @@ const upload = async (fileList: Array<File>) => {
 
         if (basicFile.status === 'await') {
           uploadQueue.push(
-            uploadChunk(basicFile).finally(() => {
-              uploadQueue.shift()
-              execTask()
-            })
+            uploadChunk(basicFile)
+              .then((response) => {
+                console.log(response)
+              })
+              .catch((error) => {
+                console.error('报错 = ', error)
+              })
+              .finally(() => {
+                uploadQueue.shift()
+                execTask()
+              })
           )
         }
       }

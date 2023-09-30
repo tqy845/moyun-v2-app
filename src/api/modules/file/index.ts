@@ -18,10 +18,10 @@ export const fetchFileList = <T = any>() => {
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const uploadFileChunk = <T = any>(formData: FormData) => {
-  return fetchRequest<T>({
+  return tauriRequest<T>({
     url: `/system/user/file/chunk`,
-    method: 'POST',
-    body: formData
+    method: 'PUT',
+    form: formData
   })
 }
 
