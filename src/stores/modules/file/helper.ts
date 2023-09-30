@@ -34,11 +34,18 @@ export interface FileStore {
    * @type {'icon' | 'list'}
    */
   fileView: 'icon' | 'list'
+
   /**
    * 文件项大小
    * @type {number}
    */
   fileItemSize: number
+
+  /**
+   * icon视图一页条目数
+   * @type {number}
+   */
+  iconViewPageItemNumber: number
 }
 
 /**
@@ -53,6 +60,7 @@ export const getFileDefaultSettings = (): FileStore => {
     tempFileList: [],
     fileUploadList: [],
     fileView: 'icon',
-    fileItemSize: 121
+    fileItemSize: 121,
+    iconViewPageItemNumber: 50
   }
 }

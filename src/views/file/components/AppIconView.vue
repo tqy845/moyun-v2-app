@@ -67,6 +67,27 @@ const handleChangeTab = (item: unknown) => {
 }
 
 /**
+ * 分页
+ * @param item
+ */
+const handleChangePage = (item: any) => {
+  console.log('换页', item)
+  let { iconViewPageItemNumber, tempFileList } = fileStore
+  const startIndex = (item - 1) * iconViewPageItemNumber
+  const endIndex = startIndex + iconViewPageItemNumber
+  fileStore.fileList = tempFileList.slice(startIndex, endIndex)
+}
+
+/**
+ * 计算分页数
+ */
+const pageItemNumber = computed(() => {
+  const { iconViewPageItemNumber, tempFileList } = fileStore
+  const calc = Math.ceil(tempFileList.length / iconViewPageItemNumber)
+  return tempFileList.length % 2 === 0 ? calc : calc + 1
+})
+
+/**
  * 鼠标事件
  */
 window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
@@ -74,6 +95,7 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 onMounted(async () => {
   await fileStore.list()
   fileStore.classify(data.tabItems[appStore.app.menuIndex['appIconViewTab']].key)
+  handleChangePage(1)
 })
 </script>
 
@@ -105,10 +127,10 @@ onMounted(async () => {
   <v-card class="w-100" :height="windowSize.height.value - 195">
     <div :style="{ height: `${windowSize.height.value - 260}px` }" style="overflow: auto">
       <!-- 读取中 -->
-      <AppFileLoading class="mt-16" v-if="fileStore.loading" />
+      <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
       <!-- 渲染 -->
       <v-btn-toggle
-        v-if="fileStore.fileList.length"
+        v-else-if="fileStore.fileList.length"
         v-model="selected"
         :density="null"
         :multiple="multiple"
@@ -136,7 +158,7 @@ onMounted(async () => {
       <AppFileUploadAlert :show="!fileStore.fileList.length && !fileStore.loading" />
     </div>
     <v-card-action>
-      <v-pagination :length="0"></v-pagination>
+      <v-pagination :length="pageItemNumber" @update:modelValue="handleChangePage"></v-pagination>
     </v-card-action>
   </v-card>
 </template>

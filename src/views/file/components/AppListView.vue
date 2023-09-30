@@ -45,7 +45,12 @@ window.addEventListener('wheel', fileUtils.listViewMouseWheel)
     show-select
   >
     <template v-slot:item.name="{ item }">
-      <v-row class="d-inline-block text-truncate" justify="start" align="center">
+      <v-row
+        class="d-inline-block text-truncate"
+        style="width: 25vw"
+        justify="start"
+        align="center"
+      >
         <v-icon :icon="`mdi-` + item.raw.icon" size="30" class="mr-1" color="#62B1FA"></v-icon>
         {{ item.columns.name.replace('.' + item.raw.extension, '') }}
       </v-row>
