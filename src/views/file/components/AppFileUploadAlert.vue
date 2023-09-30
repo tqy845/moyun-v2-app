@@ -14,8 +14,7 @@ const props = defineProps({
     type: Boolean
   },
   title: {
-    type: String,
-    default: '暂无文件'
+    type: String
   }
 })
 
@@ -33,15 +32,15 @@ const cs = reactive({
     variant="outlined"
     prominent
     border="top"
-    :title="title"
+    :title="title ?? $t('file.view.null.text')"
     class="ma-5"
     v-if="show"
   >
     <template #text>
       <p class="pa-1">
-        点击
+        {{ $t('file.view.null.button.text1') }}
         <v-btn size="x-small" icon="mdi-cloud-upload" @click="cs.fileUpload.show = true"> </v-btn>
-        按钮即刻开始上传。
+        {{ $t('file.view.null.button.text2') }}
       </p>
     </template>
   </v-alert>

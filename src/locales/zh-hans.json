@@ -44,6 +44,18 @@
   "menu.file.text": "文件",
   "menu.synchro.disk.text": "同步盘（本地）",
   "rooms.text": "房间",
+  "preferences.text": "偏好设置",
+  "logout.text": "退出登录",
+
+  "global.search.title.text": "搜索",
+  "global.search.text": "您的搜索结果将显示在这里",
+
+  "blank.page.button1.text": "全局搜索",
+  "blank.page.button2.text": "搜索文件",
+  "blank.page.button3.text": "全选文件",
+  "blank.page.button4.text": "删除文件",
+
+  "file.search.placeholder.text": "搜索文件",
   "file.upload.title.text": "文件上传",
   "file.upload.subtitle.text": "上传区域",
   "file.upload.area.text": "拖拽文件到此处或点击上传",
@@ -54,6 +66,17 @@
   "file.upload.uploadList.fileAction.cancel.text": "取消上传",
   "file.upload.autoHideUploadArea": "上传时隐藏上传区域",
   "file.upload.autoCloseDialog": "上传完毕后关闭对话框",
+
+  "file.view.iconLabel.text": "图标",
+  "file.view.listLabel.text": "列表",
+
+  "file.view.iconLabel.secondaryMenu.all.text": "全部文件",
+  "file.view.iconLabel.secondaryMenu.document.text": "文档",
+  "file.view.iconLabel.secondaryMenu.multimedia.text": "多媒体",
+
+  "file.view.null.text": "暂无文件",
+  "file.view.null.button.text1": "点击",
+  "file.view.null.button.text2": "按钮即刻开始上传",
 
   "$vuetify.noDataText": "没有数据",
   "$vuetify.fileInput.counterSize": "共{0}个文件，共{1}",

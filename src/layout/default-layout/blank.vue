@@ -14,19 +14,23 @@
         <v-img aspect-ratio="1/1" width="220" src="img/icons/512x512.png"></v-img>
       </v-col>
       <v-col class="text-button pa-0 ma-1"
-        >全局搜索 <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
+        >{{ $t('blank.page.button1.text') }}
+        <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
         <code class="bg-grey-lighten-3 pa-2 rounded-lg">K</code></v-col
       >
       <v-col class="text-button pa-0 ma-1"
-        >搜索文件 <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
+        >{{ $t('blank.page.button2.text') }}
+        <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
         <code class="bg-grey-lighten-3 pa-2 rounded-lg">F</code></v-col
       >
       <v-col class="text-button pa-0 ma-1"
-        >全选文件 <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
+        >{{ $t('blank.page.button3.text') }}
+        <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
         <code class="bg-grey-lighten-3 pa-2 rounded-lg">A</code></v-col
       >
       <v-col class="text-button pa-0 ma-1"
-        >删除文件 <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
+        >{{ $t('blank.page.button4.text') }}
+        <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
         <code class="bg-grey-lighten-3 pa-2 rounded-lg">D</code></v-col
       >
     </v-row>

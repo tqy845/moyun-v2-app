@@ -29,7 +29,7 @@ const handleSearchItem = useDebounceFn((name: string) => fileStore.filter(name),
   <v-row v-if="cs.autocomplete.show" class="mt-3 mr-3">
     <v-autocomplete
       clearable
-      label="搜索文件..."
+      :label="$t('file.search.placeholder.text')"
       variant="outlined"
       :items="fileStore.tempFileList"
       item-title="name"

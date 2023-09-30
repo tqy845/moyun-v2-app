@@ -98,7 +98,7 @@ const data = reactive({
     </template>
 
     <template v-slot:default="{}">
-      <v-card title="搜索">
+      <v-card :title="$t('global.search.title.text')">
         <v-card-text>
           <v-autocomplete
             autofocus
@@ -118,7 +118,7 @@ const data = reactive({
             <v-icon icon="mdi-text-search-variant" size="150" color="grey-lighten-1"></v-icon>
           </v-row>
           <v-row justify="center" align="center">
-            <p class="text-grey-lighten-1">您的搜索结果将显示在这里</p>
+            <p class="text-grey-lighten-1">{{ $t('global.search.text') }}</p>
           </v-row>
         </v-card-text>
 

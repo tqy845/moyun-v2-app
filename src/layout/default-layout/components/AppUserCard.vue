@@ -80,7 +80,7 @@ const toSettingPage = () => {
           <template v-slot:prepend>
             <v-icon icon="mdi-cog"></v-icon>
           </template>
-          <v-list-item-title> 偏好设置 </v-list-item-title>
+          <v-list-item-title> {{ $t('preferences.text') }} </v-list-item-title>
         </v-list-item>
 
         <v-list-item>
@@ -91,7 +91,7 @@ const toSettingPage = () => {
       <v-card-actions>
         <v-spacer></v-spacer>
 
-        <v-btn variant="text" color="error" @click="handleLogout"> 退出登录 </v-btn>
+        <v-btn variant="text" color="error" @click="handleLogout"> {{ $t('logout.text') }} </v-btn>
         <!-- <v-btn color="primary" variant="text" @click="cs.menu = false"> Save </v-btn> -->
       </v-card-actions>
     </v-card>

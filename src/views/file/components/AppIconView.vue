@@ -38,17 +38,17 @@ const data = reactive<{
   tab: null,
   tabItems: [
     {
-      label: '全部文件',
+      label: 'file.view.iconLabel.secondaryMenu.all.text',
       icon: 'file',
       key: 'all'
     },
     {
-      label: '文档',
+      label: 'file.view.iconLabel.secondaryMenu.document.text',
       icon: 'briefcase',
       key: 'document'
     },
     {
-      label: '多媒体',
+      label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
       icon: 'multimedia',
       key: 'media'
     }
@@ -90,7 +90,7 @@ onMounted(async () => {
         @update:modelValue="handleChangeTab"
       >
         <v-tab v-for="(item, index) in data.tabItems" :key="index" :value="{ ...item, index }">
-          <v-icon>mdi-{{ item.icon }}</v-icon> {{ item.label }}
+          <v-icon>mdi-{{ item.icon }}</v-icon> {{ $t(item.label) }}
         </v-tab>
       </v-tabs>
     </v-row>

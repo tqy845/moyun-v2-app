@@ -12,12 +12,12 @@ const fileStore = useFileStore()
 
 const views = [
   {
-    label: '图标',
+    label: 'file.view.iconLabel.text',
     icon: 'credit-card-chip',
     value: 'icon'
   },
   {
-    label: '列表',
+    label: 'file.view.listLabel.text',
     icon: 'view-list',
     value: 'list'
   }
@@ -51,7 +51,7 @@ const handleSwitchView = (item: any) => {
         <template v-slot:prepend>
           <v-icon :icon="`mdi-` + item.icon"></v-icon>
         </template>
-        <v-list-item-title>{{ item.label }}</v-list-item-title>
+        <v-list-item-title>{{ $t(item.label) }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>

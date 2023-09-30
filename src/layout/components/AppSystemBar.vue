@@ -42,9 +42,8 @@ const handleClose = () => {
 
 <template>
   <v-system-bar window data-tauri-drag-region color="primary">
-    <v-icon icon="mdi-message" class="me-2"></v-icon>
-
-    <span>10条未读</span>
+    <!-- <v-icon icon="mdi-message" class="me-2"></v-icon> -->
+    <!-- <span>10条未读</span> -->
 
     <v-spacer></v-spacer>
 
