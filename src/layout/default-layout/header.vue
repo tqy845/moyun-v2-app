@@ -79,8 +79,8 @@ const fileUploading = computed(() => {
   const success = fileStore.fileUploadList.filter(
     (item) => item.status === 'success' || item.status === 'error' || item.status === 'cancel'
   )
-
-  return (success.length / fileStore.fileUploadList.length) * 100
+  const calc = (success.length / fileStore.fileUploadList.length) * 100
+  return calc >= 100 ? 0 : calc
 })
 </script>
 
@@ -134,16 +134,12 @@ const fileUploading = computed(() => {
 
     <!-- {{ fileUploading }} -->
     <v-progress-circular
-      v-if="!isNaN(fileUploading)"
+      v-if="!isNaN(fileUploading) && fileUploading > 0"
       :width="3"
       :model-value="fileUploading"
       color="yellow-darken-1"
     >
-      <v-btn
-        icon="mdi-cloud-upload"
-        @click=";(cs.fileUpload.show = true), (cs.fileUpload.init = false)"
-      >
-      </v-btn>
+      <v-btn icon="mdi-cloud-upload" @click="cs.fileUpload.show = true"> </v-btn>
     </v-progress-circular>
     <v-btn v-else icon="mdi-cloud-upload" @click="cs.fileUpload.show = true"> </v-btn>
 

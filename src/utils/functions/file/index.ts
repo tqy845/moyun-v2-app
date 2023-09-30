@@ -21,7 +21,7 @@ const upload = async (fileList: Array<UploadChunk>) => {
   const fileStore = useFileStore()
   const appStore = useAppStore()
 
-  console.log('fileList = ', fileList)
+  // console.log('fileList = ', fileList)
 
   return new Promise<Boolean>((resolve) => {
     // 过滤已存在的文件
@@ -29,7 +29,7 @@ const upload = async (fileList: Array<UploadChunk>) => {
 
     for (const iterator of fileList) {
       const { file } = iterator
-      console.log(fileNameList, file.name)
+      // console.log(fileNameList, file.name)
 
       if (!fileNameList.includes(file.name)) {
         // 新任务
