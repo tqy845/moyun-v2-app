@@ -158,7 +158,11 @@ onMounted(async () => {
       <AppFileUploadAlert :show="!fileStore.fileList.length && !fileStore.loading" />
     </div>
     <v-card-action>
-      <v-pagination :length="pageItemNumber" @update:modelValue="handleChangePage"></v-pagination>
+      <v-pagination
+        :length="pageItemNumber"
+        total-visible="6"
+        @update:modelValue="handleChangePage"
+      ></v-pagination>
     </v-card-action>
   </v-card>
 </template>
