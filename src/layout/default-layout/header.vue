@@ -6,7 +6,7 @@
 -->
 <script lang="ts" setup>
 import { AppLanguage, AppFileView, AppFileSearch, AppFileUpload } from '@/components/common'
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { BasicFile } from '@/types/models'
 import { AppFile } from '@/components/common'
 import { createSharedComposable, useMagicKeys, useWindowSize } from '@vueuse/core'
@@ -29,7 +29,8 @@ const props = defineProps({
 
 const cs = reactive({
   fileUpload: {
-    show: false
+    show: false,
+    init: false
   }
 })
 
@@ -73,6 +74,14 @@ const handleChangeTab = (item: unknown) => {
   }
   fileStore.paging(fileStore.classifyTabList[_item.key] ?? 1)
 }
+
+const fileUploading = computed(() => {
+  const success = fileStore.fileUploadList.filter(
+    (item) => item.status === 'success' || item.status === 'error' || item.status === 'cancel'
+  )
+
+  return (success.length / fileStore.fileUploadList.length) * 100
+})
 </script>
 
 <template>
@@ -122,7 +131,21 @@ const handleChangeTab = (item: unknown) => {
       :show="cs.fileUpload.show"
       @update:show="(show) => (cs.fileUpload.show = show)"
     />
-    <v-btn icon="mdi-cloud-upload" @click="cs.fileUpload.show = true"> </v-btn>
+
+    <!-- {{ fileUploading }} -->
+    <v-progress-circular
+      v-if="!isNaN(fileUploading)"
+      :width="3"
+      :model-value="fileUploading"
+      color="yellow-darken-1"
+    >
+      <v-btn
+        icon="mdi-cloud-upload"
+        @click=";(cs.fileUpload.show = true), (cs.fileUpload.init = false)"
+      >
+      </v-btn>
+    </v-progress-circular>
+    <v-btn v-else icon="mdi-cloud-upload" @click="cs.fileUpload.show = true"> </v-btn>
 
     <!-- 视图切换 -->
     <AppFileView />
