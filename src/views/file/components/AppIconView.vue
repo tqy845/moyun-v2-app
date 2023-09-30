@@ -29,11 +29,10 @@ const props = defineProps<{
 
 const selected = computed(() => props.selected)
 
-const cs = reactive({})
-
 const data = reactive<{
   tab?: string | null
   tabItems: Array<{ label: string; icon: string; key: string }>
+  fileList: Array<BasicFile>
 }>({
   tab: null,
   tabItems: [
@@ -52,7 +51,8 @@ const data = reactive<{
       icon: 'multimedia',
       key: 'media'
     }
-  ]
+  ],
+  fileList: []
 })
 
 /**
@@ -61,9 +61,13 @@ const data = reactive<{
  */
 const handleChangeTab = (item: unknown) => {
   console.log('切换标签', item)
-  const { key, index } = item as { label: string; icon: string; key: string; index: number }
-  appStore.app.menuIndex['appIconViewTab'] = index
-  fileStore.classify(key)
+  // const { key, index } = item as { label: string; icon: string; key: string; index: number }
+  appStore.app.menuIndex['appIconViewTab'] = item as {
+    label: string
+    icon: string
+    key: string
+    index: number
+  }
 }
 
 /**
@@ -72,19 +76,22 @@ const handleChangeTab = (item: unknown) => {
  */
 const handleChangePage = (item: any) => {
   console.log('换页', item)
-  let { iconViewPageItemNumber, tempFileList } = fileStore
+  let { iconViewPageItemNumber } = fileStore
   const startIndex = (item - 1) * iconViewPageItemNumber
   const endIndex = startIndex + iconViewPageItemNumber
-  fileStore.fileList = tempFileList.slice(startIndex, endIndex)
+  data.fileList = fileStore
+    .classify(appStore.app.menuIndex['appIconViewTab']?.key ?? 'all')
+    .slice(startIndex, endIndex)
 }
 
 /**
  * 计算分页数
  */
 const pageItemNumber = computed(() => {
-  const { iconViewPageItemNumber, tempFileList } = fileStore
-  const calc = Math.ceil(tempFileList.length / iconViewPageItemNumber)
-  return tempFileList.length % 2 === 0 ? calc : calc + 1
+  const { iconViewPageItemNumber } = fileStore
+  const _fileList = fileStore.classify(appStore.app.menuIndex['appIconViewTab']?.key ?? 'all')
+  const calc = Math.ceil(_fileList.length / iconViewPageItemNumber)
+  return _fileList.length % 2 === 0 ? calc : calc + 1
 })
 
 /**
@@ -94,7 +101,7 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 
 onMounted(async () => {
   await fileStore.list()
-  fileStore.classify(data.tabItems[appStore.app.menuIndex['appIconViewTab']].key)
+  data.fileList = fileStore.classify(appStore.app.menuIndex['appIconViewTab']?.key ?? 'all')
   handleChangePage(1)
 })
 </script>
@@ -130,19 +137,14 @@ onMounted(async () => {
       <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
       <!-- 渲染 -->
       <v-btn-toggle
-        v-else-if="fileStore.fileList.length"
+        v-else-if="data.fileList.length"
         v-model="selected"
         :density="null"
         :multiple="multiple"
         class="pa-5 w-100"
       >
         <v-row v-if="width" :style="{ 'padding-left': `${(width % 158) / 2 + 15}px` }">
-          <v-col
-            v-for="(iterator, index) in fileStore.fileList"
-            :key="index"
-            class="px-1"
-            cols="auto"
-          >
+          <v-col v-for="(iterator, index) in data.fileList" :key="index" class="px-1" cols="auto">
             <!-- 渲染文件-->
             <AppFile
               :file-item="iterator"
@@ -155,7 +157,7 @@ onMounted(async () => {
         </v-row>
       </v-btn-toggle>
       <!-- 无内容 -->
-      <AppFileUploadAlert :show="!fileStore.fileList.length && !fileStore.loading" />
+      <AppFileUploadAlert :show="!data.fileList.length && !fileStore.loading" />
     </div>
     <v-card-action>
       <v-pagination

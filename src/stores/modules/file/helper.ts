@@ -12,16 +12,16 @@ export interface FileStore {
   loading: boolean
 
   /**
-   * 文件信息列表
+   * 文件分类信息列表
+   * @type {Array<BasicFile>}
+   */
+  fileClassify: { [key: string]: Array<BasicFile> }
+
+  /**
+   * 文件列表
    * @type {Array<BasicFile>}
    */
   fileList: Array<BasicFile>
-
-  /**
-   * 临时文件信息列表
-   * @type {Array<BasicFile>}
-   */
-  tempFileList: Array<BasicFile>
 
   /**
    * 文件上传列表
@@ -56,8 +56,11 @@ export interface FileStore {
 export const getFileDefaultSettings = (): FileStore => {
   return {
     loading: false,
+    fileClassify: {
+      document: [],
+      media: []
+    },
     fileList: [],
-    tempFileList: [],
     fileUploadList: [],
     fileView: 'icon',
     fileItemSize: 121,

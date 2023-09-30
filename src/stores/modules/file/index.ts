@@ -10,7 +10,14 @@ import { fileUtils } from '@/utils/functions'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
-  getters: {},
+  getters: {
+    /**
+     * 全部文件
+     */
+    all(state) {
+      return state.fileClassify['document'].concat(state.fileClassify['media'])
+    }
+  },
   actions: {
     /**
      * 获取文件列表
@@ -21,17 +28,23 @@ export const useFileStore = defineStore('fileStore', {
         fileList: Array<FileProperties>
       }>()
       const { fileList } = data
-      const _fileList: Array<BasicFile> = []
+      this.fileList.length =
+        this.fileClassify['document'].length =
+        this.fileClassify['media'].length =
+          0
       fileList.forEach((item) => {
-        _fileList.push(
-          new BasicFile({
-            icon: fileUtils.getIcon(item),
-            ...item
-          })
-        )
+        const _basicFile = new BasicFile({
+          icon: fileUtils.getIcon(item),
+          ...item
+        })
+        this.fileList.push(_basicFile)
+        if (fileUtils.isDocument(item.extension)) {
+          this.fileClassify['document'].push(_basicFile)
+        } else if (fileUtils.isMedia(item.extension)) {
+          this.fileClassify['media'].push(_basicFile)
+        }
       })
       this.loading = false
-      this.fileList = this.tempFileList = _fileList
       return this.fileList
     },
     /**
@@ -40,9 +53,11 @@ export const useFileStore = defineStore('fileStore', {
      */
     filter(name: string) {
       console.log('过滤', name)
+      this.loading = true
       this.fileList = name
-        ? this.tempFileList.filter((file: BasicFile) => file.name === name)
-        : this.tempFileList
+        ? this.fileList.filter((file: BasicFile) => file.name === name)
+        : this.classify('all')
+      this.loading = false
     },
     /**
      * 文件查找
@@ -50,28 +65,15 @@ export const useFileStore = defineStore('fileStore', {
      */
     find(name: string) {
       console.log('查找', name)
-      return this.tempFileList.find((file: BasicFile) => file.name === name)
+      return this.fileList.find((file: BasicFile) => file.name === name)
     },
     /**
      * 文件分类
      */
-    classify(key: string) {
+    classify(key: 'all' | 'document' | 'media') {
       console.log('分类', key)
-      this.loading = true
-      const result: Array<BasicFile> = []
-      switch (key) {
-        case 'all':
-          result.push(...this.tempFileList)
-          break
-        case 'document':
-          result.push(...this.tempFileList.filter((item) => fileUtils.isDocument(item.extension)))
-          break
-        case 'media':
-          result.push(...this.tempFileList.filter((item) => fileUtils.isMedia(item.extension)))
-          break
-      }
-      this.fileList = result
-      this.loading = false
+      if (key === 'all') return this.all
+      return this.fileClassify[key]
     },
     /**
      * 文件块上传
@@ -86,8 +88,7 @@ export const useFileStore = defineStore('fileStore', {
      */
     delete(name: string) {
       this.fileUploadList = this.fileUploadList.filter((it) => it.file.name !== name)
-      this.tempFileList = this.tempFileList.filter((it) => it.name !== name)
-      this.fileList = this.tempFileList.filter((it) => it.name !== name)
+      this.fileList = this.fileList.filter((it) => it.name !== name)
     }
   },
 
