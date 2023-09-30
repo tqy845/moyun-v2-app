@@ -120,6 +120,7 @@ export const uploadChunk = (uploadChunk: UploadChunk) => {
             formData.append(key, element)
           }
         }
+
         if (await fileStore.uploadChunk(formData)) {
           // console.log('线程 ' + i + ' 的分片上传成功')
           uploadedChunkCount++ // 分片上传成功，增加已上传分片的数量

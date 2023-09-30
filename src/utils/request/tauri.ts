@@ -38,6 +38,9 @@ const tauriRequest = async <T = any>(
    */
   if (data) {
     args.body = Body.json(data)
+  } else if (form) {
+    args.headers['Content-Type'] = 'multipart/form-data'
+    args.body = Body.form(form)
   }
 
   console.log('Request', args)

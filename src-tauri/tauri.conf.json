@@ -23,7 +23,7 @@
         "open": true
       },
       "fs": {
-        "scope": ["$APPDATA/*"],
+        "scope": ["$DATA/*", "$DESKTOP/*", "$DESKTOP/**", "*"],
         "all": true,
         "readFile": true,
         "writeFile": true,
