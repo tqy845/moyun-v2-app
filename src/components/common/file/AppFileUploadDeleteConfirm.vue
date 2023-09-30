@@ -42,19 +42,23 @@ const handleSelect = (item: number) => {
         icon="mdi-delete"
         class="mr-1"
         :loading="item.deleting"
-        :disabled="item.status === 'uploading' || item.status === 'init' || item.status === 'await'"
+        :disabled="item.status === 'uploading'"
       ></v-btn>
     </template>
     <v-card>
-      <v-card-title class="text-h5"> 删除确认 </v-card-title>
-      <v-card-text>确定要删除【{{ item.file.name }}】吗？</v-card-text>
+      <v-card-title class="text-h5">
+        {{ $t('file.upload.uploadList.fileAction.removeConfirm.title.text') }}
+      </v-card-title>
+      <v-card-text>{{
+        $t('file.upload.uploadList.fileAction.removeConfirm.content.text', [item.file.name])
+      }}</v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" variant="text" @click="handleSelect(ACTION_TYPE.CANCEL)">
-          取消
+          {{ $t('cancel') }}
         </v-btn>
         <v-btn color="error" variant="text" @click="handleSelect(ACTION_TYPE.CONFIRM)">
-          确定
+          {{ $t('confirm.text') }}
         </v-btn>
       </v-card-actions>
     </v-card>

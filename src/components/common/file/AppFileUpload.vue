@@ -11,10 +11,12 @@ import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile, UploadChunk } from '@/types/models'
 import { AppFileUploadDeleteConfirm } from '.'
 import { ACTION_TYPE } from '@/types/enums'
+import { useI18n } from 'vue-i18n'
 
 const fileInputRef = ref<HTMLInputElement>()
 const tableRef = ref()
 
+const { t } = useI18n()
 const appStore = useAppStore()
 const fileStore = useFileStore()
 
@@ -38,13 +40,57 @@ const cs = reactive<{
   tableHeight: 150
 })
 
+const data = reactive({
+  table: {
+    headers: [
+      { title: 'No', align: 'start', sortable: true, key: 'no' },
+      {
+        title: t('file.upload.uploadList.fileName.text'),
+        sortable: true,
+        key: 'file.name',
+        align: 'center'
+      },
+      {
+        title: t('file.upload.uploadList.fileSize.text'),
+        sortable: true,
+        key: 'file.size',
+        align: 'center',
+        width: 100
+      },
+      {
+        title: t('file.upload.uploadList.fileProgress.text'),
+        sortable: true,
+        key: 'power',
+        align: 'center',
+        width: 300
+      },
+      {
+        title: t('file.upload.uploadList.fileAction.text'),
+        sortable: false,
+        key: 'action',
+        align: 'center',
+        width: 150
+      }
+    ]
+  }
+})
+
 const _show = computed(() => props.show)
 
 /**
  * 展开/收起上传区域
  */
-const handleExpansion = () => {
-  cs.tableHeight = tableRef.value.height === 150 ? 370 : 150
+const handleExpansion = (event: any, reupload: boolean) => {
+  console.log(cs.upload.length, reupload)
+
+  if (reupload) {
+    cs.tableHeight = 370
+  } else if (!cs.upload.length) {
+    cs.tableHeight = 370
+  } else if (cs.upload.length) {
+    cs.tableHeight = 150
+  }
+  // cs.tableHeight = tableRef.value.height === 150 ? 370 : 150
 }
 
 /**
@@ -64,7 +110,6 @@ const handleFileDrop = (event: any) => {
 const handleFileSelect = (event: any) => {
   event.preventDefault()
   const fileObject = event.target.files as {}
-  console.log('fileObject = ', fileObject)
   handleUpload(Object.values(fileObject).map((item) => ({ file: item as File })))
 }
 
@@ -72,13 +117,15 @@ const handleFileSelect = (event: any) => {
  * 上传事件
  * @param fileList 文件列表
  */
-const handleUpload = async (fileList: Array<UploadChunk>) => {
+const handleUpload = async (fileList: Array<UploadChunk>, reupload: boolean = false) => {
   if (appStore.app.settings['uploadAutoHideUploadArea']) {
     cs.upload = []
-    handleExpansion()
+    handleExpansion(null, reupload)
   }
+
   if ((await fileUtils.upload(fileList)) && appStore.app.settings['uploadDialogAutoClose']) {
-    emits('update:show', false)
+    const allUploadCompleted = fileStore.fileUploadList.every((item) => item.status !== 'uploading')
+    if (allUploadCompleted) emits('update:show', false)
   }
 }
 
@@ -110,7 +157,7 @@ const handleCancel = (item: UploadChunk) => {
 const handleReUpload = async (item: UploadChunk) => {
   console.log('重新上传', item)
   item.status = 're-upload'
-  await fileUtils.upload([item])
+  handleUpload([item], true)
 }
 
 /**
@@ -173,12 +220,20 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
             </v-switch>
           </v-col>
         </v-row>
-        <v-btn class="ml-3" icon dark @click="emits('update:show', false)">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+        <v-tooltip :text="$t('file.upload.uploadList.dialog.hideButton.text')" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" class="ml-3" icon dark @click="emits('update:show', false)">
+              <v-icon>mdi-eye-off</v-icon>
+            </v-btn>
+          </template>
+        </v-tooltip>
       </v-toolbar>
 
-      <v-expansion-panels multiple v-model="cs.upload" @update:modelValue="handleExpansion">
+      <v-expansion-panels
+        multiple
+        v-model="cs.upload"
+        @update:modelValue="handleExpansion($event, false)"
+      >
         <v-expansion-panel :title="$t('file.upload.subtitle.text')" value="upload-area">
           <template #text>
             <div class="file-upload py-3">
@@ -209,6 +264,7 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
                 subtitle="支持分片上传、断点续传、秒传、加密上传等"
               ></v-list-item>
             </v-list> -->
+            <!-- {{ fileStore.fileUploadList.map((item, index) => ({ ...item, no: index + 1 })) }} -->
           </template>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -217,102 +273,93 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
       <v-list lines="two" subheader>
         <!-- <v-list-subheader class="w-100"> 上传列表 </v-list-subheader> -->
         <v-list-item>
-          <v-table ref="tableRef" density="compact" :height="cs.tableHeight" fixed-header>
-            <thead>
-              <tr>
-                <th class="text-left">No</th>
-                <th class="text-left">{{ $t('file.upload.uploadList.fileName.text') }}</th>
-                <th class="text-left">{{ $t('file.upload.uploadList.fileSize.text') }}</th>
-                <th class="text-left">{{ $t('file.upload.uploadList.fileProgress.text') }}</th>
-                <th class="text-left">{{ $t('file.upload.uploadList.fileAction.text') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(item, index) in fileStore.fileUploadList"
-                :key="index"
-                :class="[item.file.name]"
+          <v-data-table-virtual
+            :headers="data.table.headers"
+            :items="fileStore.fileUploadList"
+            class="elevation-1"
+            :height="cs.tableHeight"
+            fixed-header
+            item-value="name"
+            density="compact"
+          >
+            <template v-slot:item.no="{ item }">
+              {{ item.index + 1 }}
+            </template>
+            <template v-slot:item.file.size="{ item }">
+              {{ fileUtils.formatSize(item.columns['file.size']) }}
+            </template>
+            <template v-slot:item.power="{ item }">
+              <v-progress-linear
+                :buffer-value="item.columns.power"
+                :model-value="item.columns.power"
+                height="12"
+                :indeterminate="item.columns.status === 'init'"
+                rounded
               >
-                <td>{{ index + 1 }}</td>
-                <td>
-                  {{ item.file.name }}
-                  {{ item.status }}
-                </td>
-                <td>{{ fileUtils.formatSize(item.file.size) }}</td>
-                <td style="min-width: 150px">
-                  <v-progress-linear
-                    :buffer-value="item.power"
-                    :model-value="item.power"
-                    height="12"
-                    :indeterminate="item.status === 'init'"
-                    rounded
-                  >
-                    <strong class="text-white text-overline">{{
-                      item.status === 'cancel'
-                        ? '取消'
-                        : item.uploadStatus?.error
-                        ? '失败'
-                        : typeof item.power === 'number'
-                        ? Math.ceil(item.power) + '%'
-                        : item.power
-                    }}</strong></v-progress-linear
-                  >
-                </td>
-                <td width="150">
-                  <!-- 取消上传 -->
-                  <v-tooltip
-                    :text="$t('file.upload.uploadList.fileAction.cancel.text')"
-                    location="bottom"
-                  >
-                    <template v-slot:activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        size="x-small"
-                        color="warning"
-                        icon="mdi-upload-off"
-                        class="mr-1"
-                        :disabled="item.status !== 'uploading'"
-                        @click="handleCancel(item)"
-                      ></v-btn>
-                    </template>
-                  </v-tooltip>
+                <strong class="text-white text-overline">{{
+                  item.columns.status === 'cancel'
+                    ? $t('cancel.text')
+                    : item.columns.uploadStatus?.error
+                    ? $t('error.text')
+                    : typeof item.columns.power === 'number'
+                    ? Math.ceil(item.columns.power) + '%'
+                    : item.columns.power
+                }}</strong></v-progress-linear
+              >
+            </template>
+            <template v-slot:item.action="{ item }">
+              <!-- 取消上传 -->
+              <v-tooltip
+                :text="$t('file.upload.uploadList.fileAction.cancel.text')"
+                location="bottom"
+              >
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    size="x-small"
+                    color="warning"
+                    icon="mdi-upload-off"
+                    class="mr-1"
+                    :disabled="item.raw.status !== 'uploading'"
+                    @click="handleCancel(item.raw)"
+                  ></v-btn>
+                </template>
+              </v-tooltip>
 
-                  <!-- 重新上传 -->
-                  <v-tooltip
-                    :text="$t('file.upload.uploadList.fileAction.reupload.text')"
-                    location="bottom"
-                  >
-                    <template v-slot:activator="{ props }">
-                      <v-btn
-                        :disabled="!item.uploadStatus?.error || item.deleting"
-                        v-bind="props"
-                        size="x-small"
-                        color="info"
-                        icon="mdi-restart"
-                        class="mr-1"
-                        @click="handleReUpload(item)"
-                      ></v-btn>
-                    </template>
-                  </v-tooltip>
+              <!-- 重新上传 -->
+              <v-tooltip
+                :text="$t('file.upload.uploadList.fileAction.reupload.text')"
+                location="bottom"
+              >
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    :disabled="!item.raw.uploadStatus?.error || item.raw.deleting"
+                    v-bind="props"
+                    size="x-small"
+                    color="info"
+                    icon="mdi-restart"
+                    class="mr-1"
+                    @click="handleReUpload(item.raw)"
+                  ></v-btn>
+                </template>
+              </v-tooltip>
 
-                  <!-- 删除 -->
-                  <v-tooltip
-                    :text="$t('file.upload.uploadList.fileAction.remove.text')"
-                    location="bottom"
-                  >
-                    <template v-slot:activator="{ props }">
-                      <span v-bind="props">
-                        <AppFileUploadDeleteConfirm
-                          :item="item"
-                          @select="handleDeleteSelect($event, item)"
-                        />
-                      </span>
-                    </template>
-                  </v-tooltip>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
+              <!-- 删除 -->
+              <v-tooltip
+                :text="$t('file.upload.uploadList.fileAction.remove.text')"
+                location="bottom"
+              >
+                <template v-slot:activator="{ props }">
+                  <span v-bind="props">
+                    <AppFileUploadDeleteConfirm
+                      :item="item.raw"
+                      @select="handleDeleteSelect($event, item.raw)"
+                    />
+                  </span>
+                </template>
+              </v-tooltip>
+            </template>
+          </v-data-table-virtual>
         </v-list-item>
       </v-list>
     </v-card>

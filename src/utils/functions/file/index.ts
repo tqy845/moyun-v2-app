@@ -144,6 +144,7 @@ export const uploadChunk = (uploadChunk: UploadChunk) => {
       worker.onmessage = async (e) => {
         if (uploadChunk.status === 'cancel') return
         uploadChunk.status = 'uploading'
+        console.log('=====================uploading===========================')
 
         const { chunk, ...args } = e.data
         const formData = new FormData()

@@ -89,7 +89,12 @@ onMounted(async () => {
         color="primary"
         @update:modelValue="handleChangeTab"
       >
-        <v-tab v-for="(item, index) in data.tabItems" :key="index" :value="{ ...item, index }">
+        <v-tab
+          class="text-capitalize"
+          v-for="(item, index) in data.tabItems"
+          :key="index"
+          :value="{ ...item, index }"
+        >
           <v-icon>mdi-{{ item.icon }}</v-icon> {{ $t(item.label) }}
         </v-tab>
       </v-tabs>
