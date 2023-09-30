@@ -135,7 +135,7 @@ const fileUploading = computed(() => {
     <!-- {{ fileUploading }} -->
     <v-progress-circular
       v-if="!isNaN(fileUploading) && fileUploading > 0"
-      :width="4"
+      :width="3.5"
       :size="44"
       :model-value="fileUploading"
       color="yellow-darken-1"
