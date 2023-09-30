@@ -13,6 +13,10 @@ export interface App {
    */
   delay: number
   /**
+   * 菜单索引
+   */
+  menuIndex: { [key: string]: any }
+  /**
    * 偏好设置
    */
   settings: { [key: string]: any }
@@ -63,6 +67,7 @@ export const getAppDefaultSettings = (): AppStore => {
   return {
     app: {
       delay: import.meta.env.VITE_APP_BASE_DELAY,
+      menuIndex: {},
       settings: {
         uploadDialogFullscreen: false, // 上传弹窗全屏
         maxUploadCount: 5 // 最大伤上传并发

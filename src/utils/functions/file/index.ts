@@ -247,6 +247,47 @@ const listViewMouseWheel = (event: WheelEvent) => {
 }
 
 /**
+ * 是否为文档类型
+ * @param extension 文件后缀名
+ * @description 判断是否为办公三件套或者普通文档
+ */
+const isDocument = (extension: string) => {
+  const documentExtensions = [
+    'doc',
+    'docx',
+    'pdf',
+    'ppt',
+    'pptx',
+    'xls',
+    'xlsx',
+    'odt',
+    'txt',
+    'rtf'
+  ]
+  return documentExtensions.includes(extension.toLowerCase()) // 忽略大小写
+}
+
+/**
+ * 是否为图片类型
+ * @param extension 文件后缀名
+ * @description 判断是否为图片类型
+ */
+const isPicture = (extension: string) => {
+  const pictureExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp', 'tiff']
+  return pictureExtensions.includes(extension.toLowerCase()) // 忽略大小写
+}
+
+/**
+ * 是否为音/视频类型
+ * @param extension 文件后缀名
+ * @description 判断是否为音/视频类型
+ */
+const isMedia = (extension: string) => {
+  const mediaExtensions = ['mp3', 'wav', 'ogg', 'mp4', 'avi', 'mkv', 'mov', 'wmv']
+  return mediaExtensions.includes(extension.toLowerCase()) // 忽略大小写
+}
+
+/**
  * 文件Utils
  */
 const fileUtils = {
@@ -255,7 +296,10 @@ const fileUtils = {
   getIcon,
   formatSize,
   iconViewMouseWheel,
-  listViewMouseWheel
+  listViewMouseWheel,
+  isDocument,
+  isPicture,
+  isMedia
 }
 
 export default fileUtils

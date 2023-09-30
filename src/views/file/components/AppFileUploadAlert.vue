@@ -6,26 +6,42 @@
 -->
 
 <script lang="ts" setup>
-import { useFileStore } from '@/stores'
+import { AppFileUpload } from '@/components/common'
+import { reactive } from 'vue'
 
-const fileStore = useFileStore()
+const props = defineProps({
+  show: {
+    type: Boolean
+  },
+  title: {
+    type: String,
+    default: '暂无文件'
+  }
+})
+
+const cs = reactive({
+  fileUpload: {
+    show: false
+  }
+})
 </script>
 
 <template>
+  <AppFileUpload :show="cs.fileUpload.show" @update:show="(show) => (cs.fileUpload.show = show)" />
   <v-alert
-    v-if="!fileStore.fileList.length"
     density="compact"
     variant="outlined"
-    type="warning"
     prominent
     border="top"
-    title="没有文件"
+    :title="title"
+    class="ma-5"
+    v-if="show"
   >
     <template #text>
       <p class="pa-1">
         点击
-        <AppFileUpload size="x-small" />
-        按钮即刻开始上传文件，上传的文件会展示在这里。
+        <v-btn size="x-small" icon="mdi-cloud-upload" @click="cs.fileUpload.show = true"> </v-btn>
+        按钮即刻开始上传。
       </p>
     </template>
   </v-alert>

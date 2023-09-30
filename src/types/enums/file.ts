@@ -4,6 +4,8 @@ export const FILE_ICON_TYPE: { [key: string]: string } = {
   mkv: 'file-video',
   avi: 'file-video',
   flv: 'file-video',
+  mov: 'file-video',
+  wmv: 'file-video',
   // 音频类
   mp3: 'file-music',
   wav: 'file-music',
@@ -15,12 +17,16 @@ export const FILE_ICON_TYPE: { [key: string]: string } = {
   jpeg: 'file-image',
   gif: 'file-image',
   bmp: 'file-image',
+  webp: 'file-image',
+  tiff: 'file-image',
   // 表格类
   xls: 'file-excel',
   xlsx: 'file-excel',
   csv: 'file-excel',
   // 文档类
   txt: 'file-document',
+  odt: 'file-document',
+  rtf: 'file-document',
   doc: 'file-word',
   docx: 'file-word',
   pdf: 'file-powerpoint',

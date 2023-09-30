@@ -6,6 +6,7 @@
 -->
 <script lang="ts" setup>
 import { AppLanguage, AppFileView, AppFileSearch, AppFileUpload } from '@/components/common'
+import { reactive } from 'vue'
 
 const props = defineProps({
   breadcrumbItems: {
@@ -18,9 +19,11 @@ const props = defineProps({
   }
 })
 
-// const toUploadPage = () => {
-//   router.push('/upload')
-// }
+const cs = reactive({
+  fileUpload: {
+    show: false
+  }
+})
 </script>
 
 <template>
@@ -46,8 +49,11 @@ const props = defineProps({
     <AppFileSearch />
 
     <!-- 文件上传 -->
-    <AppFileUpload />
-    <!-- <v-btn icon @click="toUploadPage"> <v-icon>mdi-cloud-upload</v-icon> </v-btn> -->
+    <AppFileUpload
+      :show="cs.fileUpload.show"
+      @update:show="(show) => (cs.fileUpload.show = show)"
+    />
+    <v-btn icon="mdi-cloud-upload" @click="cs.fileUpload.show = true"> </v-btn>
 
     <!-- 视图切换 -->
     <AppFileView />

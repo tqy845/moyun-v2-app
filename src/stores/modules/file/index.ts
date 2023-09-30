@@ -44,6 +44,30 @@ export const useFileStore = defineStore('fileStore', {
         : this.tempFileList
     },
     /**
+     * 文件分类
+     */
+    classify(key: string) {
+      console.log('分类', key)
+      this.loading = true
+      const result: Array<BasicFile> = []
+      switch (key) {
+        case 'all':
+          result.push(...this.tempFileList)
+          break
+        case 'document':
+          result.push(...this.tempFileList.filter((item) => fileUtils.isDocument(item.extension)))
+          break
+        case 'picture':
+          result.push(...this.tempFileList.filter((item) => fileUtils.isPicture(item.extension)))
+          break
+        case 'media':
+          result.push(...this.tempFileList.filter((item) => fileUtils.isMedia(item.extension)))
+          break
+      }
+      this.fileList = result
+      this.loading = false
+    },
+    /**
      * 文件块上传
      */
     async uploadChunk(formData: FormData) {
