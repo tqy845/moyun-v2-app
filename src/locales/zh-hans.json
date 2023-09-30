@@ -45,5 +45,8 @@
   "menu.synchro.disk.text": "同步盘（本地）",
   "rooms.text": "房间",
   "$vuetify.noDataText": "没有数据",
-  "$vuetify.fileInput.counterSize": "共{0}个文件，共{1}"
+  "$vuetify.fileInput.counterSize": "共{0}个文件，共{1}",
+  "$vuetify.dataFooter.itemsPerPageAll": "渲染全部（可能卡顿）",
+  "$vuetify.dataFooter.itemsPerPageText": "每页条目数",
+  "$vuetify.dataFooter.pageText": "跳转"
 }

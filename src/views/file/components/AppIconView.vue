@@ -31,44 +31,31 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 
 <template>
   <div v-if="width" :style="{ 'padding-left': `${((width - 32) % 158) / 2 + 15}px` }">
-    <v-alert
-      v-if="!fileStore.fileList.length"
-      density="compact"
-      variant="outlined"
-      type="warning"
-      prominent
-      border="top"
-      title="没有文件"
+    <v-skeleton-loader
+      :loading="!fileStore.fileList.length"
+      type="image,list-item-two-line"
+      height="240"
     >
-      <template #text>
-        <p class="pa-1">
-          点击
-          <AppFileUpload size="x-small" />
-          按钮即刻开始上传文件，上传的文件会展示在这里。
-        </p>
-      </template>
-    </v-alert>
-
-    <v-icon end icon="mdi-empty"></v-icon>
-    <v-btn-toggle v-model="selected" :density="null" :multiple="multiple" class="pa-5">
-      <v-row>
-        <v-col
-          v-for="(iterator, index) in fileStore.fileList"
-          :key="index"
-          class="px-1"
-          cols="auto"
-        >
-          <!-- 渲染文件-->
-          <AppFile
-            :file-item="iterator"
-            elevation="0"
-            style="background-color: rgba(0, 0, 0, 0)"
-            @dblclick="emits('doubleClick', iterator)"
-            @contextmenu.stop="emits('rightClick', $event, iterator)"
-          />
-        </v-col>
-      </v-row>
-    </v-btn-toggle>
+      <v-btn-toggle v-model="selected" :density="null" :multiple="multiple" class="pa-5">
+        <v-row>
+          <v-col
+            v-for="(iterator, index) in fileStore.fileList"
+            :key="index"
+            class="px-1"
+            cols="auto"
+          >
+            <!-- 渲染文件-->
+            <AppFile
+              :file-item="iterator"
+              elevation="0"
+              style="background-color: rgba(0, 0, 0, 0)"
+              @dblclick="emits('doubleClick', iterator)"
+              @contextmenu.stop="emits('rightClick', $event, iterator)"
+            />
+          </v-col>
+        </v-row>
+      </v-btn-toggle>
+    </v-skeleton-loader>
   </div>
 </template>
 

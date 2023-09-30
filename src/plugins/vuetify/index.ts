@@ -9,7 +9,8 @@ import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import { i18n } from '@/plugins/i18n'
 import { useI18n } from 'vue-i18n'
 import type { App } from 'vue'
-import { VDataTable, VDataTableServer, VDataTableVirtual } from 'vuetify/labs/VDataTable'
+import { VDataTable, VDataTableVirtual } from 'vuetify/labs/VDataTable'
+import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
 import colors from 'vuetify/lib/util/colors'
 
 // 创建 Vuetify 组件实例
@@ -36,8 +37,8 @@ const vuetify = createVuetify({
   // Vuetify Components
   components: {
     VDataTable,
-    VDataTableServer,
-    VDataTableVirtual
+    VDataTableVirtual,
+    VSkeletonLoader
   }
   // components,
   // // Vuetify Directives

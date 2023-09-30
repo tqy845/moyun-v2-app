@@ -4,6 +4,7 @@ import AppBaseRightClickMenu from './AppBaseRightClickMenu.vue'
 import AppFileRightClickMenu from './AppFileRightClickMenu.vue'
 import AppListView from './AppListView.vue'
 import AppIconView from './AppIconView.vue'
+import AppFileUploadAlert from './AppFileUploadAlert.vue'
 
 export {
   AppBottomBar,
@@ -11,5 +12,6 @@ export {
   AppBaseRightClickMenu,
   AppFileRightClickMenu,
   AppListView,
-  AppIconView
+  AppIconView,
+  AppFileUploadAlert
 }

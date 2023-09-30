@@ -15,7 +15,7 @@ import {
   AppListView
 } from './components'
 import { useAppStore, useFileStore } from '@/stores'
-import { File } from '@/types/models'
+import { BasicFile } from '@/types/models'
 
 const containerRef = ref(null)
 const { width } = useElementSize(containerRef)
@@ -27,14 +27,14 @@ const fileStore = useFileStore()
 const cs = reactive<{
   rightClickMenu: {
     show: boolean
-    file: File
+    file: BasicFile
     x: number
     y: number
   }
 }>({
   rightClickMenu: {
     show: false,
-    file: {} as File,
+    file: {} as BasicFile,
     x: 0,
     y: 0
   }
@@ -47,7 +47,7 @@ const data = reactive<{
 })
 
 onMounted(async () => {
-  await fileStore.list()
+  // fileStore.list()
 })
 
 /**
@@ -79,7 +79,7 @@ whenever(ctrl_d, () => {
   handleDelete()
 })
 
-const handleDownload = async (file: File) => {
+const handleDownload = async (file: BasicFile) => {
   console.log('下载文件...')
 }
 
@@ -104,7 +104,7 @@ const navigateToFolder = (item: any) => {
   console.log('Navigate to folder:', item)
 }
 
-const handleDoubleClick = (item: File) => {
+const handleDoubleClick = (item: BasicFile) => {
   console.log('双击..', item)
   if (item.extension === 'file') {
     console.log('不受打开支持的文件...')
@@ -124,7 +124,7 @@ const handleContextMenu = (event: MouseEvent) => {
   cs.rightClickMenu.y = clientY
 }
 
-const handleRightClick = (event: MouseEvent, file: File) => {
+const handleRightClick = (event: MouseEvent, file: BasicFile) => {
   console.log('右键文件菜单', file)
   event.preventDefault()
   const { clientX, clientY } = event
@@ -155,7 +155,7 @@ const handleRightClick = (event: MouseEvent, file: File) => {
 
     <!-- 列表视图 -->
     <AppListView
-      v-if="fileStore.fileView === 'list'"
+      v-else-if="fileStore.fileView === 'list'"
       :selected="data.selected"
       @doubleClick="handleDoubleClick"
       @rightClick="handleRightClick"

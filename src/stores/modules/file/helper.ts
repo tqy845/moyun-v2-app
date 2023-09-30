@@ -6,6 +6,12 @@ import { UploadChunk, BasicFile } from '@/types/models'
  */
 export interface FileStore {
   /**
+   * 加载中
+   * @type {boolean}
+   */
+  loading: boolean
+
+  /**
    * 文件信息列表
    * @type {Array<BasicFile>}
    */
@@ -42,6 +48,7 @@ export interface FileStore {
  */
 export const getFileDefaultSettings = (): FileStore => {
   return {
+    loading: false,
     fileList: [],
     tempFileList: [],
     fileUploadList: [],

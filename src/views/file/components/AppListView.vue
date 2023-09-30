@@ -7,11 +7,12 @@
 
 <script lang="ts" setup>
 // @ts-nocheck
-import { useDateFormat, useWindowSize } from '@vueuse/core'
+import { onMounted, ref } from 'vue'
+import { useDateFormat, useElementSize, useWindowSize } from '@vueuse/core'
 import { fileUtils } from '@/utils/functions'
 import { useFileStore } from '@/stores'
 
-const { height } = useWindowSize()
+const windowSize = useWindowSize()
 const fileStore = useFileStore()
 
 const props = defineProps<{
@@ -25,20 +26,26 @@ const headers = [
   { title: '大小', align: 'end', key: 'size' }
 ]
 
+onMounted(() => {
+  fileStore.list()
+})
+
 window.addEventListener('wheel', fileUtils.listViewMouseWheel)
 </script>
 
 <template>
-  <v-data-table-virtual
+  <v-data-table
+    :loading="fileStore.loading"
     fixed-header
     :headers="headers"
     :items="fileStore.fileList"
     class="elevation-1"
-    :height="height - 130"
+    :height="windowSize.height.value - 180"
     item-value="name"
+    show-select
   >
     <template v-slot:item.name="{ item }">
-      <v-row justify="start" align="center">
+      <v-row class="d-inline-block text-truncate" justify="start" align="center">
         <v-icon :icon="`mdi-` + item.raw.icon" size="30" class="mr-1" color="#62B1FA"></v-icon>
         {{ item.columns.name.replace('.' + item.raw.extension, '') }}
       </v-row>
@@ -53,7 +60,7 @@ window.addEventListener('wheel', fileUtils.listViewMouseWheel)
         {{ fileUtils.formatSize(item?.columns?.size) }}
       </v-row>
     </template>
-  </v-data-table-virtual>
+  </v-data-table>
   <!-- 必须有一个元素在后面不然不会响应缩小的高度 -->
   <br />
 </template>

@@ -16,6 +16,7 @@ export const useFileStore = defineStore('fileStore', {
      * 获取文件列表
      */
     async list() {
+      this.loading = true
       const { data } = await fetchFileList<{
         fileList: Array<FileProperties>
       }>()
@@ -29,6 +30,7 @@ export const useFileStore = defineStore('fileStore', {
           })
         )
       })
+      this.loading = false
       this.fileList = this.tempFileList = _fileList
       return this.fileList
     },
