@@ -26,7 +26,7 @@ const upload = async (fileList: Array<UploadChunk>) => {
   return new Promise<Boolean>((resolve) => {
     // 过滤已存在的文件
     const fileNameList = fileStore.fileUploadList.map((it) => it.file.name)
-
+    let itemIndex = fileList.length
     for (const iterator of fileList) {
       const { file } = iterator
       // console.log(fileNameList, file.name)
@@ -41,7 +41,8 @@ const upload = async (fileList: Array<UploadChunk>) => {
             uploadStatus: {
               success: 0,
               error: 0
-            }
+            },
+            index: itemIndex--
           },
           ...fileStore.fileUploadList
         ]
@@ -71,6 +72,7 @@ const upload = async (fileList: Array<UploadChunk>) => {
         console.log('所有任务已完成')
         clearInterval(timer)
         fileStore.uploadChunkQueue.length = 0
+        // 重新加载文件
         fileStore.list()
         resolve(true)
       }
@@ -91,7 +93,7 @@ const upload = async (fileList: Array<UploadChunk>) => {
         if (basicFile.status === 'await') {
           uploadQueue.push(
             uploadChunk(basicFile)
-              .then((response) => {
+              .then(() => {
                 if (basicFile.uploadStatus) {
                   basicFile.uploadStatus.success++
                 }
@@ -106,6 +108,7 @@ const upload = async (fileList: Array<UploadChunk>) => {
                 console.error('报错 = ', error)
               })
               .finally(() => {
+                // 弹出第一个任务
                 uploadQueue.shift()
                 execTask()
               })
@@ -123,9 +126,13 @@ const upload = async (fileList: Array<UploadChunk>) => {
 export const uploadChunk = (uploadChunk: UploadChunk) => {
   return new Promise<boolean>((resolve, reject) => {
     const fileStore = useFileStore()
-
-    uploadChunk.status = 'init'
     const { file } = uploadChunk
+    uploadChunk.status = 'init'
+    // 将该任务提到首位
+    fileStore.fileUploadList = fileStore.fileUploadList.filter(
+      (item) => item.file.name !== uploadChunk.file.name
+    )
+    fileStore.fileUploadList.unshift(uploadChunk)
 
     // 计算 totalChunkCount，但限制最大值
     const totalChunkCount = calculateFileSlices(file.size)
@@ -146,7 +153,7 @@ export const uploadChunk = (uploadChunk: UploadChunk) => {
       worker.onmessage = async (e) => {
         if (uploadChunk.status === 'cancel') return
         uploadChunk.status = 'uploading'
-        console.log('=====================uploading===========================')
+        // console.log('=====================uploading===========================')
 
         const { chunk, ...args } = e.data
         const formData = new FormData()

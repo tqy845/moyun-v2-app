@@ -22,6 +22,11 @@ export interface FileProperties {
  */
 export interface UploadChunk {
   /**
+   * 索引
+   */
+  index?: number
+
+  /**
    * 文件
    */
   file: File

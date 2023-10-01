@@ -91,34 +91,32 @@ const fileUploading = computed(() => {
     </template>
 
     <!-- 二级菜单 -->
-    <v-row class="w-100 px-7" justify="start">
-      <v-tabs
-        v-model="appStore.app.menuIndex['appIconViewTab']['index']"
-        centered
-        stacked
-        show-arrows
-        color="yellow-darken-1"
-        @update:modelValue="handleChangeTab"
+    <v-tabs
+      v-model="appStore.app.menuIndex['appIconViewTab']['index']"
+      centered
+      stacked
+      show-arrows
+      color="yellow-darken-1"
+      @update:modelValue="handleChangeTab"
+    >
+      <v-tab
+        class="text-capitalize"
+        v-for="(item, index) in data.tabItems"
+        :key="index"
+        :value="{ ...item, index }"
       >
-        <v-tab
-          class="text-capitalize"
-          v-for="(item, index) in data.tabItems"
-          :key="index"
-          :value="{ ...item, index }"
-        >
-          <v-icon>mdi-{{ item.icon }}</v-icon> {{ $t(item.label) }}
-        </v-tab>
-      </v-tabs>
-    </v-row>
+        <v-icon>mdi-{{ item.icon }}</v-icon> {{ $t(item.label) }}
+      </v-tab>
+    </v-tabs>
     <!-- 更多操作 -->
     <!-- <template v-slot:prepend>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
     </template> -->
 
     <!-- 面包屑 -->
-    <v-app-bar-title>
+    <!-- <v-app-bar-title>
       <v-breadcrumbs v-bind="$attrs"></v-breadcrumbs>
-    </v-app-bar-title>
+    </v-app-bar-title> -->
 
     <!-- 右侧分栏 -->
     <v-spacer></v-spacer>

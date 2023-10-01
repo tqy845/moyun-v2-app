@@ -44,7 +44,7 @@ const data = reactive({
   table: {
     statistics: {} as { [key: string]: any },
     headers: [
-      { title: 'No', align: 'start', sortable: true, key: 'no', width: 100 },
+      { title: 'No', align: 'start', sortable: true, key: 'index', width: 100 },
       {
         title: t('file.upload.uploadList.fileName.text'),
         sortable: true,
@@ -124,15 +124,10 @@ const handleUpload = async (fileList: Array<UploadChunk>, reupload: boolean = fa
     cs.upload = []
     handleExpansion(null, reupload)
   }
-
   if ((await fileUtils.upload(fileList)) && appStore.app.settings['uploadDialogAutoClose']) {
     const allUploadCompleted = fileStore.fileUploadList.every((item) => item.status !== 'uploading')
     if (allUploadCompleted) emits('update:show', false)
   }
-
-  // data.table.statistics['uploadTotalSize'] = fileList
-  //   .map((item) => item.file.size)
-  //   .reduce((prev, curr) => prev + curr, 0)
 }
 
 /**
@@ -303,7 +298,7 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
               }}/个</v-col
             >
             <v-col cols="auto" class="text-primary"
-              >上传：{{
+              >取消：{{
                 fileStore.fileUploadList.filter((item) => item.status === 'cancel').length
               }}/个</v-col
             >
@@ -319,8 +314,8 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
             item-value="name"
             density="compact"
           >
-            <template v-slot:item.no="{ item }">
-              {{ item.index + 1 }}
+            <template v-slot:item.index="{ item }">
+              {{ item.raw.index }}
             </template>
             <template v-slot:item.file.size="{ item }">
               {{ fileUtils.formatSize(item.columns['file.size']) }}
