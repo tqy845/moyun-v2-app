@@ -5,19 +5,14 @@
   @description “文件展示”首页
 -->
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
-import {
-  AppBottomBar,
-  AppBaseRightClickMenu,
-  AppFileRightClickMenu,
-  AppIconView,
-  AppListView
-} from './components'
+import { AppBottomBar, AppBaseRightClickMenu, AppIconView, AppListView } from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile } from '@/types/models'
 import { usePointer } from '@vueuse/core'
 import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
+import { appWindow } from '@tauri-apps/api/window'
 
 const pointer = usePointer()
 const containerRef = ref(null)
@@ -46,9 +41,11 @@ const cs = reactive<{
 const data = reactive<{
   selected: number | Array<number>
   rightMenu: any
+  unlisten: any
 }>({
   selected: [],
-  rightMenu: null
+  rightMenu: null,
+  unlisten: null
 })
 
 onMounted(() => {
@@ -57,12 +54,10 @@ onMounted(() => {
 
   data.rightMenu = new WebviewWindow('right-menu', {
     url: '/right-menu',
-    x: 0,
-    y: 0,
     width: 256,
     resizable: false,
     decorations: false,
-    contentProtected: true,
+    contentProtected: false,
     skipTaskbar: false,
     fileDropEnabled: false,
     transparent: true,
@@ -77,8 +72,19 @@ onMounted(() => {
     // an error occurred during webview window creation
     console.error('失败', e)
   })
+
+  // 监听右键菜单聚焦
+  // @ts-ignore
+  data.unlisten = data.rightMenu.onFocusChanged(async ({ payload: focused }) => {
+    if (!focused) {
+      data.rightMenu.hide()
+    }
+  })
 })
 
+onBeforeUnmount(async () => {
+  ;(await data.unlisten)()
+})
 /**
  * 绑定Ctrl + A实现全选目标
  */
