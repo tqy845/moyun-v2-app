@@ -73,6 +73,11 @@
   "file.upload.uploadList.fileAction.removeConfirm.content.text": "确定要删除【{0}】吗？",
   "file.upload.autoHideUploadArea": "上传时隐藏上传区域",
   "file.upload.autoCloseDialog": "上传完毕后关闭对话框",
+  "file.upload.totalFileNumber": "总文件数：{0}/个",
+  "file.upload.totalFileSize": "总大小：{0}/个",
+  "file.upload.successNumber": "成功：{0}/个",
+  "file.upload.errorNumber": "失败：{0}/个",
+  "file.upload.cancelNumber": "取消：{0}/个",
 
   "file.view.iconLabel.text": "图标",
   "file.view.listLabel.text": "列表",

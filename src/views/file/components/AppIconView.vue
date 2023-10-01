@@ -30,10 +30,8 @@ const props = defineProps<{
 const selected = computed(() => props.selected)
 
 const data = reactive<{
-  tab: { [key: string]: number }
   tabItems: Array<{ label: string; icon: string; key: string }>
 }>({
-  tab: {},
   tabItems: [
     {
       label: 'file.view.iconLabel.secondaryMenu.all.text',

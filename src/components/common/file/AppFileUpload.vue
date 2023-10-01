@@ -276,32 +276,34 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
         <v-list-subheader>
           <v-row>
             <v-col cols="auto" class="text-primary">
-              总文件数：{{ fileStore.fileUploadList.length }}/个</v-col
+              {{ $t('file.upload.totalFileNumber', [fileStore.fileUploadList.length]) }}</v-col
             >
             <v-col cols="auto" class="text-primary">
-              总大小：{{
-                fileUtils.formatSize(
-                  fileStore.fileUploadList
-                    .map((item) => item.file.size)
-                    .reduce((prev, curr) => prev + curr, 0)
-                )
+              {{
+                $t('file.upload.totalFileSize', [
+                  fileUtils.formatSize(
+                    fileStore.fileUploadList
+                      .map((item) => item.file.size)
+                      .reduce((prev, curr) => prev + curr, 0)
+                  )
+                ])
               }}
             </v-col>
-            <v-col cols="auto" class="text-primary"
-              >成功：{{
+            <v-col cols="auto" class="text-primary">{{
+              $t('file.upload.successNumber', [
                 fileStore.fileUploadList.filter((item) => item.status === 'success').length
-              }}/个</v-col
-            >
-            <v-col cols="auto" class="text-primary"
-              >失败：{{
+              ])
+            }}</v-col>
+            <v-col cols="auto" class="text-primary">{{
+              $t('file.upload.errorNumber', [
                 fileStore.fileUploadList.filter((item) => item.status === 'error').length
-              }}/个</v-col
-            >
-            <v-col cols="auto" class="text-primary"
-              >取消：{{
+              ])
+            }}</v-col>
+            <v-col cols="auto" class="text-primary">{{
+              $t('file.upload.cancelNumber', [
                 fileStore.fileUploadList.filter((item) => item.status === 'cancel').length
-              }}/个</v-col
-            >
+              ])
+            }}</v-col>
           </v-row>
         </v-list-subheader>
         <v-list-item>
