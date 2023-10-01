@@ -16,8 +16,10 @@ onMounted(() => {})
 <template>
   <v-parallax height="100%" src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg">
     <v-row justify="center" align="center" class="flex-column h-50 text-black text-center">
-      <div class="text-h4 font-weight-thin mb-4">摸云 Safe and sound - Mo yun</div>
-      <p class="subheading text-center">欢迎使用，当前最新v2.x Aipha</p>
+      <div class="text-h4 font-weight-bold mb-4">摸云 Safe and sound - Mo yun</div>
+      <v-btn variant="text" class="text-none align-center d-flex">
+        欢迎您的使用，当前版本： v2.x Aipha
+      </v-btn>
     </v-row>
     <v-row justify="center" align="center" class="h-25 text-black text-center">
       <v-list lines="two" bg-color="transparent">
