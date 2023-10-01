@@ -9,7 +9,7 @@
 import { reactive, computed, onMounted, watch } from 'vue'
 import { BasicFile } from '@/types/models'
 import { AppFile, AppFileUpload } from '@/components/common'
-import { createSharedComposable, useMagicKeys, useWindowSize } from '@vueuse/core'
+import { createSharedComposable, useDebounceFn, useMagicKeys, useWindowSize } from '@vueuse/core'
 import { useAppStore, useFileStore } from '@/stores'
 import { fileUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileUploadAlert } from '.'
@@ -19,7 +19,7 @@ const windowSize = useWindowSize()
 const appStore = useAppStore()
 const fileStore = useFileStore()
 
-const emits = defineEmits(['doubleClick', 'rightClick'])
+const emits = defineEmits(['doubleClick', 'rightClick', 'outsideClick'])
 
 const props = defineProps<{
   width: number
@@ -71,6 +71,10 @@ onMounted(() => {
   fileStore.classify(key || 'all')
   fileStore.paging(fileStore.classifyTabCurrentPage[key] ?? 1)
 })
+
+const onClickOutside = useDebounceFn(() => {
+  emits('outsideClick')
+}, 10)
 </script>
 
 <template>
@@ -101,6 +105,9 @@ onMounted(() => {
               style="background-color: rgba(0, 0, 0, 0)"
               @dblclick="emits('doubleClick', iterator)"
               @contextmenu.stop="emits('rightClick', $event, iterator)"
+              v-click-outside="{
+                handler: onClickOutside
+              }"
             />
           </v-col>
         </v-row>
@@ -119,6 +126,9 @@ onMounted(() => {
       ></v-pagination>
     </v-card-action>
   </v-card>
+
+  <!-- 右键菜单 -->
+  <AppFileRightClickMenu />
 </template>
 
 <style lang="scss" scoped></style>

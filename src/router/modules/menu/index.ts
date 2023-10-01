@@ -3,7 +3,8 @@
  */
 import type { RouteRecordRaw } from 'vue-router'
 import { DefaultLayout, Menu, Blank, Header } from '@/layout'
-import { File, Welcome, TrashCan, SynchroDisk, Setting } from '@/views'
+import { File, Welcome, TrashCan, SynchroDisk, Setting, RightMenu } from '@/views'
+import { RightMenuLayout } from '@/layout/right-menu-layout'
 
 // Route rule definition
 export const routeMenu: Readonly<RouteRecordRaw[]> = [
@@ -92,6 +93,18 @@ export const routeMenu: Readonly<RouteRecordRaw[]> = [
           aside: Menu,
           default: File
         }
+      }
+    ]
+  },
+  {
+    path: '/right-menu',
+    components: {
+      default: RightMenuLayout
+    },
+    children: [
+      {
+        path: '',
+        component: RightMenu
       }
     ]
   }

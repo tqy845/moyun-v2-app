@@ -16,7 +16,10 @@ import {
 } from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile } from '@/types/models'
+import { usePointer } from '@vueuse/core'
+import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
 
+const pointer = usePointer()
 const containerRef = ref(null)
 const { width } = useElementSize(containerRef)
 const controlState = useKeyModifier('Control') // 绑定Control键实现 多选
@@ -42,13 +45,38 @@ const cs = reactive<{
 
 const data = reactive<{
   selected: number | Array<number>
+  rightMenu: any
 }>({
-  selected: []
+  selected: [],
+  rightMenu: null
 })
 
 onMounted(() => {
   if (fileStore.search) return
   fileStore.list()
+
+  data.rightMenu = new WebviewWindow('right-menu', {
+    url: '/right-menu',
+    x: 0,
+    y: 0,
+    width: 256,
+    resizable: false,
+    decorations: false,
+    contentProtected: true,
+    skipTaskbar: false,
+    fileDropEnabled: false,
+    transparent: true,
+    visible: false
+  })
+
+  data.rightMenu.once('tauri://created', function () {
+    // webview window successfully created
+    console.log('成功')
+  })
+  data.rightMenu.once('tauri://error', function (e) {
+    // an error occurred during webview window creation
+    console.error('失败', e)
+  })
 })
 
 /**
@@ -128,13 +156,19 @@ const handleContextMenu = (event: MouseEvent) => {
 const handleRightClick = (event: MouseEvent, file: BasicFile) => {
   console.log('右键文件菜单', file)
   event.preventDefault()
-  const { clientX, clientY } = event
-  cs.rightClickMenu = {
-    x: clientX,
-    y: clientY,
-    show: true,
-    file
-  }
+  const { x, y } = pointer
+
+  // 重设位置
+  data.rightMenu.setPosition(
+    new LogicalPosition(x.value + window.screenX, y.value + window.screenY)
+  )
+  data.rightMenu.show() // 显示
+  data.rightMenu.setFocus() // 置顶
+}
+
+const handleOutsideClick = () => {
+  console.log('外部...')
+  data.rightMenu.hide()
 }
 </script>
 
@@ -152,6 +186,7 @@ const handleRightClick = (event: MouseEvent, file: BasicFile) => {
       :selected="data.selected"
       @doubleClick="handleDoubleClick"
       @rightClick="handleRightClick"
+      @outsideClick="handleOutsideClick"
     />
 
     <!-- 列表视图 -->
@@ -171,12 +206,12 @@ const handleRightClick = (event: MouseEvent, file: BasicFile) => {
       :style="{ top: cs.rightClickMenu.y + 'px', left: cs.rightClickMenu.x + 'px' }"
     /> -->
 
-    <AppFileRightClickMenu
+    <!-- <AppFileRightClickMenu
       :file="cs.rightClickMenu.file"
       v-show="cs.rightClickMenu.show"
       :style="{ top: cs.rightClickMenu.y + 'px', left: cs.rightClickMenu.x + 'px' }"
       @close="cs.rightClickMenu.show = false"
-    />
+    /> -->
     <!-- <AppDownWindow /> -->
   </v-container>
 </template>

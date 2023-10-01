@@ -1,8 +1,8 @@
 <!--
-  AppRightClickMenu
+  right-menu
   @author 谭期元
-  @date  2023/09/16
-  @description “右键菜单列表”组件
+  @date  2023/10/01
+  @description “右键菜单”页
 -->
 
 <script lang="ts" setup>
@@ -45,6 +45,13 @@ const items = [
     event: () => {
       console.log('历史')
     }
+  },
+  {
+    text: 'Recent',
+    icon: 'mdi-history',
+    event: () => {
+      console.log('历史')
+    }
   }
 ]
 
@@ -55,7 +62,7 @@ const handleClickMenuItem = (callback: Function) => {
 </script>
 
 <template>
-  <v-card class="mx-auto" width="256">
+  <v-card class="mx-auto elevation-1 rounded-lg" width="256" style="border: 1px solid #dcdcdc8a">
     <v-list class="px-2">
       <v-list-item
         v-for="(item, i) in items"
