@@ -69,10 +69,9 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 
 onMounted(() => {
   if (fileStore.search) return
-  const { key, index } = appStore.app.menuIndex['appIconViewTab']
-
+  const { key } = appStore.app.menuIndex['appIconViewTab']
   fileStore.classify(key || 'all')
-  fileStore.paging(fileStore.classifyTabCurrentPage[index] || 1)
+  fileStore.paging(fileStore.classifyTabCurrentPage[key] ?? 1)
 })
 </script>
 
@@ -113,6 +112,9 @@ onMounted(() => {
     </div>
     <v-card-action>
       <v-pagination
+        :model-value="
+          fileStore.classifyTabCurrentPage[appStore.app.menuIndex['appIconViewTab']?.key || 1]
+        "
         :length="pageItemNumber"
         total-visible="6"
         @update:modelValue="fileStore.changePage"
