@@ -70,9 +70,9 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 onMounted(() => {
   if (fileStore.search) return
   const { key, index } = appStore.app.menuIndex['appIconViewTab']
+
   fileStore.classify(key || 'all')
-  fileStore.paging(index || 1)
-  // fileStore.list()
+  fileStore.paging(fileStore.classifyTabCurrentPage[index] || 1)
 })
 </script>
 

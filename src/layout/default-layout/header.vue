@@ -69,10 +69,10 @@ const handleChangeTab = (item: unknown) => {
     index: number
   }
   appStore.app.menuIndex['appIconViewTab'] = _item
-  if (!fileStore.classifyTabList[_item.key]) {
-    fileStore.classifyTabList[_item.key] = 1
+  if (!fileStore.classifyTabCurrentPage[_item.key]) {
+    fileStore.classifyTabCurrentPage[_item.key] = 1
   }
-  fileStore.paging(fileStore.classifyTabList[_item.key] ?? 1)
+  fileStore.paging(fileStore.classifyTabCurrentPage[_item.key] ?? 1)
 }
 
 const fileUploading = computed(() => {
@@ -92,6 +92,7 @@ const fileUploading = computed(() => {
 
     <!-- 二级菜单 -->
     <v-tabs
+      v-show="!fileStore.search"
       v-model="appStore.app.menuIndex['appIconViewTab']['index']"
       centered
       stacked

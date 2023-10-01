@@ -128,8 +128,10 @@ export const useFileStore = defineStore('fileStore', {
      */
     changePage(page: number) {
       const appStore = useAppStore()
-      this.classifyTabList[appStore.app.menuIndex['appIconViewTab'].key] = page
+
+      this.classifyTabCurrentPage[appStore.app.menuIndex['appIconViewTab'].key] = page
       this.paging(page)
+      console.log('this.classifyTabCurrentPage = ', this.classifyTabCurrentPage)
     }
   },
 

@@ -47,6 +47,7 @@ const data = reactive<{
 })
 
 onMounted(() => {
+  if (fileStore.search) return
   fileStore.list()
 })
 

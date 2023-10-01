@@ -26,9 +26,7 @@ const headers = [
   { title: '大小', align: 'end', key: 'size' }
 ]
 
-onMounted(() => {
-  // fileStore.list()
-})
+onMounted(() => {})
 
 window.addEventListener('wheel', fileUtils.listViewMouseWheel)
 </script>

@@ -58,7 +58,7 @@ export interface FileStore {
   /**
    * 分类菜单tab
    */
-  classifyTabList: { [key: string]: number }
+  classifyTabCurrentPage: { [key: string]: number }
 
   /**
    * 延时队列
@@ -89,7 +89,7 @@ export const getFileDefaultSettings = (): FileStore => {
     fileView: 'icon',
     fileItemSize: 121,
     iconViewPageItemNumber: 50,
-    classifyTabList: {},
+    classifyTabCurrentPage: {},
     uploadChunkQueue: [],
     search: ''
   }
