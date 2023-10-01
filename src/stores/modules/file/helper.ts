@@ -64,6 +64,11 @@ export interface FileStore {
    * 延时队列
    */
   uploadChunkQueue: Array<any>
+
+  /**
+   * 文件搜索
+   */
+  search: string
 }
 
 /**
@@ -85,6 +90,7 @@ export const getFileDefaultSettings = (): FileStore => {
     fileItemSize: 121,
     iconViewPageItemNumber: 50,
     classifyTabList: {},
-    uploadChunkQueue: []
+    uploadChunkQueue: [],
+    search: ''
   }
 }

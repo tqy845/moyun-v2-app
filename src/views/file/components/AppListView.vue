@@ -27,7 +27,7 @@ const headers = [
 ]
 
 onMounted(() => {
-  fileStore.list()
+  // fileStore.list()
 })
 
 window.addEventListener('wheel', fileUtils.listViewMouseWheel)

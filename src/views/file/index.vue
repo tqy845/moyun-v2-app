@@ -46,8 +46,8 @@ const data = reactive<{
   selected: []
 })
 
-onMounted(async () => {
-  // fileStore.list()
+onMounted(() => {
+  fileStore.list()
 })
 
 /**

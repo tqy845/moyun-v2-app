@@ -51,7 +51,7 @@ export const useFileStore = defineStore('fileStore', {
     filter(name: string) {
       // console.log('过滤', name)
       this.loading = true
-      this.fileList = name
+      this.currentFileList = name
         ? this.fileList.filter((file: BasicFile) => file.name === name)
         : this.classify('all')
       this.loading = false
@@ -68,7 +68,7 @@ export const useFileStore = defineStore('fileStore', {
      * 文件分类
      * @param key 分类类型
      */
-    classify(key: 'all' | 'document' | 'media') {
+    classify(key: 'all' | 'document' | 'media' = 'all') {
       // console.log('分类', key)
       if (key === 'all') return this.fileList
       return this.fileClassify[key]

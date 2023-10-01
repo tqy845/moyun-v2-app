@@ -18,10 +18,6 @@ const cs = reactive({
   }
 })
 
-const data = reactive({
-  search: ''
-})
-
 const handleSearchItem = useDebounceFn((name: string) => fileStore.filter(name), 300)
 </script>
 
@@ -31,12 +27,12 @@ const handleSearchItem = useDebounceFn((name: string) => fileStore.filter(name),
       clearable
       :label="$t('file.search.placeholder.text')"
       variant="outlined"
-      :items="fileStore.tempFileList"
+      :items="fileStore.classify()"
       item-title="name"
       item-value="name"
       autofocus
       @update:modelValue="handleSearchItem"
-      v-model="data.search"
+      v-model="fileStore.search"
     >
       <template #prepend>
         <v-btn icon v-if="!cs.autocomplete.show" @click="cs.autocomplete.show = true">
@@ -51,7 +47,7 @@ const handleSearchItem = useDebounceFn((name: string) => fileStore.filter(name),
       'mdi-' +
       (cs.autocomplete.show
         ? `magnify-remove-outline`
-        : data.search
+        : fileStore.search
         ? `magnify-plus-cursor`
         : `magnify`)
     }}</v-icon>
