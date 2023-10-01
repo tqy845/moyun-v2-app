@@ -1,3 +1,5 @@
+import { uploadChunk } from './../../../utils/functions/file/index'
+import { uploadFileChunk } from '@/api'
 import { UploadChunk, BasicFile } from '@/types/models'
 
 /**
@@ -57,6 +59,11 @@ export interface FileStore {
    * 分类菜单tab
    */
   classifyTabList: { [key: string]: number }
+
+  /**
+   * 延时队列
+   */
+  uploadChunkQueue: Array<any>
 }
 
 /**
@@ -77,6 +84,7 @@ export const getFileDefaultSettings = (): FileStore => {
     fileView: 'icon',
     fileItemSize: 121,
     iconViewPageItemNumber: 50,
-    classifyTabList: {}
+    classifyTabList: {},
+    uploadChunkQueue: []
   }
 }

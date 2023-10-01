@@ -6,7 +6,7 @@ import { AppStore } from './../app/helper'
 import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
 import { fetchFileList, uploadFileChunk } from '@/api'
-import { BasicFile, FileChunk, FileProperties } from '@/types/models'
+import { BasicFile, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore } from '..'
 
@@ -80,8 +80,24 @@ export const useFileStore = defineStore('fileStore', {
      */
     async uploadChunk(formData: FormData, flag: string) {
       // console.log('上传块', formData)
-      const { code } = await uploadFileChunk(formData, flag)
-      return code === 200
+      const appStore = useAppStore()
+      return new Promise((resolve, reject) => {
+        if (this.uploadChunkQueue.length >= appStore.app.settings['maxUploadCount']) {
+          Promise.race(this.uploadChunkQueue).then(() => {
+            this.uploadChunkQueue.push(
+              uploadFileChunk(formData, flag)
+                .then((response) => resolve(response))
+                .catch((error) => reject(error))
+            )
+          })
+        } else {
+          this.uploadChunkQueue.push(
+            uploadFileChunk(formData, flag)
+              .then((response) => resolve(response))
+              .catch((error) => reject(error))
+          )
+        }
+      })
     },
     /**
      * 删除文件

@@ -42,6 +42,7 @@ const cs = reactive<{
 
 const data = reactive({
   table: {
+    statistics: {} as { [key: string]: any },
     headers: [
       { title: 'No', align: 'start', sortable: true, key: 'no', width: 100 },
       {
@@ -82,7 +83,7 @@ const _show = computed(() => props.show)
  * 展开/收起上传区域
  */
 const handleExpansion = (event: any, reupload: boolean) => {
-  console.log(cs.upload.length, reupload)
+  // console.log(cs.upload.length, reupload)
 
   if (reupload) {
     cs.tableHeight = 370
@@ -128,6 +129,10 @@ const handleUpload = async (fileList: Array<UploadChunk>, reupload: boolean = fa
     const allUploadCompleted = fileStore.fileUploadList.every((item) => item.status !== 'uploading')
     if (allUploadCompleted) emits('update:show', false)
   }
+
+  // data.table.statistics['uploadTotalSize'] = fileList
+  //   .map((item) => item.file.size)
+  //   .reduce((prev, curr) => prev + curr, 0)
 }
 
 /**
@@ -273,6 +278,37 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
       <v-divider></v-divider>
       <v-list lines="two" subheader>
         <!-- <v-list-subheader class="w-100"> 上传列表 </v-list-subheader> -->
+        <v-list-subheader>
+          <v-row>
+            <v-col cols="auto" class="text-primary">
+              总文件数：{{ fileStore.fileUploadList.length }}/个</v-col
+            >
+            <v-col cols="auto" class="text-primary">
+              总大小：{{
+                fileUtils.formatSize(
+                  fileStore.fileUploadList
+                    .map((item) => item.file.size)
+                    .reduce((prev, curr) => prev + curr, 0)
+                )
+              }}
+            </v-col>
+            <v-col cols="auto" class="text-primary"
+              >成功：{{
+                fileStore.fileUploadList.filter((item) => item.status === 'success').length
+              }}/个</v-col
+            >
+            <v-col cols="auto" class="text-primary"
+              >失败：{{
+                fileStore.fileUploadList.filter((item) => item.status === 'error').length
+              }}/个</v-col
+            >
+            <v-col cols="auto" class="text-primary"
+              >上传：{{
+                fileStore.fileUploadList.filter((item) => item.status === 'cancel').length
+              }}/个</v-col
+            >
+          </v-row>
+        </v-list-subheader>
         <v-list-item>
           <v-data-table-virtual
             :headers="data.table.headers"

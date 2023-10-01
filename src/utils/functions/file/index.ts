@@ -70,20 +70,22 @@ const upload = async (fileList: Array<UploadChunk>) => {
       } else if (uploadQueue.length === 0) {
         console.log('所有任务已完成')
         clearInterval(timer)
+        fileStore.uploadChunkQueue.length = 0
         fileStore.list()
         resolve(true)
       }
-      console.log('扫描上传任务')
+      // console.log('扫描上传任务')
     }, 1000)
 
     const execTask = () => {
       while (uploadQueue.length < appStore.app.settings['maxUploadCount']) {
-        if (count >= fileStore.fileUploadList.length) break
-        let basicFile = fileStore.fileUploadList[count++]
+        const { fileUploadList } = fileStore
+        if (count >= fileUploadList.length) break
+        let basicFile = fileUploadList[count++]
 
-        while (basicFile.status !== 'await' && count < fileStore.fileUploadList.length) {
-          basicFile = fileStore.fileUploadList[count]
-          if (count < fileStore.fileUploadList.length) count++
+        while (basicFile.status !== 'await' && count < fileUploadList.length) {
+          basicFile = fileUploadList[count]
+          if (count < fileUploadList.length) count++
         }
 
         if (basicFile.status === 'await') {
@@ -93,7 +95,7 @@ const upload = async (fileList: Array<UploadChunk>) => {
                 if (basicFile.uploadStatus) {
                   basicFile.uploadStatus.success++
                 }
-                console.log(response)
+                // console.log(response)
               })
               .catch((error) => {
                 if (basicFile.uploadStatus) {

@@ -81,7 +81,7 @@ export const getAppDefaultSettings = (): AppStore => {
       },
       settings: {
         uploadDialogFullscreen: false, // 上传弹窗全屏
-        maxUploadCount: 5 // 最大伤上传并发
+        maxUploadCount: 2 // 最大上传并发
       }
     },
     messageQueue: [],
