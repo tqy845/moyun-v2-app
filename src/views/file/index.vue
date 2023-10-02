@@ -74,7 +74,7 @@ onMounted(async () => {
 
   const unlisten = await listen(
     'click',
-    (event: {
+    async (event: {
       windowLabel: string
       payload: { actionType: number | string; actionData: { [key: string]: any } }
     }) => {
@@ -87,7 +87,8 @@ onMounted(async () => {
           case ACTION_TYPE.DELETE:
             if (fileStore.currentSelectedFileList.length > 1) {
               // 批量删除
-              fileStore.currentSelectedFileList.forEach((item) => {
+              const _list = [...fileStore.currentSelectedFileList]
+              _list.forEach((item) => {
                 fileStore.currentFileList.find((it) => it.name === item)?.delete()
               })
             } else {
@@ -125,45 +126,6 @@ useMagicKeys({
   }
 })
 
-/**
- * 绑定Ctrl + D实现删除选中文件
- */
-const { ctrl_d } = useMagicKeys({
-  passive: false,
-  onEventFired(e) {
-    if (e.ctrlKey && e.key === 'd' && e.type === 'keydown') e.preventDefault()
-  }
-})
-whenever(ctrl_d, () => {
-  console.log('删除文件')
-  handleDelete()
-})
-
-const handleDownload = async (file: BasicFile) => {
-  console.log('下载文件...')
-}
-
-const handleCollect = () => {
-  console.log('收藏文件...')
-}
-
-const handleDelete = () => {
-  console.log('删除文件...')
-}
-
-const handleShare = () => {
-  console.log('分享文件...')
-}
-
-const handleRename = () => {
-  console.log('重命名文件...')
-}
-
-const navigateToFolder = (item: any) => {
-  // Add your logic here for handling folder navigation
-  console.log('Navigate to folder:', item)
-}
-
 const handleDoubleClick = (item: BasicFile) => {
   console.log('双击..', item)
   if (item.extension === 'file') {
@@ -187,7 +149,10 @@ const handleContextMenu = (event: MouseEvent) => {
 const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
   // console.log('右键文件菜单', event, file)
   event.preventDefault()
-  fileStore.selected(file.name)
+  // 没有批量选中，就选当前这条
+  if (fileStore.currentSelectedFileList.length < 1) {
+    fileStore.selected(file.name)
+  }
   const { x, y } = pointer
   // 重设位置
   data.rightMenu.setPosition(
