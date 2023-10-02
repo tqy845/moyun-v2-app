@@ -75,13 +75,21 @@ export const getAppDefaultSettings = (): AppStore => {
     app: {
       delay: import.meta.env.VITE_APP_BASE_DELAY,
       menuIndex: {
-        appIconViewTab: {
-          index: 1
-        }
+        // 二级菜单选中项
+        currentSecondMenuTab: {},
+        // 文件分类默认选中分类
+        currentFileClassifyTab: {
+          index: 0,
+          key: 'all'
+        },
+        // 文件上传，打开的Tab项
+        currentFileUploadOpenTab: ['upload-area']
       },
       settings: {
+        maxUploadCount: 2, // 最大上传并发
         uploadDialogFullscreen: false, // 上传弹窗全屏
-        maxUploadCount: 2 // 最大上传并发
+        uploadAutoHideUploadArea: true, // 上传时自动隐藏上传区域
+        uploadDialogAutoClose: false // 上传完毕后自动关闭对话框
       }
     },
     messageQueue: [],

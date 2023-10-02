@@ -40,7 +40,7 @@ export const useFileStore = defineStore('fileStore', {
           this.fileClassify['media'].push(_basicFile)
         }
       })
-      this.currentFileList = this.classify(appStore.app.menuIndex['appIconViewTab']?.key ?? 'all')
+      this.currentFileList = this.classify(appStore.app.menuIndex['currentFileClassifyTab'].key)
       this.loading = false
       return this.fileList
     },
@@ -119,7 +119,7 @@ export const useFileStore = defineStore('fileStore', {
       const startIndex = (item - 1) * iconViewPageItemNumber
       const endIndex = startIndex + iconViewPageItemNumber
       this.currentFileList = this.classify(
-        appStore.app.menuIndex['appIconViewTab']?.key ?? 'all'
+        appStore.app.menuIndex['currentFileClassifyTab'].key
       ).slice(startIndex, endIndex)
     },
     /**
@@ -129,7 +129,7 @@ export const useFileStore = defineStore('fileStore', {
     changePage(page: number) {
       const appStore = useAppStore()
 
-      this.classifyTabCurrentPage[appStore.app.menuIndex['appIconViewTab'].key] = page
+      this.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab'].key] = page
       this.paging(page)
       console.log('this.classifyTabCurrentPage = ', this.classifyTabCurrentPage)
     }

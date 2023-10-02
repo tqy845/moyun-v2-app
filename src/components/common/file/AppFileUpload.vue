@@ -30,14 +30,14 @@ const emits = defineEmits(['update:show'])
 
 const cs = reactive<{
   dialog: { show: boolean }
-  upload: Array<string>
   tableHeight: number
 }>({
   dialog: {
     show: false
   },
-  upload: ['upload-area'],
-  tableHeight: 150
+  tableHeight: appStore.app.menuIndex['currentFileUploadOpenTab'].includes('upload-area')
+    ? 150
+    : 370
 })
 
 const data = reactive({
@@ -55,7 +55,7 @@ const data = reactive({
       {
         title: t('file.upload.uploadList.fileSize.text'),
         sortable: true,
-        key: 'file.size',
+        key: 'fileSize',
         align: 'center',
         width: 100
       },
@@ -84,12 +84,11 @@ const _show = computed(() => props.show)
  */
 const handleExpansion = (event: any, reupload: boolean) => {
   // console.log(cs.upload.length, reupload)
-
   if (reupload) {
     cs.tableHeight = 370
-  } else if (!cs.upload.length) {
+  } else if (!appStore.app.menuIndex['currentFileUploadOpenTab'].includes('upload-area')) {
     cs.tableHeight = 370
-  } else if (cs.upload.length) {
+  } else if (appStore.app.menuIndex['currentFileUploadOpenTab'].includes('upload-area')) {
     cs.tableHeight = 150
   }
   // cs.tableHeight = tableRef.value.height === 150 ? 370 : 150
@@ -121,7 +120,7 @@ const handleFileSelect = (event: any) => {
  */
 const handleUpload = async (fileList: Array<UploadChunk>, reupload: boolean = false) => {
   if (appStore.app.settings['uploadAutoHideUploadArea']) {
-    cs.upload = []
+    appStore.app.menuIndex['currentFileUploadOpenTab'] = []
     handleExpansion(null, reupload)
   }
   if ((await fileUtils.upload(fileList)) && appStore.app.settings['uploadDialogAutoClose']) {
@@ -232,7 +231,7 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
 
       <v-expansion-panels
         multiple
-        v-model="cs.upload"
+        v-model="appStore.app.menuIndex['currentFileUploadOpenTab']"
         @update:modelValue="handleExpansion($event, false)"
       >
         <v-expansion-panel :title="$t('file.upload.subtitle.text')" value="upload-area">
@@ -317,27 +316,27 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
             density="compact"
           >
             <template v-slot:item.index="{ item }">
-              {{ item.raw.index }}
+              {{ item.index }}
             </template>
-            <template v-slot:item.file.size="{ item }">
-              {{ fileUtils.formatSize(item.columns['file.size']) }}
+            <template v-slot:item.fileSize="{ item }">
+              {{ fileUtils.formatSize(item.file.size) }}
             </template>
             <template v-slot:item.power="{ item }">
               <v-progress-linear
-                :buffer-value="item.raw.power"
-                :model-value="item.raw.power"
+                :buffer-value="item.power"
+                :model-value="item.power"
                 height="12"
-                :indeterminate="item.raw.status === 'init'"
+                :indeterminate="item.status === 'init'"
                 rounded
               >
                 <strong class="text-white text-overline">{{
-                  item.raw.status === 'cancel'
+                  item.status === 'cancel'
                     ? $t('cancel.text')
-                    : item.raw.uploadStatus?.error
+                    : item.uploadStatus?.error
                     ? $t('error.text')
-                    : typeof item.raw.power === 'number'
-                    ? Math.ceil(item.raw.power) + '%'
-                    : item.raw.power
+                    : typeof item.power === 'number'
+                    ? Math.ceil(item.power) + '%'
+                    : item.power
                 }}</strong></v-progress-linear
               >
             </template>
@@ -354,8 +353,8 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
                     color="warning"
                     icon="mdi-upload-off"
                     class="mr-1"
-                    :disabled="item.raw.status !== 'uploading'"
-                    @click="handleCancel(item.raw)"
+                    :disabled="item.status !== 'uploading'"
+                    @click="handleCancel(item)"
                   ></v-btn>
                 </template>
               </v-tooltip>
@@ -367,13 +366,13 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
               >
                 <template v-slot:activator="{ props }">
                   <v-btn
-                    :disabled="!item.raw.uploadStatus?.error || item.raw.deleting"
+                    :disabled="!item.uploadStatus?.error || item.deleting"
                     v-bind="props"
                     size="x-small"
                     color="info"
                     icon="mdi-restart"
                     class="mr-1"
-                    @click="handleReUpload(item.raw)"
+                    @click="handleReUpload(item)"
                   ></v-btn>
                 </template>
               </v-tooltip>
@@ -386,8 +385,8 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
                 <template v-slot:activator="{ props }">
                   <span v-bind="props">
                     <AppFileUploadDeleteConfirm
-                      :item="item.raw"
-                      @select="handleDeleteSelect($event, item.raw)"
+                      :item="item"
+                      @select="handleDeleteSelect($event, item)"
                     />
                   </span>
                 </template>

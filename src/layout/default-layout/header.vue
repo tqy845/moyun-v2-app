@@ -68,7 +68,7 @@ const handleChangeTab = (item: unknown) => {
     key: string
     index: number
   }
-  appStore.app.menuIndex['appIconViewTab'] = _item
+  appStore.app.menuIndex['currentFileClassifyTab'] = _item
   if (!fileStore.classifyTabCurrentPage[_item.key]) {
     fileStore.classifyTabCurrentPage[_item.key] = 1
   }
@@ -90,10 +90,10 @@ const fileUploading = computed(() => {
       <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
     </template>
 
-    <!-- 二级菜单 -->
+    <!-- 文件分类 -->
     <v-tabs
-      v-show="!fileStore.search"
-      v-model="appStore.app.menuIndex['appIconViewTab']['index']"
+      v-show="!fileStore.search && appStore.app.menuIndex['currentSecondMenuTab']['id']"
+      v-model="appStore.app.menuIndex['currentFileClassifyTab']['index']"
       centered
       stacked
       show-arrows

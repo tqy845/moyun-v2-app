@@ -56,7 +56,9 @@ const data = reactive<{
  */
 const pageItemNumber = computed(() => {
   const { iconViewPageItemNumber } = fileStore
-  const _fileList = fileStore.classify(appStore.app.menuIndex['appIconViewTab']?.key ?? 'all')
+  const _fileList = fileStore.classify(
+    appStore.app.menuIndex['currentFileClassifyTab'].key
+  )
   return Math.ceil(_fileList.length / iconViewPageItemNumber)
 })
 
@@ -67,7 +69,7 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 
 onMounted(() => {
   if (fileStore.search) return
-  const { key } = appStore.app.menuIndex['appIconViewTab']
+  const { key } = appStore.app.menuIndex['currentFileClassifyTab']
   fileStore.classify(key || 'all')
   fileStore.paging(fileStore.classifyTabCurrentPage[key] ?? 1)
 })
@@ -118,7 +120,9 @@ const onClickOutside = useDebounceFn(() => {
     <v-card-action>
       <v-pagination
         :model-value="
-          fileStore.classifyTabCurrentPage[appStore.app.menuIndex['appIconViewTab']?.key || 1]
+          fileStore.classifyTabCurrentPage[
+            appStore.app.menuIndex['currentFileClassifyTab'].key
+          ]
         "
         :length="pageItemNumber"
         total-visible="6"

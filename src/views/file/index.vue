@@ -5,7 +5,7 @@
   @description “文件展示”首页
 -->
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { onUnmounted, onMounted, reactive, ref } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
 import { AppBottomBar, AppBaseRightClickMenu, AppIconView, AppListView } from './components'
 import { useAppStore, useFileStore } from '@/stores'
@@ -48,7 +48,7 @@ const data = reactive<{
   unlisten: null
 })
 
-onMounted(() => {
+onMounted(async () => {
   if (fileStore.search) return
   fileStore.list()
 
@@ -64,15 +64,6 @@ onMounted(() => {
     visible: false
   })
 
-  data.rightMenu.once('tauri://created', function () {
-    // webview window successfully created
-    console.log('成功')
-  })
-  data.rightMenu.once('tauri://error', function (e) {
-    // an error occurred during webview window creation
-    console.error('失败', e)
-  })
-
   // 监听右键菜单聚焦
   // @ts-ignore
   data.unlisten = data.rightMenu.onFocusChanged(async ({ payload: focused }) => {
@@ -82,8 +73,10 @@ onMounted(() => {
   })
 })
 
-onBeforeUnmount(async () => {
+onUnmounted(async () => {
+  console.log('卸载组件')
   ;(await data.unlisten)()
+  data.rightMenu.close()
 })
 /**
  * 绑定Ctrl + A实现全选目标

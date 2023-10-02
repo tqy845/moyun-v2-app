@@ -28,6 +28,7 @@ const handleSelectItem = (item: AsideMenuItem) => {
   <v-divider :thickness="1" class="border-opacity-1" color="gray"></v-divider>
 
   <v-list v-bind="$attrs">
+    <!-- 一级菜单 -->
     <v-list-item
       v-for="(item, index) in appStore.asideMenu.itemList"
       :key="index"

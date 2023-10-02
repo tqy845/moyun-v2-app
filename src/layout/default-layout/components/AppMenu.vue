@@ -5,6 +5,9 @@
   @description “菜单列表”组件
 -->
 <script lang="ts" setup>
+import { useAppStore } from '@/stores'
+
+const appStore = useAppStore()
 const items = [
   { text: 'menu.file.text', icon: 'folder', path: '/personal/file' },
   {
@@ -18,11 +21,16 @@ const items = [
     path: '/personal/trash-can'
   }
 ]
+
+const handleChangeSecondMenuItem = (item: any) => {
+  appStore.app.menuIndex['currentSecondMenuTab'] = item
+}
 </script>
 
 <template>
-  <v-list :lines="false" nav>
-    <!-- 菜单项 -->
+  <v-list :lines="false" nav @click:select="handleChangeSecondMenuItem">
+    <!-- 二级菜单 -->
+    <!-- {{ appStore.app.menuIndex['currentFileClassifyTab'] }} -->
     <v-list-item
       v-for="(item, index) in items"
       :key="index"
