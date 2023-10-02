@@ -4,7 +4,7 @@
 
 import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
-import { fetchFileList, uploadFileChunk } from '@/api'
+import { fetchFileList, fileDeleteByNameList, uploadFileChunk } from '@/api'
 import { BasicFile, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore } from '..'
@@ -103,6 +103,17 @@ export const useFileStore = defineStore('fileStore', {
           this.class[key] = this.class[key].filter((it) => it?.name !== name)
         }
       })
+    },
+    /**
+     * 通过文件名列表删除文件
+     */
+    async deleteByNameList(names: Array<string>) {
+      const { code } = await fileDeleteByNameList({ fileNames: names })
+      if (code === 200) {
+        for (const name of names) {
+          this.delete(name)
+        }
+      }
     },
     /**
      * 分页

@@ -88,10 +88,7 @@ onMounted(async () => {
             // console.log('删除', fileStore.selectedList)
             if (fileStore.selectedList.length > 1) {
               // 批量删除
-              const _list = [...fileStore.selectedList]
-              _list.forEach((item) => {
-                fileStore.renderList.find((it) => it.name === item)?.delete()
-              })
+              fileStore.deleteByNameList(fileStore.selectedList)
             } else {
               // 删除单个
               fileStore.renderList.find((item) => item.name === fileStore.selectedList[0])?.delete()

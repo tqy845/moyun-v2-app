@@ -31,7 +31,7 @@ const upload = async (fileList: Array<File>) => {
     fileStore.uploadQueue
       .waitForAll()
       .then(() => {
-        // fileStore.fetch()
+        fileStore.fetch()
         resolve(true)
       })
       .catch((error) => {

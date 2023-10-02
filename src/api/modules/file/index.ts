@@ -54,3 +54,16 @@ export const fileDeleteByName = <T = any>(fileName: string) => {
     method: 'DELETE'
   })
 }
+
+/**
+ * 删除文件<batch>
+ * @param {string} fileNameList 文件名列表
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string> }) => {
+  return tauriRequest<T>({
+    url: `/system/user/file/delete-multiple`,
+    method: 'DELETE',
+    data: params
+  })
+}

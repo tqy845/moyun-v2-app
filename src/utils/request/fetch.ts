@@ -1,7 +1,6 @@
 import { useUserStore, useAppStore } from '@/stores'
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { BASE_URL, ResponseType } from './helper'
-import { BaseDirectory, writeBinaryFile } from '@tauri-apps/api/fs'
 
 /**
  * 发起请求
