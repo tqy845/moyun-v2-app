@@ -116,9 +116,10 @@ export const useFileStore = defineStore('fileStore', {
      */
     delete(name: string) {
       // console.log('删除文件', name)
-      this.fileUploadList = this.fileUploadList.filter((it) => it.file.name !== name)
-      this.fileList = this.fileList.filter((it) => it.name !== name)
+      this.currentSelectedFileList = this.currentSelectedFileList.filter((it) => it.name !== name)
       this.currentFileList = this.currentFileList.filter((it) => it.name !== name)
+      this.fileList = this.fileList.filter((it) => it.name !== name)
+      this.fileUploadList = this.fileUploadList.filter((it) => it.file.name !== name)
     },
     /**
      * 分页
