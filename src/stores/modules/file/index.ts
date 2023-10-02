@@ -18,8 +18,8 @@ export const useFileStore = defineStore('fileStore', {
      * 获取文件列表
      */
     async list() {
-      const appStore = useAppStore()
       this.loading = true
+      const appStore = useAppStore()
       const { data } = await fetchFileList<{
         fileList: Array<FileProperties>
       }>()
@@ -40,7 +40,11 @@ export const useFileStore = defineStore('fileStore', {
           this.fileClassify['media'].push(_basicFile)
         }
       })
-      this.currentFileList = this.classify(appStore.app.menuIndex['currentFileClassifyTab'].key)
+      const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+      // 分类
+      this.currentFileList = this.classify(key)
+      // 分页
+      this.paging(this.classifyTabCurrentPage[key] ?? 1)
       this.loading = false
       return this.fileList
     },
@@ -49,11 +53,18 @@ export const useFileStore = defineStore('fileStore', {
      * @param name 文件名
      */
     filter(name: string) {
-      // console.log('过滤', name)
+      console.log('过滤', name)
       this.loading = true
-      this.currentFileList = name
-        ? this.fileList.filter((file: BasicFile) => file.name === name)
-        : this.classify('all')
+      const appStore = useAppStore()
+      if (name) {
+        this.currentFileList = this.fileList.filter((file: BasicFile) => file.name === name)
+      } else {
+        const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+        // 分类
+        this.currentFileList = this.classify(key)
+        // 分页
+        this.paging(this.classifyTabCurrentPage[key] ?? 1)
+      }
       this.loading = false
     },
     /**

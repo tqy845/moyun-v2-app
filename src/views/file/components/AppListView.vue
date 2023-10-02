@@ -49,18 +49,18 @@ window.addEventListener('wheel', fileUtils.listViewMouseWheel)
         justify="start"
         align="center"
       >
-        <v-icon :icon="`mdi-` + item.raw.icon" size="30" class="mr-1" color="#62B1FA"></v-icon>
-        {{ item.columns.name.replace('.' + item.raw.extension, '') }}
+        <v-icon :icon="`mdi-` + item.icon" size="30" class="mr-1" color="#62B1FA"></v-icon>
+        {{ item.name.replace('.' + item.extension, '') }}
       </v-row>
     </template>
     <template v-slot:item.lastModified="{ item }">
       <v-row justify="start">
-        {{ useDateFormat(item.columns.lastModified, 'YYYY/MM/DD H:mm:ss').value }}
+        {{ useDateFormat(item.lastModified, 'YYYY/MM/DD H:mm:ss').value }}
       </v-row>
     </template>
     <template v-slot:item.size="{ item }">
       <v-row justify="end">
-        {{ fileUtils.formatSize(item?.columns?.size) }}
+        {{ fileUtils.formatSize(item.size) }}
       </v-row>
     </template>
   </v-data-table>

@@ -33,19 +33,16 @@ const upload = async (fileList: Array<UploadChunk>) => {
 
       if (!fileNameList.includes(file.name)) {
         // 新任务
-        fileStore.fileUploadList = [
-          {
-            power: 0,
-            file: file,
-            status: 'await',
-            uploadStatus: {
-              success: 0,
-              error: 0
-            },
-            index: itemIndex--
+        fileStore.fileUploadList.unshift({
+          power: 0,
+          file: file,
+          status: 'await',
+          uploadStatus: {
+            success: 0,
+            error: 0
           },
-          ...fileStore.fileUploadList
-        ]
+          index: itemIndex--
+        })
         appStore.requestQueue[file.name] = []
       }
       // 重新上传

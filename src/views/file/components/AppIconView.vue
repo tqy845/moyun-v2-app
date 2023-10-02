@@ -6,7 +6,7 @@
 -->
 
 <script lang="ts" setup>
-import { reactive, computed, onMounted, watch } from 'vue'
+import { reactive, computed, onMounted, watch, onUpdated } from 'vue'
 import { BasicFile } from '@/types/models'
 import { AppFile, AppFileUpload } from '@/components/common'
 import { createSharedComposable, useDebounceFn, useMagicKeys, useWindowSize } from '@vueuse/core'
@@ -56,9 +56,7 @@ const data = reactive<{
  */
 const pageItemNumber = computed(() => {
   const { iconViewPageItemNumber } = fileStore
-  const _fileList = fileStore.classify(
-    appStore.app.menuIndex['currentFileClassifyTab'].key
-  )
+  const _fileList = fileStore.classify(appStore.app.menuIndex['currentFileClassifyTab'].key)
   return Math.ceil(_fileList.length / iconViewPageItemNumber)
 })
 
@@ -67,12 +65,7 @@ const pageItemNumber = computed(() => {
  */
 window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 
-onMounted(() => {
-  if (fileStore.search) return
-  const { key } = appStore.app.menuIndex['currentFileClassifyTab']
-  fileStore.classify(key || 'all')
-  fileStore.paging(fileStore.classifyTabCurrentPage[key] ?? 1)
-})
+onMounted(() => {})
 
 const onClickOutside = useDebounceFn(() => {
   emits('outsideClick')
@@ -120,9 +113,7 @@ const onClickOutside = useDebounceFn(() => {
     <v-card-action>
       <v-pagination
         :model-value="
-          fileStore.classifyTabCurrentPage[
-            appStore.app.menuIndex['currentFileClassifyTab'].key
-          ]
+          fileStore.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab'].key]
         "
         :length="pageItemNumber"
         total-visible="6"

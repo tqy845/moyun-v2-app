@@ -13,6 +13,7 @@ import { BasicFile } from '@/types/models'
 import { usePointer } from '@vueuse/core'
 import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
 import { appWindow } from '@tauri-apps/api/window'
+import { watchDebounced } from '@vueuse/core'
 
 const pointer = usePointer()
 const containerRef = ref(null)
@@ -78,6 +79,7 @@ onUnmounted(async () => {
   ;(await data.unlisten)()
   data.rightMenu.close()
 })
+
 /**
  * 绑定Ctrl + A实现全选目标
  */
