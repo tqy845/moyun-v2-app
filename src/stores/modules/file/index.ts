@@ -120,6 +120,12 @@ export const useFileStore = defineStore('fileStore', {
       this.currentFileList = this.currentFileList.filter((it) => it.name !== name)
       this.fileList = this.fileList.filter((it) => it.name !== name)
       this.fileUploadList = this.fileUploadList.filter((it) => it.file.name !== name)
+      const more = ['all', 'document', 'media']
+      more.forEach((key) => {
+        if (Array.isArray(this.fileClassify[key])) {
+          this.fileClassify[key] = this.fileClassify[key].filter((it) => it?.name !== name)
+        }
+      })
     },
     /**
      * 分页
