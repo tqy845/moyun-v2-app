@@ -12,7 +12,6 @@ import { UploadChunk } from '@/types/models'
 
 const props = defineProps<{
   item: UploadChunk
-  show: boolean
 }>()
 
 const emits = defineEmits(['select'])
@@ -31,12 +30,10 @@ const handleSelect = (item: number | string) => {
   cs.dialog.show = false
   emits('select', item)
 }
-
-const _show = computed(() => props.show)
 </script>
 
 <template>
-  <v-dialog v-model="_show" persistent width="auto">
+  <v-dialog v-model="cs.dialog.show" persistent width="auto">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"

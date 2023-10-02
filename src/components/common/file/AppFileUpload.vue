@@ -169,11 +169,6 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
   console.log('用户选择', selected, item)
   if (selected === ACTION_TYPE.CONFIRM) {
     item.deleting = true
-    // 从上传列表中移除
-    fileStore.fileUploadList = fileStore.fileUploadList.filter(
-      (it) => it.file.name !== item.file.name
-    )
-    // 从文件列表中移除
     const _file = fileStore.find(item.file.name)
     if (_file?.name) {
       await _file.delete()
