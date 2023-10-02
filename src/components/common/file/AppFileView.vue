@@ -29,7 +29,7 @@ const views = [
  */
 const handleSwitchView = (item: any) => {
   console.log('切换视图', item)
-  fileStore.fileView = item.value
+  fileStore.view = item.value
 }
 </script>
 

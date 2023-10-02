@@ -26,8 +26,8 @@ const cs = reactive({
 
 <template>
   <v-btn
-    :size="fileStore.fileItemSize + 15"
-    :width="fileStore.fileItemSize"
+    :size="fileStore.itemSize + 15"
+    :width="fileStore.itemSize"
     stacked
     v-bind="$attrs"
     class="pa-5"
@@ -39,7 +39,7 @@ const cs = reactive({
           <v-icon
             :icon="`mdi-${fileItem.icon}`"
             color="#62B1FA"
-            :size="fileStore.fileItemSize - 30"
+            :size="fileStore.itemSize - 30"
           ></v-icon>
         </v-col>
         <v-col class="progress-linear">

@@ -1,9 +1,17 @@
 import { fileDownloadByName, fileDeleteByName } from '@/api'
 import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
-import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
-import { start } from 'repl'
-import { useFileStore } from '@/stores'
+import { useFileStore, useUserStore } from '@/stores'
+import { calculateFileSlices } from '@/utils/functions/file/helper'
+/**
+ * 单个分片大小
+ */
+const CHUNK_SIZE = 1024 * 1024 * 10
+/**
+ * 线程数量
+ */
+const THREAD_COUNT = navigator.hardwareConcurrency || 4
+
 /**
  * 文件属性
  */
@@ -18,40 +26,131 @@ export interface FileProperties {
 }
 
 /**
- * 文件上传属性
+ * 分片上传对象
  */
-export interface UploadChunk {
-  /**
-   * 索引
-   */
+export class UploadChunk {
   index?: number
-
-  /**
-   * 文件
-   */
   file: File
-
-  /**
-   * 上传进度或状态
-   */
   power?: number
-
-  /**
-   * 上传状态
-   */
   status?: 'success' | 'error' | 'await' | 'uploading' | 'init' | 're-upload' | 'cancel'
-
-  /**
-   * 删除中
-   */
   deleting?: boolean
-
-  /**
-   * 文件块上传状态
-   */
   uploadStatus?: {
     success: number
     error: number
+  }
+
+  constructor(file: File, index: number = 0) {
+    this.index = index
+    this.file = file
+    this.power = 0
+    this.status = 'await'
+    this.deleting = false
+    this.uploadStatus = {
+      success: 0,
+      error: 0
+    }
+  }
+
+  /**
+   * 置顶
+   */
+  top(): void {
+    const fileStore = useFileStore()
+    fileStore.uploadTop(this.file.name)
+  }
+
+  /**
+   * 分片
+   */
+  partUpload(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      const userStore = useUserStore()
+      const totalChunkCount = calculateFileSlices(this.file.size)
+      const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
+      let uploadedChunkCount = 0 // 跟踪已上传的分片数量
+      // 前置任务
+      this.status = 'init'
+      // 置顶
+      this.top()
+
+      // 开启多线程
+      for (let i = 0; i < THREAD_COUNT; i++) {
+        // 创建新线程
+        const worker = new Worker(new URL('@/utils/functions/file/worker.ts', import.meta.url), {
+          type: 'module'
+        })
+
+        // 计算文件分片位置
+        const startIndex = i * workerChunkCount
+        let endIndex = startIndex + workerChunkCount
+        if (endIndex > totalChunkCount) {
+          endIndex = totalChunkCount
+          break
+        }
+
+        // 给worker线程发送数据，以分片和上传
+        console.log('发送数据', i)
+
+        this.status = 'uploading'
+        worker.postMessage({
+          // 文件信息
+          file: this.file,
+          CHUNK_SIZE,
+          startIndex,
+          endIndex,
+          index: i,
+          token: userStore.token
+        })
+        // 接收worker线程返回
+        worker.onmessage = async (e) => {
+          console.log('接收worker返回内容', e.data)
+          // 计数器+1
+          uploadedChunkCount++
+          if (e.data) {
+            // 上传成功，更新文件上传进度
+            this.power = (uploadedChunkCount / totalChunkCount) * 100
+
+            // 判断是否已经上传完毕
+            if (uploadedChunkCount === totalChunkCount) {
+              if (this.uploadStatus?.error) {
+                this.status = 'error'
+              } else {
+                this.status = 'success'
+              }
+              console.log('文件 ' + this.file.name + ' 上传完成')
+              worker.terminate()
+              resolve(true)
+            }
+          } else {
+            // 上传失败
+            this.status = 'error'
+            worker.terminate()
+            reject(false)
+          }
+        }
+      }
+    })
+  }
+
+  /**
+   * 取消上传
+   */
+  cancelUpload(): void {
+    this.status = 'cancel'
+    // 实现取消上传的逻辑
+  }
+
+  /**
+   * 删除文件
+   * @param deleteLocal 是否删除本地缓存
+   */
+  async delete(deleteLocal: boolean = true): Promise<boolean> {
+    const fileStore = useFileStore()
+    const { code } = await fileDeleteByName(this.file.name)
+    if (code === 200 && deleteLocal) {
+      fileStore.delete(this.file.name)
+    }
+    return code === 200
   }
 }
 
@@ -147,6 +246,7 @@ export class BasicFile {
 
   /**
    * 删除文件
+   * @param deleteLocal 是否删除本地缓存
    */
   async delete(deleteLocal: boolean = true): Promise<boolean> {
     const fileStore = useFileStore()

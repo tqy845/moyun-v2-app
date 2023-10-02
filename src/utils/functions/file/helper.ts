@@ -23,6 +23,7 @@ export const createChunk = (file: File, index: number, chunkSize: number) => {
         chunk
       })
     }
+
     fileReader.readAsArrayBuffer(chunk)
   })
 }

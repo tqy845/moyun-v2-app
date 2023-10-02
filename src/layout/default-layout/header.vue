@@ -76,10 +76,10 @@ const handleChangeTab = (item: unknown) => {
 }
 
 const fileUploading = computed(() => {
-  const success = fileStore.fileUploadList.filter(
+  const success = fileStore.uploadQueue.all.filter(
     (item) => item.status === 'success' || item.status === 'error' || item.status === 'cancel'
   )
-  const calc = (success.length / fileStore.fileUploadList.length) * 100
+  const calc = (success.length / fileStore.uploadQueue.all.length) * 100
   return calc >= 100 ? 0 : calc
 })
 </script>

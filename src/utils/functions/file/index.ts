@@ -2,199 +2,42 @@
  * 文件工具库
  */
 
-import { fileDownloadByName } from '@/api'
-import { pinyin } from 'pinyin-pro'
-import { invoke } from '@tauri-apps/api'
-import { writeBinaryFile, BaseDirectory } from '@tauri-apps/api/fs'
 import { FileProperties, UploadChunk } from '@/types/models'
 import { FILE_ICON_TYPE } from '@/types/enums'
 import { useAppStore, useFileStore } from '@/stores'
-import { calculateFileSlices } from './helper'
-
-const CHUNK_SIZE = 1024 * 1024 * 10 // 单个分片大小
-const THREAD_COUNT = navigator.hardwareConcurrency || 4
 
 /**
  * 文件上传
+ * @param fileList 原生文件列表
  */
-const upload = async (fileList: Array<UploadChunk>) => {
+const upload = async (fileList: Array<File>) => {
   const fileStore = useFileStore()
   const appStore = useAppStore()
 
-  // console.log('fileList = ', fileList)
-
-  return new Promise<Boolean>((resolve) => {
+  return new Promise<boolean>((resolve, reject) => {
     // 过滤已存在的文件
-    const fileNameList = fileStore.fileUploadList.map((it) => it.file.name)
-    let itemIndex = fileList.length
-    for (const iterator of fileList) {
-      const { file } = iterator
-      // console.log(fileNameList, file.name)
+    const fileNameList = fileStore.uploadQueue.all.map((it) => it.file.name)
 
+    for (const file of fileList) {
       if (!fileNameList.includes(file.name)) {
         // 新任务
-        fileStore.fileUploadList.unshift({
-          power: 0,
-          file: file,
-          status: 'await',
-          uploadStatus: {
-            success: 0,
-            error: 0
-          },
-          index: itemIndex--
-        })
-        appStore.requestQueue[file.name] = []
-      }
-      // 重新上传
-      else if (iterator.status === 're-upload') {
-        iterator.power = 0
-        iterator.status = 'await'
-        iterator.uploadStatus = {
-          success: 0,
-          error: 0
-        }
+        const task = new UploadChunk(file, fileStore.uploadQueue.all.length + 1)
+        fileStore.uploadQueue.add(task, 'partUpload')
         appStore.requestQueue[file.name] = []
       }
     }
 
-    // 创建一个队列来管理文件上传
-    const uploadQueue: Array<Promise<unknown>> = []
-    let count = 0
-
-    // 将文件添加到队列
-    const timer = setInterval(async () => {
-      if (count < fileStore.fileUploadList.length) {
-        execTask()
-      } else if (uploadQueue.length === 0) {
-        console.log('所有任务已完成')
-        clearInterval(timer)
-        fileStore.uploadChunkQueue.length = 0
-        // 重新加载文件
-        fileStore.list()
+    // 等待全部任务完成返回
+    fileStore.uploadQueue
+      .waitForAll()
+      .then(() => {
+        // fileStore.fetch()
         resolve(true)
-      }
-      // console.log('扫描上传任务')
-    }, 1000)
-
-    const execTask = () => {
-      while (uploadQueue.length < appStore.app.settings['maxUploadCount']) {
-        const { fileUploadList } = fileStore
-        if (count >= fileUploadList.length) break
-        let basicFile = fileUploadList[count++]
-
-        while (basicFile.status !== 'await' && count < fileUploadList.length) {
-          basicFile = fileUploadList[count]
-          if (count < fileUploadList.length) count++
-        }
-
-        if (basicFile.status === 'await') {
-          uploadQueue.push(
-            uploadChunk(basicFile)
-              .then(() => {
-                if (basicFile.uploadStatus) {
-                  basicFile.uploadStatus.success++
-                }
-                // console.log(response)
-              })
-              .catch((error) => {
-                if (basicFile.uploadStatus) {
-                  basicFile.uploadStatus.error++
-                }
-                // 取消下载
-                basicFile.status = 'cancel'
-                console.error('报错 = ', error)
-              })
-              .finally(() => {
-                // 弹出第一个任务
-                uploadQueue.shift()
-                execTask()
-              })
-          )
-        }
-      }
-    }
-  })
-}
-
-/**
- * 上传分片
- * @param chunk 分片
- */
-export const uploadChunk = (uploadChunk: UploadChunk) => {
-  return new Promise<boolean>((resolve, reject) => {
-    const fileStore = useFileStore()
-    const { file } = uploadChunk
-    uploadChunk.status = 'init'
-    // 将该任务提到首位
-    fileStore.fileUploadList = fileStore.fileUploadList.filter(
-      (item) => item.file.name !== uploadChunk.file.name
-    )
-    fileStore.fileUploadList.unshift(uploadChunk)
-
-    // 计算 totalChunkCount，但限制最大值
-    const totalChunkCount = calculateFileSlices(file.size)
-    const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
-    let uploadedChunkCount = 0 // 用于跟踪已上传的分片数量
-
-    for (let i = 0; i < THREAD_COUNT; i++) {
-      const worker = new Worker(new URL('./worker.ts', import.meta.url), {
-        type: 'module'
       })
-
-      const startIndex = i * workerChunkCount
-      let endIndex = startIndex + workerChunkCount
-      if (endIndex > totalChunkCount) {
-        endIndex = totalChunkCount
-      }
-
-      worker.onmessage = async (e) => {
-        if (uploadChunk.status === 'cancel') return
-        uploadChunk.status = 'uploading'
-        // console.log('=====================uploading===========================')
-
-        const { chunk, ...args } = e.data
-        const formData = new FormData()
-        formData.append('file', chunk, `chunk_${i}`)
-        formData.append('chunkSize', String(CHUNK_SIZE))
-        for (const key in args) {
-          if (Object.hasOwn(args, key)) {
-            const element = args[key]
-            formData.append(key, element)
-          }
-        }
-
-        if (await fileStore.uploadChunk(formData, file.name)) {
-          // console.log('线程 ' + i + ' 的分片上传成功')
-          uploadedChunkCount++ // 分片上传成功，增加已上传分片的数量
-
-          const progress = (uploadedChunkCount / totalChunkCount) * 100
-          uploadChunk.power = progress // 设置文件上传进度
-
-          if (uploadedChunkCount === totalChunkCount) {
-            if (uploadChunk.uploadStatus?.error) {
-              uploadChunk.status = 'error'
-            } else {
-              uploadChunk.status = 'success'
-            }
-            // console.log('文件 ' + file.name + ' 上传完成')
-            worker.terminate()
-            resolve(true)
-          }
-        } else {
-          uploadChunk.status = 'error'
-          // console.log('文件 ' + file.name + ' 上传失败')
-          reject(false)
-        }
-      }
-
-      worker.postMessage({
-        file,
-        CHUNK_SIZE,
-        startIndex,
-        endIndex,
-        totalChunkCount
+      .catch((error) => {
+        console.error('出错', error)
+        reject(false)
       })
-    }
   })
 }
 
@@ -256,16 +99,16 @@ const iconViewMouseWheel = (event: WheelEvent) => {
     // 根据滚动方向执行相应操作
     if (delta > 0) {
       // 向下滚动
-      if (fileStore.fileItemSize > 80) {
-        fileStore.fileItemSize -= 3
+      if (fileStore.itemSize > 80) {
+        fileStore.itemSize -= 3
       } else {
-        fileStore.fileView = 'list'
+        fileStore.view = 'list'
       }
       // 在这里执行你的操作
     } else if (delta < 0) {
       // 向上滚动
-      if (fileStore.fileItemSize < 300) {
-        fileStore.fileItemSize += 3
+      if (fileStore.itemSize < 300) {
+        fileStore.itemSize += 3
       }
     }
   }
@@ -289,7 +132,7 @@ const listViewMouseWheel = (event: WheelEvent) => {
     // 根据滚动方向执行相应操作
     if (delta < 0) {
       // 向上滚动
-      fileStore.fileView = 'icon'
+      fileStore.view = 'icon'
     }
   }
 }

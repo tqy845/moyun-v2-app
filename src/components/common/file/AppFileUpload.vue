@@ -101,7 +101,7 @@ const handleExpansion = (event: any, reupload: boolean) => {
 const handleFileDrop = (event: any) => {
   event.preventDefault()
   const fileObject = event.dataTransfer.files as {}
-  handleUpload(Object.values(fileObject).map((item) => ({ file: item as File })))
+  handleUpload(Object.values(fileObject))
 }
 
 /**
@@ -111,20 +111,22 @@ const handleFileDrop = (event: any) => {
 const handleFileSelect = (event: any) => {
   event.preventDefault()
   const fileObject = event.target.files as {}
-  handleUpload(Object.values(fileObject).map((item) => ({ file: item as File })))
+  handleUpload(Object.values(fileObject))
 }
 
 /**
  * 上传事件
  * @param fileList 文件列表
  */
-const handleUpload = async (fileList: Array<UploadChunk>, reupload: boolean = false) => {
+const handleUpload = async (fileList: Array<File>, reupload: boolean = false) => {
   if (appStore.app.settings['uploadAutoHideUploadArea']) {
     appStore.app.menuIndex['currentFileUploadOpenTab'] = []
     handleExpansion(null, reupload)
   }
   if ((await fileUtils.upload(fileList)) && appStore.app.settings['uploadDialogAutoClose']) {
-    const allUploadCompleted = fileStore.fileUploadList.every((item) => item.status !== 'uploading')
+    const allUploadCompleted = fileStore.uploadQueue.all.every(
+      (item) => item.status !== 'uploading'
+    )
     if (allUploadCompleted) emits('update:show', false)
   }
 }
@@ -157,7 +159,7 @@ const handleCancel = (item: UploadChunk) => {
 const handleReUpload = async (item: UploadChunk) => {
   console.log('重新上传', item)
   item.status = 're-upload'
-  handleUpload([item], true)
+  handleUpload([item.file], true)
 }
 
 /**
@@ -169,10 +171,7 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
   console.log('用户选择', selected, item)
   if (selected === ACTION_TYPE.CONFIRM) {
     item.deleting = true
-    const _file = fileStore.find(item.file.name)
-    if (_file?.name) {
-      await _file.delete()
-    }
+    await item.delete()
     item.deleting = false
   }
 }
@@ -259,7 +258,7 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
                 subtitle="支持分片上传、断点续传、秒传、加密上传等"
               ></v-list-item>
             </v-list> -->
-            <!-- {{ fileStore.fileUploadList.map((item, index) => ({ ...item, no: index + 1 })) }} -->
+            <!-- {{ fileStore.uploadList?.map((item, index) => ({ ...item, no: index + 1 })) }} -->
           </template>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -270,40 +269,45 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
         <v-list-subheader>
           <v-row>
             <v-col cols="auto" class="text-primary">
-              {{ $t('file.upload.totalFileNumber', [fileStore.fileUploadList.length]) }}</v-col
-            >
-            <v-col cols="auto" class="text-primary">
               {{
                 $t('file.upload.totalFileSize', [
                   fileUtils.formatSize(
-                    fileStore.fileUploadList
+                    fileStore.uploadQueue.all
                       .map((item) => item.file.size)
                       .reduce((prev, curr) => prev + curr, 0)
                   )
                 ])
               }}
             </v-col>
+            <v-col cols="auto" class="text-primary">
+              {{ $t('file.upload.totalFileNumber', [fileStore.uploadQueue.all.length]) }}</v-col
+            >
             <v-col cols="auto" class="text-primary">{{
               $t('file.upload.successNumber', [
-                fileStore.fileUploadList.filter((item) => item.status === 'success').length
+                fileStore.uploadQueue.all.filter((item) => item.status === 'success').length
               ])
             }}</v-col>
             <v-col cols="auto" class="text-primary">{{
               $t('file.upload.errorNumber', [
-                fileStore.fileUploadList.filter((item) => item.status === 'error').length
+                fileStore.uploadQueue.all.filter((item) => item.status === 'error').length
               ])
             }}</v-col>
             <v-col cols="auto" class="text-primary">{{
               $t('file.upload.cancelNumber', [
-                fileStore.fileUploadList.filter((item) => item.status === 'cancel').length
+                fileStore.uploadQueue.all.filter((item) => item.status === 'cancel').length
               ])
+            }}</v-col>
+            <v-col cols="auto" class="text-primary">{{
+              $t('file.upload.maxUploadCount.text', [appStore.app.settings['maxUploadCount']])
             }}</v-col>
           </v-row>
         </v-list-subheader>
         <v-list-item>
+          <!-- {{ fileStore.uploadList? }} -->
+          <!-- {{ fileStore.uploadQueue }} -->
           <v-data-table-virtual
             :headers="data.table.headers"
-            :items="fileStore.fileUploadList"
+            :items="fileStore.uploadQueue.all"
             class="elevation-1"
             :height="cs.tableHeight"
             fixed-header

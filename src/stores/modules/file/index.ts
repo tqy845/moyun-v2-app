@@ -1,4 +1,3 @@
-import { AppStore } from './../app/helper'
 /**
  * File Store
  */
@@ -17,36 +16,33 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 获取文件列表
      */
-    async list() {
+    async fetch() {
       this.loading = true
       const appStore = useAppStore()
       const { data } = await fetchFileList<{
         fileList: Array<FileProperties>
       }>()
       const { fileList } = data
-      this.fileList.length =
-        this.fileClassify['document'].length =
-        this.fileClassify['media'].length =
-          0
+      this.list.length = this.class['document'].length = this.class['media'].length = 0
       fileList.forEach((item) => {
         const _basicFile = new BasicFile({
           icon: fileUtils.getIcon(item),
           ...item
         })
-        this.fileList.push(_basicFile)
+        this.list.push(_basicFile)
         if (fileUtils.isDocument(item.extension)) {
-          this.fileClassify['document'].push(_basicFile)
+          this.class['document'].push(_basicFile)
         } else if (fileUtils.isMedia(item.extension)) {
-          this.fileClassify['media'].push(_basicFile)
+          this.class['media'].push(_basicFile)
         }
       })
       const { key } = appStore.app.menuIndex['currentFileClassifyTab']
       // 分类
-      this.currentFileList = this.classify(key)
+      this.renderList = this.classify(key)
       // 分页
       this.paging(this.classifyTabCurrentPage[key] ?? 1)
       this.loading = false
-      return this.fileList
+      return this.list
     },
     /**
      * 文件过滤
@@ -57,11 +53,11 @@ export const useFileStore = defineStore('fileStore', {
       this.loading = true
       const appStore = useAppStore()
       if (name) {
-        this.currentFileList = this.fileList.filter((file: BasicFile) => file.name === name)
+        this.renderList = this.list.filter((file: BasicFile) => file.name === name)
       } else {
         const { key } = appStore.app.menuIndex['currentFileClassifyTab']
         // 分类
-        this.currentFileList = this.classify(key)
+        this.renderList = this.classify(key)
         // 分页
         this.paging(this.classifyTabCurrentPage[key] ?? 1)
       }
@@ -72,8 +68,7 @@ export const useFileStore = defineStore('fileStore', {
      * @param name 文件名
      */
     find(name: string) {
-      // console.log('查找', name)
-      return this.fileList.find((file: BasicFile) => file.name === name)
+      return this.list.find((file: BasicFile) => file.name === name)
     },
     /**
      * 文件分类
@@ -81,34 +76,16 @@ export const useFileStore = defineStore('fileStore', {
      */
     classify(key: 'all' | 'document' | 'media' = 'all') {
       // console.log('分类', key)
-      if (key === 'all') return this.fileList
-      return this.fileClassify[key]
+      if (key === 'all') return this.list
+      return this.class[key]
     },
     /**
      * 文件块上传
      * @param 包含分片的表单数据
      * @param 网络请求标记
      */
-    async uploadChunk(formData: FormData, flag: string) {
-      // console.log('上传块', formData)
-      const appStore = useAppStore()
-      return new Promise((resolve, reject) => {
-        if (this.uploadChunkQueue.length >= appStore.app.settings['maxUploadCount']) {
-          Promise.race(this.uploadChunkQueue).then(() => {
-            this.uploadChunkQueue.push(
-              uploadFileChunk(formData, flag)
-                .then((response) => resolve(response))
-                .catch((error) => reject(error))
-            )
-          })
-        } else {
-          this.uploadChunkQueue.push(
-            uploadFileChunk(formData, flag)
-              .then((response) => resolve(response))
-              .catch((error) => reject(error))
-          )
-        }
-      })
+    async uploadChunk<T>(formData: FormData, flag: string) {
+      return await uploadFileChunk<T>(formData, flag)
     },
     /**
      * 删除文件
@@ -116,14 +93,14 @@ export const useFileStore = defineStore('fileStore', {
      */
     delete(name: string) {
       // console.log('删除文件', name)
-      this.currentFileList = this.currentFileList.filter((it) => it.name !== name)
-      this.fileList = this.fileList.filter((it) => it.name !== name)
-      this.fileUploadList = this.fileUploadList.filter((it) => it.file.name !== name)
-      this.currentSelectedFileList = this.currentSelectedFileList.filter((it) => it !== name)
+      this.renderList = this.renderList.filter((it) => it.name !== name)
+      this.list = this.list.filter((it) => it.name !== name)
+      this.uploadQueue.all = this.uploadQueue.all.filter((it) => it.file.name !== name)
+      this.selectedList = this.selectedList.filter((it) => it !== name)
       const more = ['all', 'document', 'media']
       more.forEach((key) => {
-        if (Array.isArray(this.fileClassify[key])) {
-          this.fileClassify[key] = this.fileClassify[key].filter((it) => it?.name !== name)
+        if (Array.isArray(this.class[key])) {
+          this.class[key] = this.class[key].filter((it) => it?.name !== name)
         }
       })
     },
@@ -137,9 +114,10 @@ export const useFileStore = defineStore('fileStore', {
       const { iconViewPageItemNumber } = this
       const startIndex = (item - 1) * iconViewPageItemNumber
       const endIndex = startIndex + iconViewPageItemNumber
-      this.currentFileList = this.classify(
-        appStore.app.menuIndex['currentFileClassifyTab'].key
-      ).slice(startIndex, endIndex)
+      this.renderList = this.classify(appStore.app.menuIndex['currentFileClassifyTab'].key).slice(
+        startIndex,
+        endIndex
+      )
     },
     /**
      * 换页
@@ -159,24 +137,38 @@ export const useFileStore = defineStore('fileStore', {
     selected(name: string, multiple: boolean = false) {
       if (multiple) {
         // 多选
-        if (this.currentSelectedFileList.includes(name)) {
-          this.currentSelectedFileList = this.currentSelectedFileList.filter((it) => it !== name)
+        if (this.selectedList.includes(name)) {
+          this.selectedList = this.selectedList.filter((it) => it !== name)
         } else {
-          this.currentSelectedFileList.push(name)
+          this.selectedList.push(name)
         }
       } else {
         // 单选
-        this.currentSelectedFileList = [name]
+        this.selectedList = [name]
       }
     },
     /**
      * 全选或者全不选
      */
     selectAll() {
-      if (this.currentSelectedFileList.length === this.currentFileList.length) {
-        this.currentSelectedFileList = []
+      if (this.selectedList.length === this.renderList.length) {
+        this.selectedList = []
       } else {
-        this.currentSelectedFileList = this.currentFileList.map((it) => it.name)
+        this.selectedList = this.renderList.map((it) => it.name)
+      }
+    },
+    /**
+     * 上传置顶
+     * @param name 文件名
+     */
+    uploadTop(name: string) {
+      const index: number = this.uploadQueue.all.findIndex((file) => file.file.name === name)
+      if (index !== -1) {
+        // 如果找到匹配的文件对象
+        // 先将该文件对象从数组中删除
+        const fileToMove = this.uploadQueue.all.splice(index, 1)[0]
+        // 然后将它插入到数组的首位
+        this.uploadQueue.all.unshift(fileToMove)
       }
     }
   },
@@ -188,7 +180,7 @@ export const useFileStore = defineStore('fileStore', {
   persist: [
     {
       storage: localStorage,
-      paths: ['fileView', 'fileItemSize']
+      paths: ['view', 'itemSize']
     }
   ]
 })

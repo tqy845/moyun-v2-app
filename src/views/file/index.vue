@@ -85,18 +85,16 @@ onMounted(async () => {
       if (windowLabel === 'right-menu') {
         switch (actionType) {
           case ACTION_TYPE.DELETE:
-            // console.log('删除', fileStore.currentSelectedFileList)
-            if (fileStore.currentSelectedFileList.length > 1) {
+            // console.log('删除', fileStore.selectedList)
+            if (fileStore.selectedList.length > 1) {
               // 批量删除
-              const _list = [...fileStore.currentSelectedFileList]
+              const _list = [...fileStore.selectedList]
               _list.forEach((item) => {
-                fileStore.currentFileList.find((it) => it.name === item)?.delete()
+                fileStore.renderList.find((it) => it.name === item)?.delete()
               })
             } else {
               // 删除单个
-              fileStore.currentFileList
-                .find((item) => item.name === fileStore.currentSelectedFileList[0])
-                ?.delete()
+              fileStore.renderList.find((item) => item.name === fileStore.selectedList[0])?.delete()
             }
             break
         }
@@ -105,7 +103,7 @@ onMounted(async () => {
     }
   )
   if (fileStore.search) return
-  fileStore.list()
+  fileStore.fetch()
 })
 
 onUnmounted(async () => {
@@ -151,7 +149,7 @@ const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
   // console.log('右键文件菜单', event, file)
   event.preventDefault()
   // 没有批量选中，就选当前这条
-  if (fileStore.currentSelectedFileList.length <= 1) {
+  if (fileStore.selectedList.length <= 1) {
     fileStore.selected(file.name)
   }
   const { x, y } = pointer
@@ -172,7 +170,7 @@ const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
   >
     <!-- 图标视图 -->
     <AppIconView
-      v-if="fileStore.fileView === 'icon'"
+      v-if="fileStore.view === 'icon'"
       :width="width"
       :multiple="!!controlState"
       @doubleClick="handleDoubleClick"
@@ -181,7 +179,7 @@ const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
 
     <!-- 列表视图 -->
     <AppListView
-      v-else-if="fileStore.fileView === 'list'"
+      v-else-if="fileStore.view === 'list'"
       :multiple="!!controlState"
       @doubleClick="handleDoubleClick"
       @rightClick="handleRightClick"

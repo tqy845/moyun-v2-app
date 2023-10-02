@@ -1,6 +1,6 @@
-import { uploadChunk } from './../../../utils/functions/file/index'
-import { uploadFileChunk } from '@/api'
-import { UploadChunk, BasicFile } from '@/types/models'
+import { BasicFile } from '@/types/models'
+import { useAppStore } from '..'
+import { Concurrent } from '@/utils/functions/queue'
 
 /**
  * 文件存储对象接口
@@ -17,37 +17,36 @@ export interface FileStore {
    * 文件分类信息列表
    * @type {Array<BasicFile>}
    */
-  fileClassify: { [key: string]: Array<BasicFile> }
+  class: { [key: string]: Array<BasicFile> }
 
   /**
    * 文件列表
    * @type {Array<BasicFile>}
    */
-  fileList: Array<BasicFile>
+  list: Array<BasicFile>
 
   /**
-   * 当前文件列表
+   * 渲染列表
    * @type {Array<BasicFile>}
    */
-  currentFileList: Array<BasicFile>
+  renderList: Array<BasicFile>
 
   /**
-   * 文件上传列表
-   * @type {Array<UploadChunk>}
+   * 上传队列
    */
-  fileUploadList: Array<UploadChunk>
+  uploadQueue: Concurrent<any>
 
   /**
-   * 文件视图
+   * 视图
    * @type {'icon' | 'list'}
    */
-  fileView: 'icon' | 'list'
+  view: 'icon' | 'list'
 
   /**
    * 文件项大小
    * @type {number}
    */
-  fileItemSize: number
+  itemSize: number
 
   /**
    * icon视图一页条目数
@@ -73,7 +72,7 @@ export interface FileStore {
   /**
    * 当前选中的文件
    */
-  currentSelectedFileList: Array<string>
+  selectedList: Array<string>
 }
 
 /**
@@ -82,21 +81,24 @@ export interface FileStore {
  * @returns {FileStore} 包含用户信息和令牌的用户存储对象
  */
 export const getFileDefaultSettings = (): FileStore => {
+  const appStore = useAppStore()
+  const maxUploadCount = appStore.app.settings['maxUploadCount']
+
   return {
     loading: false,
-    fileClassify: {
+    class: {
       document: [],
       media: []
     },
-    fileList: [],
-    currentFileList: [],
-    fileUploadList: [],
-    fileView: 'icon',
-    fileItemSize: 121,
+    list: [],
+    renderList: [],
+    view: 'icon',
+    itemSize: 121,
     iconViewPageItemNumber: 50,
     classifyTabCurrentPage: {},
     uploadChunkQueue: [],
     search: '',
-    currentSelectedFileList: []
+    selectedList: [],
+    uploadQueue: new Concurrent(maxUploadCount)
   }
 }

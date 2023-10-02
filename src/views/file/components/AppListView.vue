@@ -42,18 +42,18 @@ const handleClickTableRow = (item: any) => {
 </script>
 
 <template>
-  <!-- {{ fileStore.currentSelectedFileList }} -->
+  <!-- {{ fileStore.selectedList }} -->
   <v-data-table
     :loading="fileStore.loading"
     fixed-header
     :headers="headers"
-    :items="fileStore.currentFileList"
+    :items="fileStore.renderList"
     class="elevation-1"
     :height="windowSize.height.value - 180"
     item-value="name"
     :hover="{ background: '#f5f5f5' }"
     show-select
-    v-model="fileStore.currentSelectedFileList"
+    v-model="fileStore.selectedList"
   >
     <template v-slot:item="{ item }">
       <tr @click="handleClickTableRow(item)" @contextmenu.stop="emits('rightClick', $event, item)">
@@ -62,7 +62,7 @@ const handleClickTableRow = (item: any) => {
             style="position: relative; right: 7px"
             class="d-flex"
             :value="item.name"
-            v-model="fileStore.currentSelectedFileList"
+            v-model="fileStore.selectedList"
           ></v-checkbox>
         </td>
         <td>

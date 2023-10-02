@@ -65,8 +65,8 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 onMounted(() => {})
 
 const handleSelectItem = (index: any) => {
-  // console.log('select', fileStore.currentFileList[index].name)
-  fileStore.selected(fileStore.currentFileList[index].name, props.multiple)
+  // console.log('select', fileStore.renderList[index].name)
+  fileStore.selected(fileStore.renderList[index].name, props.multiple)
 }
 </script>
 
@@ -75,22 +75,22 @@ const handleSelectItem = (index: any) => {
   <v-card class="w-100" :height="windowSize.height.value - 130">
     <div :style="{ height: `${windowSize.height.value - 190}px` }" style="overflow: auto">
       <!-- 读取中 -->
-      <!-- {{ fileStore.currentSelectedFileList }} -->
+      <!-- {{ fileStore.selectedList }} -->
       <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
       <!-- 渲染 -->
       <v-btn-toggle
-        v-else-if="fileStore.currentFileList.length"
+        v-else-if="fileStore.renderList.length"
         :density="null"
         class="pa-5 w-100"
         :model-value="
-          fileStore.currentSelectedFileList.map((it_name) =>
-            fileStore.currentFileList.findIndex((it) => it.name === it_name)
+          fileStore.selectedList.map((it_name) =>
+            fileStore.renderList.findIndex((it) => it.name === it_name)
           )
         "
       >
         <v-row v-if="width" :style="{ 'padding-left': `${(width % 158) / 2 + 15}px` }">
           <v-col
-            v-for="(iterator, index) in fileStore.currentFileList"
+            v-for="(iterator, index) in fileStore.renderList"
             :key="index"
             class="px-1"
             cols="auto"
@@ -108,7 +108,7 @@ const handleSelectItem = (index: any) => {
         </v-row>
       </v-btn-toggle>
       <!-- 无内容 -->
-      <AppFileUploadAlert :show="!fileStore.currentFileList.length && !fileStore.loading" />
+      <AppFileUploadAlert :show="!fileStore.renderList.length && !fileStore.loading" />
     </div>
     <v-card-action>
       <v-pagination

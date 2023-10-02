@@ -16,6 +16,7 @@ export const fetchFileList = <T = any>() => {
  * 上传文件（分片）
  * @param {string} formData 包含分片的表单
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ * @description 暂时废弃，因为worker线程无法使用该接口，已在worker线程中单独使用fetch
  */
 export const uploadFileChunk = <T = any>(formData: FormData, flag: string) => {
   return fetchRequest<T>({

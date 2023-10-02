@@ -61,6 +61,7 @@
 
   "file.search.placeholder.text": "搜索文件",
   "file.upload.title.text": "文件上传",
+  "file.upload.maxUploadCount.text": "并发量{0}/个",
   "file.upload.subtitle.text": "上传区域",
   "file.upload.uploadList.dialog.hideButton.text": "隐藏上传对话框",
   "file.upload.area.text": "拖拽文件到此处或点击上传",
