@@ -116,10 +116,10 @@ export const useFileStore = defineStore('fileStore', {
      */
     delete(name: string) {
       // console.log('删除文件', name)
-      this.currentSelectedFileList = this.currentSelectedFileList.filter((it) => it.name !== name)
       this.currentFileList = this.currentFileList.filter((it) => it.name !== name)
       this.fileList = this.fileList.filter((it) => it.name !== name)
       this.fileUploadList = this.fileUploadList.filter((it) => it.file.name !== name)
+      this.currentSelectedFileList = this.currentSelectedFileList.filter((it) => it !== name)
       const more = ['all', 'document', 'media']
       more.forEach((key) => {
         if (Array.isArray(this.fileClassify[key])) {

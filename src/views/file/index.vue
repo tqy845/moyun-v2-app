@@ -85,6 +85,7 @@ onMounted(async () => {
       if (windowLabel === 'right-menu') {
         switch (actionType) {
           case ACTION_TYPE.DELETE:
+            // console.log('删除', fileStore.currentSelectedFileList)
             if (fileStore.currentSelectedFileList.length > 1) {
               // 批量删除
               const _list = [...fileStore.currentSelectedFileList]
