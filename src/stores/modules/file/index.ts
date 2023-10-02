@@ -53,7 +53,7 @@ export const useFileStore = defineStore('fileStore', {
      * @param name 文件名
      */
     filter(name: string) {
-      console.log('过滤', name)
+      // console.log('过滤', name)
       this.loading = true
       const appStore = useAppStore()
       if (name) {
@@ -143,6 +143,33 @@ export const useFileStore = defineStore('fileStore', {
       this.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab'].key] = page
       this.paging(page)
       console.log('this.classifyTabCurrentPage = ', this.classifyTabCurrentPage)
+    },
+    /**
+     * 选中或移除一个文件
+     * @param name 文件名
+     */
+    selected(name: string, multiple: boolean = false) {
+      if (multiple) {
+        // 多选
+        if (this.currentSelectedFileList.includes(name)) {
+          this.currentSelectedFileList = this.currentSelectedFileList.filter((it) => it !== name)
+        } else {
+          this.currentSelectedFileList.push(name)
+        }
+      } else {
+        // 单选
+        this.currentSelectedFileList = [name]
+      }
+    },
+    /**
+     * 全选或者全不选
+     */
+    selectAll() {
+      if (this.currentSelectedFileList.length === this.currentFileList.length) {
+        this.currentSelectedFileList = []
+      } else {
+        this.currentSelectedFileList = this.currentFileList.map((it) => it.name)
+      }
     }
   },
 

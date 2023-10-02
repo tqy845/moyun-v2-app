@@ -92,7 +92,8 @@
 
   "$vuetify.noDataText": "没有数据",
   "$vuetify.fileInput.counterSize": "共{0}个文件，共{1}",
-  "$vuetify.dataFooter.itemsPerPageAll": "渲染全部（可能卡顿）",
+  "$vuetify.dataFooter.itemsPerPageAll": "全部",
   "$vuetify.dataFooter.itemsPerPageText": "每页条目数",
-  "$vuetify.dataFooter.pageText": "跳转"
+  "$vuetify.dataFooter.pageText": "当前{0}~{1}条",
+  "$vuetify.dataIterator.loadingText": "数据读取中..."
 }

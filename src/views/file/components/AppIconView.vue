@@ -19,15 +19,12 @@ const windowSize = useWindowSize()
 const appStore = useAppStore()
 const fileStore = useFileStore()
 
-const emits = defineEmits(['doubleClick', 'rightClick', 'outsideClick'])
+const emits = defineEmits(['doubleClick', 'rightClick'])
 
 const props = defineProps<{
   width: number
-  selected: number | Array<number>
   multiple: boolean
 }>()
-
-const selected = computed(() => props.selected)
 
 const data = reactive<{
   tabItems: Array<{ label: string; icon: string; key: string }>
@@ -67,9 +64,10 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 
 onMounted(() => {})
 
-const onClickOutside = useDebounceFn(() => {
-  emits('outsideClick')
-}, 10)
+const handleSelectItem = (index: any) => {
+  // console.log('select', fileStore.currentFileList[index].name)
+  fileStore.selected(fileStore.currentFileList[index].name, props.multiple)
+}
 </script>
 
 <template>
@@ -81,10 +79,13 @@ const onClickOutside = useDebounceFn(() => {
       <!-- 渲染 -->
       <v-btn-toggle
         v-else-if="fileStore.currentFileList.length"
-        v-model="selected"
         :density="null"
-        :multiple="multiple"
         class="pa-5 w-100"
+        :model-value="
+          fileStore.currentSelectedFileList.map((it_name) =>
+            fileStore.currentFileList.findIndex((it) => it.name === it_name)
+          )
+        "
       >
         <v-row v-if="width" :style="{ 'padding-left': `${(width % 158) / 2 + 15}px` }">
           <v-col
@@ -98,11 +99,9 @@ const onClickOutside = useDebounceFn(() => {
               :file-item="iterator"
               elevation="0"
               style="background-color: rgba(0, 0, 0, 0)"
+              @click="handleSelectItem(index)"
               @dblclick="emits('doubleClick', iterator)"
               @contextmenu.stop="emits('rightClick', $event, iterator)"
-              v-click-outside="{
-                handler: onClickOutside
-              }"
             />
           </v-col>
         </v-row>

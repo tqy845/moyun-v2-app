@@ -11,9 +11,7 @@ import { AppBottomBar, AppBaseRightClickMenu, AppIconView, AppListView } from '.
 import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile } from '@/types/models'
 import { usePointer } from '@vueuse/core'
-import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
-import { appWindow } from '@tauri-apps/api/window'
-import { watchDebounced } from '@vueuse/core'
+import { LogicalPosition, WebviewWindow, LogicalSize } from '@tauri-apps/api/window'
 
 const pointer = usePointer()
 const containerRef = ref(null)
@@ -40,11 +38,9 @@ const cs = reactive<{
 })
 
 const data = reactive<{
-  selected: number | Array<number>
   rightMenu: any
   unlisten: any
 }>({
-  selected: [],
   rightMenu: null,
   unlisten: null
 })
@@ -59,7 +55,7 @@ onMounted(async () => {
     resizable: false,
     decorations: false,
     contentProtected: false,
-    skipTaskbar: false,
+    skipTaskbar: true,
     fileDropEnabled: false,
     transparent: true,
     visible: false
@@ -69,6 +65,8 @@ onMounted(async () => {
   // @ts-ignore
   data.unlisten = data.rightMenu.onFocusChanged(async ({ payload: focused }) => {
     if (!focused) {
+      console.log(123123)
+
       data.rightMenu.hide()
     }
   })
@@ -81,18 +79,16 @@ onUnmounted(async () => {
 })
 
 /**
- * 绑定Ctrl + A实现全选目标
+ * 全选
  */
-const { ctrl_a } = useMagicKeys({
+useMagicKeys({
   passive: false,
   onEventFired(e) {
-    if (e.ctrlKey && e.key === 'a' && e.type === 'keydown') e.preventDefault()
+    if (e.ctrlKey && e.key === 'a' && e.type === 'keydown') {
+      e.preventDefault()
+      fileStore.selectAll()
+    }
   }
-})
-whenever(ctrl_a, () => {
-  console.log('全选')
-  data.selected = []
-  for (let i = 0; i < fileStore.fileList.length; i++) data.selected.push(i)
 })
 
 /**
@@ -166,11 +162,6 @@ const handleRightClick = (event: MouseEvent, file: BasicFile) => {
   data.rightMenu.show() // 显示
   data.rightMenu.setFocus() // 置顶
 }
-
-const handleOutsideClick = () => {
-  console.log('外部...')
-  data.rightMenu.hide()
-}
 </script>
 
 <template>
@@ -184,22 +175,20 @@ const handleOutsideClick = () => {
       v-if="fileStore.fileView === 'icon'"
       :width="width"
       :multiple="!!controlState"
-      :selected="data.selected"
       @doubleClick="handleDoubleClick"
       @rightClick="handleRightClick"
-      @outsideClick="handleOutsideClick"
     />
 
     <!-- 列表视图 -->
     <AppListView
       v-else-if="fileStore.fileView === 'list'"
-      :selected="data.selected"
+      :multiple="!!controlState"
       @doubleClick="handleDoubleClick"
       @rightClick="handleRightClick"
     />
 
     <!--文件底部操作菜单-->
-    <AppBottomBar v-if="Array.isArray(data.selected) && data.selected?.length > 1" />
+    <!-- <AppBottomBar /> -->
 
     <!-- 右键菜单 -->
     <!-- {{ cs.rightClickMenu }}

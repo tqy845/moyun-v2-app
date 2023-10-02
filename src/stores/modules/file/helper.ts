@@ -69,6 +69,11 @@ export interface FileStore {
    * 文件搜索
    */
   search: string
+
+  /**
+   * 当前选中的文件
+   */
+  currentSelectedFileList: Array<string>
 }
 
 /**
@@ -91,6 +96,7 @@ export const getFileDefaultSettings = (): FileStore => {
     iconViewPageItemNumber: 50,
     classifyTabCurrentPage: {},
     uploadChunkQueue: [],
-    search: ''
+    search: '',
+    currentSelectedFileList: []
   }
 }
