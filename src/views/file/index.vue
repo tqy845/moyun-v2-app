@@ -150,7 +150,7 @@ const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
   // console.log('右键文件菜单', event, file)
   event.preventDefault()
   // 没有批量选中，就选当前这条
-  if (fileStore.currentSelectedFileList.length < 1) {
+  if (fileStore.currentSelectedFileList.length <= 1) {
     fileStore.selected(file.name)
   }
   const { x, y } = pointer
