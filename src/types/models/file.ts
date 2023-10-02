@@ -149,7 +149,7 @@ export class BasicFile {
    * 删除文件
    */
   async delete(): Promise<void> {
-    console.log('删除文件', this.name)
+    // console.log('删除文件', this.name)
     const fileStore = useFileStore()
     const { code } = await fileDeleteByName(this.name)
     if (code === 200) {

@@ -56,10 +56,7 @@ const handleClickTableRow = (item: any) => {
     v-model="fileStore.currentSelectedFileList"
   >
     <template v-slot:item="{ item }">
-      <tr
-        @click="handleClickTableRow(item)"
-        @contextmenu.stop="emits('rightClick', $event, iterator)"
-      >
+      <tr @click="handleClickTableRow(item)" @contextmenu.stop="emits('rightClick', $event, item)">
         <td>
           <v-checkbox
             style="position: relative; right: 7px"

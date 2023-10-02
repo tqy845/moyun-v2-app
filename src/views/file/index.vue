@@ -8,10 +8,15 @@
 import { onUnmounted, onMounted, reactive, ref } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
 import { AppBottomBar, AppBaseRightClickMenu, AppIconView, AppListView } from './components'
+import { AppFileDeleteConfirm } from '@/components/common'
 import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile } from '@/types/models'
 import { usePointer } from '@vueuse/core'
 import { LogicalPosition, WebviewWindow, LogicalSize } from '@tauri-apps/api/window'
+import { onUpdated } from 'vue'
+import { listen } from '@tauri-apps/api/event'
+import { emit } from '@tauri-apps/api/event'
+import { ACTION_TYPE } from '@/types/enums'
 
 const pointer = usePointer()
 const containerRef = ref(null)
@@ -46,12 +51,10 @@ const data = reactive<{
 })
 
 onMounted(async () => {
-  if (fileStore.search) return
-  fileStore.list()
-
   data.rightMenu = new WebviewWindow('right-menu', {
     url: '/right-menu',
     width: 256,
+    height: 219,
     resizable: false,
     decorations: false,
     contentProtected: false,
@@ -65,11 +68,42 @@ onMounted(async () => {
   // @ts-ignore
   data.unlisten = data.rightMenu.onFocusChanged(async ({ payload: focused }) => {
     if (!focused) {
-      console.log(123123)
-
       data.rightMenu.hide()
     }
   })
+
+  const unlisten = await listen(
+    'click',
+    (event: {
+      windowLabel: string
+      payload: { actionType: number | string; actionData: { [key: string]: any } }
+    }) => {
+      const {
+        windowLabel,
+        payload: { actionType, actionData }
+      } = event
+      if (windowLabel === 'right-menu') {
+        switch (actionType) {
+          case ACTION_TYPE.DELETE:
+            if (fileStore.currentSelectedFileList.length > 1) {
+              // 批量删除
+              fileStore.currentSelectedFileList.forEach((item) => {
+                fileStore.currentFileList.find((it) => it.name === item)?.delete()
+              })
+            } else {
+              // 删除单个
+              fileStore.currentFileList
+                .find((item) => item.name === fileStore.currentSelectedFileList[0])
+                ?.delete()
+            }
+            break
+        }
+        data.rightMenu.hide()
+      }
+    }
+  )
+  if (fileStore.search) return
+  fileStore.list()
 })
 
 onUnmounted(async () => {
@@ -150,11 +184,11 @@ const handleContextMenu = (event: MouseEvent) => {
   cs.rightClickMenu.y = clientY
 }
 
-const handleRightClick = (event: MouseEvent, file: BasicFile) => {
-  console.log('右键文件菜单', file)
+const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
+  // console.log('右键文件菜单', event, file)
   event.preventDefault()
+  fileStore.selected(file.name)
   const { x, y } = pointer
-
   // 重设位置
   data.rightMenu.setPosition(
     new LogicalPosition(x.value + window.screenX, y.value + window.screenY)

@@ -1,17 +1,18 @@
 <!--
-  AppFileUploadDeleteConfirm
+  AppFileDeleteConfirm
   @author 谭期元
   @date  2023/09/30
   @description “文件上传删除确认”组件
 -->
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { ACTION_TYPE, ActionType } from '@/types/enums'
 import { UploadChunk } from '@/types/models'
 
 const props = defineProps<{
   item: UploadChunk
+  show: boolean
 }>()
 
 const emits = defineEmits(['select'])
@@ -26,14 +27,16 @@ const cs = reactive({
  * 用户选择
  * @param item 用户的选择
  */
-const handleSelect = (item: number) => {
+const handleSelect = (item: number | string) => {
   cs.dialog.show = false
   emits('select', item)
 }
+
+const _show = computed(() => props.show)
 </script>
 
 <template>
-  <v-dialog v-model="cs.dialog.show" persistent width="auto">
+  <v-dialog v-model="_show" persistent width="auto">
     <template v-slot:activator="{ props }">
       <v-btn
         v-bind="props"

@@ -75,6 +75,7 @@ const handleSelectItem = (index: any) => {
   <v-card class="w-100" :height="windowSize.height.value - 130">
     <div :style="{ height: `${windowSize.height.value - 190}px` }" style="overflow: auto">
       <!-- 读取中 -->
+      <!-- {{ fileStore.currentSelectedFileList }} -->
       <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
       <!-- 渲染 -->
       <v-btn-toggle

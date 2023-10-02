@@ -9,7 +9,7 @@ import { computed, reactive, ref } from 'vue'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile, UploadChunk } from '@/types/models'
-import { AppFileUploadDeleteConfirm } from '.'
+import { AppFileDeleteConfirm } from '.'
 import { ACTION_TYPE } from '@/types/enums'
 import { useI18n } from 'vue-i18n'
 
@@ -384,10 +384,7 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
               >
                 <template v-slot:activator="{ props }">
                   <span v-bind="props">
-                    <AppFileUploadDeleteConfirm
-                      :item="item"
-                      @select="handleDeleteSelect($event, item)"
-                    />
+                    <AppFileDeleteConfirm :item="item" @select="handleDeleteSelect($event, item)" />
                   </span>
                 </template>
               </v-tooltip>

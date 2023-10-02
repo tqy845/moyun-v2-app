@@ -6,75 +6,87 @@
 -->
 
 <script lang="ts" setup>
+import { useFileStore } from '@/stores'
+import { ACTION_TYPE } from '@/types/enums'
 import { BasicFile } from '@/types/models'
+import { emit } from '@tauri-apps/api/event'
+import { reactive } from 'vue'
 
+const fileStore = useFileStore()
 const props = defineProps({
   file: {
     type: BasicFile,
     required: true
   }
 })
-const emits = defineEmits(['close'])
+
+const cs = reactive({
+  deleteConfirm: {
+    show: false
+  }
+})
 
 const items = [
   {
-    text: 'DownLoad',
+    text: 'right.menu.open.text',
+    icon: 'mdi-open-in-app',
+    actionType: ACTION_TYPE.OPEN,
+    shortcutKey: 'Enter'
+  },
+  {
+    text: 'right.menu.download.text',
     icon: 'mdi-cloud-download',
-    event: () => {
-      console.log('下载')
-      props.file.download()
-    }
+    actionType: ACTION_TYPE.DOWNLOAD
   },
   {
-    text: 'Shared',
+    text: 'right.menu.shared.text',
     icon: 'mdi-account-multiple',
-    event: () => {
-      console.log('分享')
-    }
+    actionType: ACTION_TYPE.SHARE
   },
   {
-    text: 'Starred',
-    icon: 'mdi-star',
-    event: () => {
-      console.log('收藏')
-    }
+    text: 'right.menu.property.text',
+    icon: 'mdi-wrench',
+    actionType: ACTION_TYPE.PROPERTY,
+    shortcutKey: 'Alt+Enter'
   },
   {
-    text: 'Recent',
-    icon: 'mdi-history',
-    event: () => {
-      console.log('历史')
-    }
-  },
-  {
-    text: 'Recent',
-    icon: 'mdi-history',
-    event: () => {
-      console.log('历史')
-    }
+    text: 'right.menu.delete.text',
+    icon: 'mdi-delete',
+    actionType: ACTION_TYPE.DELETE,
+    color: 'red',
+    shortcutKey: 'Ctrl+D'
   }
 ]
-
-const handleClickMenuItem = (callback: Function) => {
-  callback()
-  emits('close')
-}
 </script>
 
 <template>
   <v-card class="mx-auto elevation-1 rounded-lg" width="256" style="border: 1px solid #dcdcdc8a">
-    <v-list class="px-2">
+    <v-list class="px-2" lines="one" density="compact">
       <v-list-item
         v-for="(item, i) in items"
         :key="i"
         color="primary"
         rounded="xl"
-        @click="handleClickMenuItem(item.event)"
+        @click="emit('click', { actionType: item.actionType })"
       >
-        <template v-slot:prepend>
-          <v-icon :icon="item.icon"></v-icon>
-        </template>
-        <v-list-item-title>{{ item.text }}</v-list-item-title>
+        <v-list-item-title>
+          <v-row align="center">
+            <v-col
+              cols="6"
+              class="text-caption font-weight-bold"
+              :class="[`text-${item.color ?? 'grey-darken-2'}`]"
+            >
+              <v-icon :icon="item.icon" :color="item?.color" class="mr-2"></v-icon>
+              {{ $t(item.text) }}</v-col
+            >
+            <v-col
+              cols="6"
+              class="text-end font-weight-regular font-italic text-caption pr-4"
+              style="font-size: 12px"
+              >{{ item.shortcutKey }}
+            </v-col>
+          </v-row>
+        </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-card>
