@@ -9,6 +9,8 @@
   "register.terms": "我已阅读并同意网站的使用条款和条例",
   "register.terms.hint": "请先阅读并勾选同意网站的使用条款和条例",
   "confirm.text": "确认",
+  "change.i18n.hint.title": "切换语言",
+  "change.i18n.hint.content": "注意：切换语言后，部分内容需要重新登录才能生效",
   "cancel.text": "取消",
   "error.text": "失败",
   "account.or.email": "账户名或邮箱号",
