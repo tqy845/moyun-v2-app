@@ -18,7 +18,7 @@ const handleSwitchLanguage = (item: LanguageItem) => {
   console.log('切换语言', item)
   locale.value = item.value
   cookies.set('locale', item.value)
-  if (userStore.token && userStore.user.email) {
+  if (userStore.token) {
     cs.hint.show = true
   }
 }

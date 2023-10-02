@@ -14,6 +14,7 @@
   "cancel.text": "Cancel",
   "error.text": "Failure",
   "account.or.email": "Username or Email",
+  "file.upload.maxUploadCount.text": "Concurrent: {0}",
   "password.text": "Password",
   "password.confirm.text": "Confirm Password",
   "password.notMatch": "The two passwords do not match",

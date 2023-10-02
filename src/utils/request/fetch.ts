@@ -40,6 +40,7 @@ const fetchRequest = async <T = any>(
     // 构建请求头
     const defaultHeaders: HeadersInit = {
       'Accept-Language': cookies.get('locale'),
+      'Content-Type': 'application/json',
       ResponseType: responseType || 'json'
     }
 
