@@ -108,11 +108,17 @@ export const useFileStore = defineStore('fileStore', {
      * 通过文件名列表删除文件
      */
     async deleteByNameList(names: Array<string>) {
+      const appStore = useAppStore()
       const { code } = await fileDeleteByNameList({ fileNames: names })
       if (code === 200) {
         for (const name of names) {
           this.delete(name)
         }
+        const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+        // 分类
+        this.renderList = this.classify(key)
+        // 分页
+        this.paging(this.classifyTabCurrentPage[key] ?? 1)
       }
     },
     /**

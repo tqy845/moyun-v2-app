@@ -3,6 +3,8 @@ import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
 import { useFileStore, useUserStore } from '@/stores'
 import { calculateFileSlices } from '@/utils/functions/file/helper'
+import { ACTION_TYPE } from '../enums'
+
 /**
  * 单个分片大小
  */
@@ -29,15 +31,39 @@ export interface FileProperties {
  * 分片上传对象
  */
 export class UploadChunk {
+  /**
+   * 索引
+   */
   index?: number
+  /**
+   * 文件
+   */
   file: File
+  /**
+   * 进度
+   */
   power?: number
-  status?: 'success' | 'error' | 'await' | 'uploading' | 'init' | 're-upload' | 'cancel'
+  /**
+   * 状态
+   */
+  status?: 'success' | 'error' | 'await' | 'init' | 're-upload' | 'cancel'
+  /**
+   * 是否删除中
+   */
   deleting?: boolean
-  uploadStatus?: {
-    success: number
-    error: number
-  }
+  /**
+   * 当前worker线程数量
+   */
+  workerCount?: number
+  /**
+   * 总分片数量
+   */
+  private totalChunkCount?: number
+  /**
+   * 已上传分片数量
+   */
+  private uploadedChunkCount?: number
+  private workerChunkCount?: number
 
   constructor(file: File, index: number = 0) {
     this.index = index
@@ -45,10 +71,6 @@ export class UploadChunk {
     this.power = 0
     this.status = 'await'
     this.deleting = false
-    this.uploadStatus = {
-      success: 0,
-      error: 0
-    }
   }
 
   /**
@@ -60,76 +82,13 @@ export class UploadChunk {
   }
 
   /**
-   * 分片
+   * 上传
    */
-  partUpload(): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      const userStore = useUserStore()
-      const totalChunkCount = calculateFileSlices(this.file.size)
-      const workerChunkCount = Math.ceil(totalChunkCount / THREAD_COUNT)
-      let uploadedChunkCount = 0 // 跟踪已上传的分片数量
-      // 前置任务
-      this.status = 'init'
-      // 置顶
-      this.top()
-
-      // 开启多线程
-      for (let i = 0; i < THREAD_COUNT; i++) {
-        // 创建新线程
-        const worker = new Worker(new URL('@/utils/functions/file/worker.ts', import.meta.url), {
-          type: 'module'
-        })
-
-        // 计算文件分片位置
-        const startIndex = i * workerChunkCount
-        let endIndex = startIndex + workerChunkCount
-        if (endIndex > totalChunkCount) {
-          endIndex = totalChunkCount
-          break
-        }
-
-        // 给worker线程发送数据，以分片和上传
-        console.log('发送数据', i)
-
-        this.status = 'uploading'
-        worker.postMessage({
-          // 文件信息
-          file: this.file,
-          CHUNK_SIZE,
-          startIndex,
-          endIndex,
-          index: i,
-          token: userStore.token
-        })
-        // 接收worker线程返回
-        worker.onmessage = async (e) => {
-          console.log('接收worker返回内容', e.data)
-          // 计数器+1
-          uploadedChunkCount++
-          if (e.data) {
-            // 上传成功，更新文件上传进度
-            this.power = (uploadedChunkCount / totalChunkCount) * 100
-
-            // 判断是否已经上传完毕
-            if (uploadedChunkCount === totalChunkCount) {
-              if (this.uploadStatus?.error) {
-                this.status = 'error'
-              } else {
-                this.status = 'success'
-              }
-              console.log('文件 ' + this.file.name + ' 上传完成')
-              worker.terminate()
-              resolve(true)
-            }
-          } else {
-            // 上传失败
-            this.status = 'error'
-            worker.terminate()
-            reject(false)
-          }
-        }
-      }
-    })
+  async upload(): Promise<boolean> {
+    // 置顶
+    this.top()
+    // 分片上传
+    return await this.partUpload()
   }
 
   /**
@@ -137,7 +96,14 @@ export class UploadChunk {
    */
   cancelUpload(): void {
     this.status = 'cancel'
-    // 实现取消上传的逻辑
+  }
+
+  /**
+   * 重新上传
+   */
+  reupload(): void {
+    this.power = 0
+    this.partUpload()
   }
 
   /**
@@ -145,12 +111,128 @@ export class UploadChunk {
    * @param deleteLocal 是否删除本地缓存
    */
   async delete(deleteLocal: boolean = true): Promise<boolean> {
+    this.deleting = true
     const fileStore = useFileStore()
     const { code } = await fileDeleteByName(this.file.name)
     if (code === 200 && deleteLocal) {
       fileStore.delete(this.file.name)
     }
+    this.deleting = false
     return code === 200
+  }
+
+  /**
+   * 用户是否取消上传
+   * @param callback 回调函数
+   */
+  private isCancel = (callback: Function) => {
+    if (this.status === 'cancel') {
+      // 如果用户停止上传
+      callback()
+    } else {
+      setTimeout(() => this.isCancel(callback), 300)
+    }
+  }
+
+  /**
+   * 分片上传
+   */
+  private partUpload(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      // 前置任务
+      this.status = 'init'
+      this.uploadedChunkCount = 0
+      this.totalChunkCount = calculateFileSlices(this.file.size)
+      this.workerCount = 0
+      this.workerChunkCount = Math.ceil(this.totalChunkCount / THREAD_COUNT)
+
+      const userStore = useUserStore()
+      const requestId = Math.random().toString(36).substring(7) // 生成一个唯一的请求标识
+
+      // 开启多线程
+      for (let i = 0; i < THREAD_COUNT; i++) {
+        // 计算分片位置
+        const startIndex = i * this.workerChunkCount
+        let endIndex = startIndex + this.workerChunkCount
+        if (endIndex > this.totalChunkCount) {
+          endIndex = this.totalChunkCount
+          break
+        }
+
+        // 创建worker线程
+        const worker = new Worker(new URL('@/utils/functions/file/worker.ts', import.meta.url), {
+          type: 'module'
+        })
+        // 创建新工作者时增加 workerCount
+        this.workerCount++
+
+        // 递归检查用户是否取消上传
+        this.isCancel(() => {
+          this.toWorker(worker, { type: 'cancel' })
+        })
+
+        this.toWorker(worker, {
+          // 文件信息
+          file: this.file,
+          CHUNK_SIZE,
+          startIndex,
+          endIndex,
+          index: i,
+          token: userStore.token,
+          requestId: requestId,
+          url: `http://localhost/system/user/file/chunk`
+        })
+
+        // 接收worker线程返回
+        worker.onmessage = async (e) => {
+          const result = this.isCompleted(worker, e.data)
+          if (result === ACTION_TYPE.COMPLETE) {
+            resolve(true)
+          } else if (result === ACTION_TYPE.ERROR) {
+            reject(e.data)
+          }
+        }
+      }
+    })
+  }
+
+  /**
+   * 发送数据到worker线程
+   * @param worker worker实例
+   * @param data 数据
+   */
+  private toWorker(worker: Worker, data: { [key: string]: any }) {
+    worker.postMessage(data)
+  }
+
+  /**
+   * 是否已经上传完成
+   * @param worker worker实例
+   * @param statusCode 状态码
+   * @returns
+   */
+  private isCompleted(worker: Worker, statusCode: number) {
+    if (statusCode === ACTION_TYPE.CANCEL) {
+      // 取消上传
+      return ACTION_TYPE.CANCEL
+    } else if (statusCode) {
+      // 上传成功，更新文件上传进度
+      this.uploadedChunkCount! += this.workerChunkCount!
+      this.power = (this.uploadedChunkCount! / this.totalChunkCount!) * 100
+      // 判断是否已经上传完毕
+      if (this.uploadedChunkCount === this.totalChunkCount) {
+        this.status = 'success'
+        // console.log('文件 ' + this.file.name + ' 上传完成')
+        return ACTION_TYPE.COMPLETE
+      }
+    } else {
+      // 上传失败
+      this.status = 'error'
+      return ACTION_TYPE.ERROR
+    }
+    this.workerCount!--
+    worker.terminate()
+    return ACTION_TYPE.UPLOAD
   }
 }
 

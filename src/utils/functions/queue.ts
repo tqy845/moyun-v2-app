@@ -32,9 +32,11 @@ export class Concurrent<T extends { [key: string]: () => Promise<any> }> {
     const { task, key, resolve, reject } = this.taskQueue.shift()!
 
     try {
-      await task[key]()
+      const result = await task[key]()
+      // console.log('task = ', result)
       resolve()
     } catch (error) {
+      console.log('error = ', error)
       reject(error)
     } finally {
       this.runningCount--

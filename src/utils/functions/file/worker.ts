@@ -1,8 +1,33 @@
+import { ACTION_TYPE } from '@/types/enums'
 import { createChunk } from './helper'
 
-// 多线程切片
+/**
+ * 请求的 AbortController
+ */
+const controllers: { [key: string]: any } = {}
+
+/**
+ * 多线程切片
+ * @param event 主线程发来的数据
+ */
 self.onmessage = async (event) => {
-  const { startIndex, endIndex, CHUNK_SIZE, index, token, file } = event.data
+  /**
+   * 取消网络请求
+   */
+  if (event.data.type === 'cancel') {
+    for (const requestId in controllers) {
+      if (Object.hasOwn(controllers, requestId)) {
+        controllers[requestId].abort()
+      }
+    }
+    self.postMessage(ACTION_TYPE.CANCEL)
+  }
+
+  /**
+   * 发起网络请求
+   */
+  const { startIndex, endIndex, CHUNK_SIZE, index, requestId, url, token, file } = event.data
+  const flagList: Array<number> = []
 
   for (let i = startIndex; i < endIndex; i++) {
     // 切片
@@ -24,7 +49,7 @@ self.onmessage = async (event) => {
     }
 
     // 上传
-    const response = await fetch('http://localhost/system/user/file/chunk', {
+    const response = await sendRequest(requestId, url, {
       method: 'PUT',
       body: form,
       headers: {
@@ -33,9 +58,22 @@ self.onmessage = async (event) => {
     })
 
     // 响应结果
-    const { code, message } = await response.json()
-    // console.log('result = ', message)
+    const { code } = await response.json()
     // 返回
-    self.postMessage(code === 200)
+    flagList.push(code)
   }
+
+  self.postMessage(flagList.every((item) => item === 200))
+}
+
+/**
+ * 发起请求
+ * @param requestId 请求ID
+ * @param url 地址
+ * @param options 选项
+ */
+const sendRequest = async (requestId: string, url: string, options: RequestInit) => {
+  const controller = new AbortController()
+  controllers[requestId] = controller
+  return await fetch(url, { ...options, signal: controller.signal })
 }

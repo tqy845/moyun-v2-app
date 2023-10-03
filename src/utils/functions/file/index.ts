@@ -17,26 +17,27 @@ const upload = async (fileList: Array<File>) => {
   return new Promise<boolean>((resolve, reject) => {
     // 过滤已存在的文件
     const fileNameList = fileStore.uploadQueue.all.map((it) => it.file.name)
-
     for (const file of fileList) {
       if (!fileNameList.includes(file.name)) {
         // 新任务
         const task = new UploadChunk(file, fileStore.uploadQueue.all.length + 1)
-        fileStore.uploadQueue.add(task, 'partUpload')
+        fileStore.uploadQueue.add(task, 'upload')
         appStore.requestQueue[file.name] = []
       }
     }
 
-    // 等待全部任务完成返回
+    // 等待全部任务
     fileStore.uploadQueue
       .waitForAll()
       .then(() => {
-        fileStore.fetch()
         resolve(true)
       })
       .catch((error) => {
-        console.error('出错', error)
-        reject(false)
+        reject(error)
+      })
+      .finally(() => {
+        fileStore.fetch()
+        console.log('完成')
       })
   })
 }

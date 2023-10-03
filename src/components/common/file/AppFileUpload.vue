@@ -8,13 +8,10 @@
 import { computed, reactive, ref } from 'vue'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore, useFileStore } from '@/stores'
-import { BasicFile, UploadChunk } from '@/types/models'
 import { AppFileDeleteConfirm } from '.'
-import { ACTION_TYPE } from '@/types/enums'
 import { useI18n } from 'vue-i18n'
 
 const fileInputRef = ref<HTMLInputElement>()
-const tableRef = ref()
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -125,7 +122,7 @@ const handleUpload = async (fileList: Array<File>, reupload: boolean = false) =>
   }
   if ((await fileUtils.upload(fileList)) && appStore.app.settings['uploadDialogAutoClose']) {
     const allUploadCompleted = fileStore.uploadQueue.all.every(
-      (item) => item.status !== 'uploading'
+      (item) => item.status === 'success' || item.status === 'error'
     )
     if (allUploadCompleted) emits('update:show', false)
   }
@@ -138,41 +135,6 @@ const handleClickArea = () => {
   if (fileInputRef.value) {
     fileInputRef.value.value = ''
     fileInputRef.value.click()
-  }
-}
-
-/**
- * 取消下载
- * @param item UploadChunk 文件
- */
-const handleCancel = (item: UploadChunk) => {
-  console.log('取消下载', item)
-  appStore.requestQueue[item.file.name].forEach((it) => {
-    it.abort()
-  })
-  delete appStore.requestQueue[item.file.name]
-}
-
-/**
- * 重新上传
- */
-const handleReUpload = async (item: UploadChunk) => {
-  console.log('重新上传', item)
-  item.status = 're-upload'
-  handleUpload([item.file], true)
-}
-
-/**
- * 删除文件
- * @param selected 是否删除
- * @param item 文件
- */
-const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
-  console.log('用户选择', selected, item)
-  if (selected === ACTION_TYPE.CONFIRM) {
-    item.deleting = true
-    await item.delete()
-    item.deleting = false
   }
 }
 </script>
@@ -300,6 +262,11 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
             <v-col cols="auto" class="text-primary">{{
               $t('file.upload.maxUploadCount.text', [appStore.app.settings['maxUploadCount']])
             }}</v-col>
+            <v-col cols="auto" class="text-primary">{{
+              $t('file.upload.currentWorkerCount.text', [
+                fileStore.uploadQueue.all.reduce((sum, item) => sum + (item.workerCount || 0), 0)
+              ])
+            }}</v-col>
           </v-row>
         </v-list-subheader>
         <v-list-item>
@@ -317,25 +284,37 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
             <template v-slot:item.index="{ item }">
               {{ item.index }}
             </template>
+            <template v-slot:item.file.name="{ item }">
+              <v-chip variant="text" size="x-large" style="position: relative; right: 15px">
+                <div class="text-truncate" style="width: 25vw">
+                  <v-icon
+                    :icon="`mdi-` + item.icon"
+                    size="30"
+                    class="mr-2"
+                    color="#62B1FA"
+                  ></v-icon>
+                  <span style="position: relative; top: 2px">{{ item.file.name }}</span>
+                </div>
+              </v-chip>
+            </template>
             <template v-slot:item.fileSize="{ item }">
               {{ fileUtils.formatSize(item.file.size) }}
             </template>
             <template v-slot:item.power="{ item }">
               <v-progress-linear
-                :buffer-value="item.power"
                 :model-value="item.power"
                 height="12"
-                :indeterminate="item.status === 'init'"
+                :indeterminate="item.status === 'init' && item.power <= 0"
                 rounded
               >
                 <strong class="text-white text-overline">{{
                   item.status === 'cancel'
                     ? $t('cancel.text')
-                    : item.uploadStatus?.error
+                    : item.status === 'error'
                     ? $t('error.text')
-                    : typeof item.power === 'number'
-                    ? Math.ceil(item.power) + '%'
-                    : item.power
+                    : item.status === 'success'
+                    ? $t('success.text')
+                    : Math.ceil(item.power) + '%'
                 }}</strong></v-progress-linear
               >
             </template>
@@ -352,8 +331,14 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
                     color="warning"
                     icon="mdi-upload-off"
                     class="mr-1"
-                    :disabled="item.status !== 'uploading'"
-                    @click="handleCancel(item)"
+                    :disabled="
+                      !(
+                        item.status !== 'cancel' &&
+                        item.status !== 'success' &&
+                        item.status !== 'error'
+                      )
+                    "
+                    @click="() => item.cancelUpload()"
                   ></v-btn>
                 </template>
               </v-tooltip>
@@ -365,13 +350,13 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
               >
                 <template v-slot:activator="{ props }">
                   <v-btn
-                    :disabled="!item.uploadStatus?.error || item.deleting"
+                    :disabled="item.status !== 'cancel'"
                     v-bind="props"
                     size="x-small"
                     color="info"
                     icon="mdi-restart"
                     class="mr-1"
-                    @click="handleReUpload(item)"
+                    @click="item.reupload()"
                   ></v-btn>
                 </template>
               </v-tooltip>
@@ -383,7 +368,7 @@ const handleDeleteSelect = async (selected: number, item: UploadChunk) => {
               >
                 <template v-slot:activator="{ props }">
                   <span v-bind="props">
-                    <AppFileDeleteConfirm :item="item" @select="handleDeleteSelect($event, item)" />
+                    <AppFileDeleteConfirm :item="item" />
                   </span>
                 </template>
               </v-tooltip>

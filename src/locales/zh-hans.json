@@ -13,6 +13,7 @@
   "change.i18n.hint.content": "注意：切换语言后，部分内容需要重新登录才能生效",
   "cancel.text": "取消",
   "error.text": "失败",
+  "success.text": "成功",
   "account.or.email": "账户名或邮箱号",
   "password.text": "密码",
   "password.confirm.text": "确认密码",
@@ -61,7 +62,8 @@
 
   "file.search.placeholder.text": "搜索文件",
   "file.upload.title.text": "文件上传",
-  "file.upload.maxUploadCount.text": "并发：{0}/个",
+  "file.upload.maxUploadCount.text": "最大并发：{0}/个",
+  "file.upload.currentWorkerCount.text": "实时工作线程：{0}/个",
   "file.upload.subtitle.text": "上传区域",
   "file.upload.uploadList.dialog.hideButton.text": "隐藏上传对话框",
   "file.upload.area.text": "拖拽文件到此处或点击上传",

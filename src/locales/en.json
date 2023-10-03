@@ -13,6 +13,7 @@
   "change.i18n.hint.content": "Note: After changing the language, some content may require relogin to take effect",
   "cancel.text": "Cancel",
   "error.text": "Failure",
+  "success.text": "Succe1ss",
   "account.or.email": "Username or Email",
   "file.upload.maxUploadCount.text": "Concurrent: {0}",
   "password.text": "Password",

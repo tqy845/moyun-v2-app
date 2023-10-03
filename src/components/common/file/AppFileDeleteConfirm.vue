@@ -6,7 +6,7 @@
 -->
 
 <script lang="ts" setup>
-import { computed, reactive } from 'vue'
+import { reactive } from 'vue'
 import { ACTION_TYPE, ActionType } from '@/types/enums'
 import { UploadChunk } from '@/types/models'
 
@@ -23,12 +23,14 @@ const cs = reactive({
 })
 
 /**
- * 用户选择
- * @param item 用户的选择
+ * 用户操作
+ * @param item 用户的操作
  */
 const handleSelect = (item: number | string) => {
   cs.dialog.show = false
-  emits('select', item)
+  if (item === ACTION_TYPE.CONFIRM) {
+    props.item.delete()
+  }
 }
 </script>
 
@@ -42,7 +44,7 @@ const handleSelect = (item: number | string) => {
         icon="mdi-delete"
         class="mr-1"
         :loading="item.deleting"
-        :disabled="item.status === 'uploading'"
+        :disabled="item.power! >= 0 && item.power! < 100"
       ></v-btn>
     </template>
     <v-card>
