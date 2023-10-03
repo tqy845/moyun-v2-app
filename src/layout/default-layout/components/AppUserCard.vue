@@ -27,15 +27,6 @@ const user = reactive({
 })
 
 /**
- * 退出
- */
-const handleLogout = () => {
-  userStore.logout()
-  router.replace('/login')
-  cs.menu = false
-}
-
-/**
  * 前往设置页面
  */
 const toSettingPage = () => {
@@ -91,7 +82,19 @@ const toSettingPage = () => {
       <v-card-actions>
         <v-spacer></v-spacer>
 
-        <v-btn variant="text" color="error" @click="handleLogout"> {{ $t('logout.text') }} </v-btn>
+        <v-btn
+          variant="text"
+          color="error"
+          @click="
+            // 用户登出
+            userStore.logout(() => {
+              $router.replace('/login')
+              cs.menu = false
+            })
+          "
+        >
+          {{ $t('logout.text') }}
+        </v-btn>
         <!-- <v-btn color="primary" variant="text" @click="cs.menu = false"> Save </v-btn> -->
       </v-card-actions>
     </v-card>

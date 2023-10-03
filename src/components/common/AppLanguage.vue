@@ -4,9 +4,9 @@ import { useI18n } from 'vue-i18n'
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { reactive } from 'vue'
 import { useUserStore } from '@/stores'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
-const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 const { locale } = useI18n()
 const cookies = useCookies(['locale'])
@@ -15,10 +15,11 @@ const cookies = useCookies(['locale'])
  * @param item 语言选项
  */
 const handleSwitchLanguage = (item: LanguageItem) => {
-  console.log('切换语言', item)
+  // console.log('切换语言', item)
   locale.value = item.value
   cookies.set('locale', item.value)
-  if (userStore.token) {
+  // 如果未登录，则不需要提示
+  if (route.path !== '/login') {
     cs.hint.show = true
   }
 }
@@ -28,15 +29,6 @@ const cs = reactive({
     show: false
   }
 })
-
-/**
- * 退出
- */
-const handleLogout = () => {
-  userStore.logout()
-  router.replace('/login')
-  cs.hint.show = false
-}
 </script>
 
 <template>
@@ -66,7 +58,14 @@ const handleLogout = () => {
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn :text="$t('logout.text')" color="error" @click="handleLogout"></v-btn>
+          <v-btn
+            :text="$t('logout.text')"
+            color="error"
+            @click="
+              // 用户登出
+              userStore.logout(() => ($router.replace('login'), (cs.hint.show = false)))
+            "
+          ></v-btn>
           <v-btn :text="$t('confirm.text')" @click="isActive.value = false"></v-btn>
         </v-card-actions>
       </v-card>

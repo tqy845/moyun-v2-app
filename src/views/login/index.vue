@@ -38,9 +38,9 @@ const toWelcome = () => {
   router.replace('/welcome')
 }
 
-const getCodeImage = useDebounceFn(async () => {
+const codeImage = useDebounceFn(async () => {
   console.log('获取验证码')
-  cs.img = await userStore.getCodeImage()
+  cs.img = await userStore.codeImage()
 }, appStore.getDelay * 5)
 
 /**
@@ -72,14 +72,14 @@ const loginByAccountHandler = async (form: User) => {
   if (await userStore.userLoginByAccount(form)) {
     toWelcome()
   } else {
-    await getCodeImage()
+    await codeImage()
   }
 }
 
 const openLoginByAccount = useDebounceFn(async () => {
   cs.showDialog = true
   // 加载验证码
-  await getCodeImage()
+  await codeImage()
 }, appStore.getDelay)
 
 /**
@@ -168,7 +168,7 @@ const onLoginByTouchID = async () => {
     v-model="cs.showDialog"
     :img="cs.img"
     @close="cs.showDialog = false"
-    @refresh="getCodeImage"
+    @refresh="codeImage"
     @save="loginByAccountHandler"
   />
 </template>

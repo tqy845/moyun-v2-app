@@ -7,15 +7,16 @@ import { getUserDefaultSettings, User, UserStore } from './helper'
 import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
 import { cryptUtils } from '@/utils/functions'
 import { useAppStore } from '@/stores'
+import { useRouter } from 'vue-router'
 
 export const useUserStore = defineStore('userStore', {
   state: (): UserStore => getUserDefaultSettings(),
   getters: {},
   actions: {
     /**
-     * 获取验证码图片
+     * 验证码
      */
-    async getCodeImage() {
+    async codeImage() {
       const {
         code,
         data: { img, uuid }
@@ -71,11 +72,15 @@ export const useUserStore = defineStore('userStore', {
     },
 
     /**
-     * 用户注销操作
+     * 登出
      */
-    async logout() {
-      logoutForUser(this.user)
+    async logout(callback?: Function) {
       this.$reset()
+      logoutForUser(this.user)
+      // 执行回调
+      if (callback) {
+        callback()
+      }
     }
   },
 
