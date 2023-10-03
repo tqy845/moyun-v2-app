@@ -91,7 +91,7 @@ export const useFileStore = defineStore('fileStore', {
      * 删除文件
      * @param name 文件名
      */
-    delete(name: string) {
+    delete(name: string, refreshLocal: boolean = true) {
       // console.log('删除文件', name)
       this.renderList = this.renderList.filter((it) => it.name !== name)
       this.list = this.list.filter((it) => it.name !== name)
@@ -103,6 +103,12 @@ export const useFileStore = defineStore('fileStore', {
           this.class[key] = this.class[key].filter((it) => it?.name !== name)
         }
       })
+      if (refreshLocal) {
+        const appStore = useAppStore()
+        const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+        this.renderList = this.classify(key)
+        this.paging(this.classifyTabCurrentPage[key] ?? 1)
+      }
     },
     /**
      * 通过文件名列表删除文件
@@ -112,7 +118,7 @@ export const useFileStore = defineStore('fileStore', {
       const { code } = await fileDeleteByNameList({ fileNames: names })
       if (code === 200) {
         for (const name of names) {
-          this.delete(name)
+          this.delete(name, false)
         }
         const { key } = appStore.app.menuIndex['currentFileClassifyTab']
         // 分类
