@@ -54,7 +54,7 @@ export const useFileStore = defineStore('fileStore', {
       this.loading = true
       const appStore = useAppStore()
       if (name) {
-        this.renderList = this.list.filter((file: BasicFile) => file.name === name)
+        this.renderList = this.list.filter((file) => file.name === name)
       } else {
         const { key } = appStore.app.menuIndex['currentFileClassifyTab']
         // 分类
@@ -69,7 +69,7 @@ export const useFileStore = defineStore('fileStore', {
      * @param name 文件名
      */
     find(name: string) {
-      return this.list.find((file: BasicFile) => file.name === name)
+      return this.list.find((file) => file.name === name)
     },
     /**
      * 文件分类
@@ -214,7 +214,7 @@ export const useFileStore = defineStore('fileStore', {
             : this.renderList.find((item) => item.name === this.selectedList[0])?.delete()
           break
         case ACTION_TYPE.DOWNLOAD:
-          console.log('下载', this.selectedList)
+          // console.log('下载', this.selectedList)
           isBatch
             ? this.downloadByNameList(this.selectedList)
             : this.renderList.find((item) => item.name === this.selectedList[0])?.download()

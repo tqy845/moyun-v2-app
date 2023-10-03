@@ -1,5 +1,6 @@
 import { FileChunk } from '@/types/models'
 import { fetchRequest, tauriRequest } from '@/utils/request'
+import { ResponseType } from '@tauri-apps/api/http'
 
 /**
  * 文件列表
@@ -65,6 +66,32 @@ export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string>
     url: `/system/user/file/delete-multiple`,
     method: 'DELETE',
     data: params
+  })
+}
+
+/**
+ * 获取下载文件分片列表<single>
+ * @param {string} params 包含文件名的对象
+ * @param {string} params.fileName 文件名
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fetchFileChunkNames = <T = any>(params: { fileName: string }) => {
+  return fetchRequest<T>({
+    url: `/system/user/file/${params.fileName}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * 获取下载文件分片<single>
+ * @param {string} params 包含文件名的对象
+ * @param {string} params.fileName 文件名
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fetchFileChunk = <T = any>(params: { chunkName: string }) => {
+  return fetchRequest<T>({
+    url: `/system/user/file/chunk/${params.chunkName}`,
+    method: 'GET'
   })
 }
 

@@ -1,6 +1,8 @@
 import { useUserStore, useAppStore } from '@/stores'
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { BASE_URL, ResponseType } from './helper'
+import { invoke } from '@tauri-apps/api'
+import { BaseDirectory, writeBinaryFile } from '@tauri-apps/api/fs'
 
 /**
  * 发起请求
@@ -70,13 +72,41 @@ const fetchRequest = async <T = any>(
     // 发起请求
     const response = await fetch(BASE_URL + url, requestInit)
 
-    // 处理响应数据
-    result = await response.json()
+    // 处理文件流
+    if (
+      response.headers.get('content-type')?.includes('application/octet-stream') &&
+      response.body
+    ) {
+      const reader = response.body.getReader()
+      // 创建一个新的Uint8Array来存储合并的数据
+      const chunks: Uint8Array[] = [] // Array to store chunks
+      const flag = true
+      while (flag) {
+        const { done, value } = await reader.read()
+        if (done) {
+          break
+        }
+        chunks.push(value)
+      }
 
-    // 拦截数据
-    console.log('Response:', result)
-
-    return result
+      // Concatenate all chunks into a single Uint8Array
+      const mergedArray = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0))
+      let offset = 0
+      for (const chunk of chunks) {
+        mergedArray.set(chunk, offset)
+        offset += chunk.length
+      }
+      result.data = {
+        chunk: mergedArray
+      } as T
+      return result
+    } else {
+      // 处理响应数据
+      result = await response.json()
+      // 拦截数据
+      console.log('Response:', result)
+      return result
+    }
   } catch (err) {
     console.error(err)
     return {

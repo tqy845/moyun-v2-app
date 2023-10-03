@@ -10,6 +10,7 @@ export const FILE_ICON_TYPE: { [key: string]: string } = {
   mp3: 'file-music',
   wav: 'file-music',
   ogg: 'file-music',
+  m4a: 'file-music',
   // 图片类
   svg: 'file-image',
   png: 'file-image',
