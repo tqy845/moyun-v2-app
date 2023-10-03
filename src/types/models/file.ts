@@ -212,6 +212,9 @@ export class UploadChunk {
    * @returns
    */
   private isCompleted(worker: Worker, statusCode: number) {
+    this.workerCount!--
+    worker.terminate()
+
     if (statusCode === ACTION_TYPE.CANCEL) {
       // 取消上传
       return ACTION_TYPE.CANCEL
@@ -230,8 +233,7 @@ export class UploadChunk {
       this.status = 'error'
       return ACTION_TYPE.ERROR
     }
-    this.workerCount!--
-    worker.terminate()
+
     return ACTION_TYPE.UPLOAD
   }
 }

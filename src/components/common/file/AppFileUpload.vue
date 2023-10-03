@@ -190,7 +190,57 @@ const handleClickArea = () => {
         v-model="appStore.app.menuIndex['currentFileUploadOpenTab']"
         @update:modelValue="handleExpansion($event, false)"
       >
-        <v-expansion-panel :title="$t('file.upload.subtitle.text')" value="upload-area">
+        <v-expansion-panel value="upload-area">
+          <template #title>
+            {{ $t('file.upload.subtitle.text') }}
+            <v-list-subheader
+              class="pl-5 text-gray"
+              v-show="!appStore.app.menuIndex['currentFileUploadOpenTab'].length"
+            >
+              <v-row>
+                <v-col cols="auto">
+                  {{
+                    $t('file.upload.totalFileSize', [
+                      fileUtils.formatSize(
+                        fileStore.uploadQueue.all
+                          .map((item) => item.file.size)
+                          .reduce((prev, curr) => prev + curr, 0)
+                      )
+                    ])
+                  }}
+                </v-col>
+                <v-col cols="auto">
+                  {{ $t('file.upload.totalFileNumber', [fileStore.uploadQueue.all.length]) }}</v-col
+                >
+                <v-col cols="auto">{{
+                  $t('file.upload.successNumber', [
+                    fileStore.uploadQueue.all.filter((item) => item.status === 'success').length
+                  ])
+                }}</v-col>
+                <v-col cols="auto">{{
+                  $t('file.upload.errorNumber', [
+                    fileStore.uploadQueue.all.filter((item) => item.status === 'error').length
+                  ])
+                }}</v-col>
+                <v-col cols="auto">{{
+                  $t('file.upload.cancelNumber', [
+                    fileStore.uploadQueue.all.filter((item) => item.status === 'cancel').length
+                  ])
+                }}</v-col>
+                <v-col cols="auto">{{
+                  $t('file.upload.maxUploadCount.text', [appStore.app.settings['maxUploadCount']])
+                }}</v-col>
+                <v-col cols="auto">{{
+                  $t('file.upload.currentWorkerCount.text', [
+                    fileStore.uploadQueue.all.reduce(
+                      (sum, item) => sum + (item.workerCount || 0),
+                      0
+                    )
+                  ])
+                }}</v-col>
+              </v-row>
+            </v-list-subheader>
+          </template>
           <template #text>
             <div class="file-upload py-3">
               <div
@@ -228,47 +278,7 @@ const handleClickArea = () => {
       <v-divider></v-divider>
       <v-list lines="two" subheader>
         <!-- <v-list-subheader class="w-100"> 上传列表 </v-list-subheader> -->
-        <v-list-subheader>
-          <v-row>
-            <v-col cols="auto" class="text-primary">
-              {{
-                $t('file.upload.totalFileSize', [
-                  fileUtils.formatSize(
-                    fileStore.uploadQueue.all
-                      .map((item) => item.file.size)
-                      .reduce((prev, curr) => prev + curr, 0)
-                  )
-                ])
-              }}
-            </v-col>
-            <v-col cols="auto" class="text-primary">
-              {{ $t('file.upload.totalFileNumber', [fileStore.uploadQueue.all.length]) }}</v-col
-            >
-            <v-col cols="auto" class="text-primary">{{
-              $t('file.upload.successNumber', [
-                fileStore.uploadQueue.all.filter((item) => item.status === 'success').length
-              ])
-            }}</v-col>
-            <v-col cols="auto" class="text-primary">{{
-              $t('file.upload.errorNumber', [
-                fileStore.uploadQueue.all.filter((item) => item.status === 'error').length
-              ])
-            }}</v-col>
-            <v-col cols="auto" class="text-primary">{{
-              $t('file.upload.cancelNumber', [
-                fileStore.uploadQueue.all.filter((item) => item.status === 'cancel').length
-              ])
-            }}</v-col>
-            <v-col cols="auto" class="text-primary">{{
-              $t('file.upload.maxUploadCount.text', [appStore.app.settings['maxUploadCount']])
-            }}</v-col>
-            <v-col cols="auto" class="text-primary">{{
-              $t('file.upload.currentWorkerCount.text', [
-                fileStore.uploadQueue.all.reduce((sum, item) => sum + (item.workerCount || 0), 0)
-              ])
-            }}</v-col>
-          </v-row>
-        </v-list-subheader>
+
         <v-list-item>
           <!-- {{ fileStore.uploadList? }} -->
           <!-- {{ fileStore.uploadQueue }} -->

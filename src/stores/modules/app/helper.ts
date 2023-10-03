@@ -86,7 +86,7 @@ export const getAppDefaultSettings = (): AppStore => {
         currentFileUploadOpenTab: ['upload-area']
       },
       settings: {
-        maxUploadCount: 6, // 最大上传并发
+        maxUploadCount: 1, // 最大上传并发
         uploadDialogFullscreen: false, // 上传弹窗全屏
         uploadAutoHideUploadArea: true, // 上传时自动隐藏上传区域
         uploadDialogAutoClose: false // 上传完毕后自动关闭对话框
