@@ -169,9 +169,12 @@ export class UploadChunk {
         }
 
         // 创建worker线程
-        const worker = new Worker(new URL('@/utils/functions/file/worker.ts', import.meta.url), {
-          type: 'module'
-        })
+        const worker = new Worker(
+          new URL('@/utils/functions/file/upload-worker.ts', import.meta.url),
+          {
+            type: 'module'
+          }
+        )
         // 创建新工作者时增加 workerCount
         this.workerCount++
 
@@ -315,12 +318,13 @@ export class BasicFile {
    * @returns {Promise<void>} 下载完成后的 Promise。
    */
   async download(): Promise<void> {
+    const fileStore = useFileStore()
     if (!this.isDirectory) {
       // 下载文件分片名
       const fileChunks = await this.getChunkNames()
       // 下载分片
-      for await (const chunkName of fileChunks) {
-        await this.getChunk(chunkName)
+      for (const chunkName of fileChunks) {
+        fileStore.downloadQueue.add(this.getChunk(chunkName), '')
       }
       // 合并
       await this.mergedChunks(fileChunks)
@@ -358,11 +362,19 @@ export class BasicFile {
     return data.chunkNames
   }
 
+  /**
+   * 获取文件分片
+   * @param 分片名
+   */
   private async getChunk(chunkName: string) {
     const { data } = await fetchFileChunk<{ chunk: BinaryFileContents }>({ chunkName })
-    await writeBinaryFile(chunkName, data.chunk, { dir: BaseDirectory.Desktop })
+    return await writeBinaryFile(chunkName, data.chunk, { dir: BaseDirectory.Desktop })
   }
 
+  /**
+   * 分片合并
+   * @param chunkNames 分片名列表
+   */
   private async mergedChunks(chunkNames: Array<string>) {
     try {
       const mergedContent = await Promise.all(

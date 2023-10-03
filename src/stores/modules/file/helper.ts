@@ -37,6 +37,11 @@ export interface FileStore {
   uploadQueue: Concurrent<any>
 
   /**
+   * 下载队列
+   */
+  downloadQueue: Concurrent<any>
+
+  /**
    * 视图
    * @type {'icon' | 'list'}
    */
@@ -83,6 +88,7 @@ export interface FileStore {
 export const getFileDefaultSettings = (): FileStore => {
   const appStore = useAppStore()
   const maxUploadCount = appStore.app.settings['maxUploadCount']
+  const maxDownLoadCount = appStore.app.settings['maxDownLoadCount']
 
   return {
     loading: false,
@@ -99,6 +105,7 @@ export const getFileDefaultSettings = (): FileStore => {
     uploadChunkQueue: [],
     search: '',
     selectedList: [],
-    uploadQueue: new Concurrent(maxUploadCount)
+    uploadQueue: new Concurrent(maxUploadCount),
+    downloadQueue: new Concurrent(maxDownLoadCount)
   }
 }
