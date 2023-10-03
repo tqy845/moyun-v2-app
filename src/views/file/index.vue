@@ -82,23 +82,14 @@ onMounted(async () => {
         windowLabel,
         payload: { actionType, actionData }
       } = event
+      // 右键菜单
       if (windowLabel === 'right-menu') {
-        switch (actionType) {
-          case ACTION_TYPE.DELETE:
-            // console.log('删除', fileStore.selectedList)
-            if (fileStore.selectedList.length > 1) {
-              // 批量删除
-              fileStore.deleteByNameList(fileStore.selectedList)
-            } else {
-              // 删除单个
-              fileStore.renderList.find((item) => item.name === fileStore.selectedList[0])?.delete()
-            }
-            break
-        }
-        data.rightMenu.hide()
+        fileStore.rightMenu(actionType, actionData)
       }
+      data.rightMenu.hide()
     }
   )
+
   if (fileStore.search) return
   fileStore.fetch()
 })

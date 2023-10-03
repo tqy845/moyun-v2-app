@@ -67,3 +67,16 @@ export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string>
     data: params
   })
 }
+
+/**
+ * 下载文件<batch>
+ * @param {string} fileNameList 文件名列表
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fileDownloadByNameList = <T = any>(params: { fileNames: Array<string> }) => {
+  return tauriRequest<T>({
+    url: `/system/user/file/download-multiple`,
+    method: 'GET',
+    data: params
+  })
+}

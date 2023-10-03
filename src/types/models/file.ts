@@ -118,7 +118,7 @@ export class UploadChunk {
     const fileStore = useFileStore()
     const { code } = await fileDeleteByName(this.file.name)
     if (code === 200 && deleteLocal) {
-      fileStore.delete(this.file.name)
+      fileStore.deleteCache(this.file.name)
     }
     this.deleting = false
     return code === 200
@@ -310,6 +310,8 @@ export class BasicFile {
    */
   async download(): Promise<void> {
     this.power = 'awaiting'
+    console.log('下载文件', this.name)
+
     const {
       data: { blob }
     } = await fileDownloadByName<{ blob: Blob }>(this.name, (progress: number) => {

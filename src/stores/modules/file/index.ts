@@ -4,10 +4,11 @@
 
 import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
-import { fetchFileList, fileDeleteByNameList, uploadFileChunk } from '@/api'
+import { fetchFileList, fileDeleteByNameList, uploadFileChunk, fileDownloadByNameList } from '@/api'
 import { BasicFile, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore } from '..'
+import { ACTION_TYPE } from '@/types/enums'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
@@ -88,46 +89,6 @@ export const useFileStore = defineStore('fileStore', {
       return await uploadFileChunk<T>(formData, flag)
     },
     /**
-     * 删除文件
-     * @param name 文件名
-     */
-    delete(name: string, refreshLocal: boolean = true) {
-      // console.log('删除文件', name)
-      this.renderList = this.renderList.filter((it) => it.name !== name)
-      this.list = this.list.filter((it) => it.name !== name)
-      this.uploadQueue.all = this.uploadQueue.all.filter((it) => it.file.name !== name)
-      this.selectedList = this.selectedList.filter((it) => it !== name)
-      const more = ['all', 'document', 'media']
-      more.forEach((key) => {
-        if (Array.isArray(this.class[key])) {
-          this.class[key] = this.class[key].filter((it) => it?.name !== name)
-        }
-      })
-      if (refreshLocal) {
-        const appStore = useAppStore()
-        const { key } = appStore.app.menuIndex['currentFileClassifyTab']
-        this.renderList = this.classify(key)
-        this.paging(this.classifyTabCurrentPage[key] ?? 1)
-      }
-    },
-    /**
-     * 通过文件名列表删除文件
-     */
-    async deleteByNameList(names: Array<string>) {
-      const appStore = useAppStore()
-      const { code } = await fileDeleteByNameList({ fileNames: names })
-      if (code === 200) {
-        for (const name of names) {
-          this.delete(name, false)
-        }
-        const { key } = appStore.app.menuIndex['currentFileClassifyTab']
-        // 分类
-        this.renderList = this.classify(key)
-        // 分页
-        this.paging(this.classifyTabCurrentPage[key] ?? 1)
-      }
-    },
-    /**
      * 分页
      * @param item
      */
@@ -192,6 +153,72 @@ export const useFileStore = defineStore('fileStore', {
         const fileToMove = this.uploadQueue.all.splice(index, 1)[0]
         // 然后将它插入到数组的首位
         this.uploadQueue.all.unshift(fileToMove)
+      }
+    },
+    /**
+     * 删除本地缓存
+     * @param name 文件名
+     */
+    deleteCache(name: string, refreshLocal: boolean = true) {
+      // console.log('删除文件', name)
+      this.renderList = this.renderList.filter((it) => it.name !== name)
+      this.list = this.list.filter((it) => it.name !== name)
+      this.uploadQueue.all = this.uploadQueue.all.filter((it) => it.file.name !== name)
+      this.selectedList = this.selectedList.filter((it) => it !== name)
+      const more = ['all', 'document', 'media']
+      more.forEach((key) => {
+        if (Array.isArray(this.class[key])) {
+          this.class[key] = this.class[key].filter((it) => it?.name !== name)
+        }
+      })
+      if (refreshLocal) {
+        const appStore = useAppStore()
+        const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+        this.renderList = this.classify(key)
+        this.paging(this.classifyTabCurrentPage[key] ?? 1)
+      }
+    },
+    /**
+     * 通过文件名列表删除文件
+     */
+    async deleteByNameList(names: Array<string>) {
+      const appStore = useAppStore()
+      const { code } = await fileDeleteByNameList({ fileNames: names })
+      if (code === 200) {
+        for (const name of names) {
+          this.deleteCache(name, false)
+        }
+        const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+        // 分类
+        this.renderList = this.classify(key)
+        // 分页
+        this.paging(this.classifyTabCurrentPage[key] ?? 1)
+      }
+    },
+    /**
+     * 批量下载
+     */
+    async downloadByNameList(names: Array<string>) {
+      return await fileDownloadByNameList({ fileNames: names })
+    },
+    /**
+     * 右键菜单
+     * @param event 事件
+     */
+    async rightMenu(actionType: number | string, actionData: any) {
+      const isBatch: boolean = this.selectedList.length > 1
+      switch (actionType) {
+        case ACTION_TYPE.DELETE:
+          isBatch
+            ? this.deleteByNameList(this.selectedList)
+            : this.renderList.find((item) => item.name === this.selectedList[0])?.delete()
+          break
+        case ACTION_TYPE.DOWNLOAD:
+          console.log('下载', this.selectedList)
+          isBatch
+            ? this.downloadByNameList(this.selectedList)
+            : this.renderList.find((item) => item.name === this.selectedList[0])?.download()
+          break
       }
     }
   },
