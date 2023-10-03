@@ -360,7 +360,7 @@ const handleClickArea = () => {
               >
                 <template v-slot:activator="{ props }">
                   <v-btn
-                    :disabled="item.status !== 'cancel'"
+                    :disabled="!(item.status === 'cancel' || item.status === 'error')"
                     v-bind="props"
                     size="x-small"
                     color="info"

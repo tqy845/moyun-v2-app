@@ -63,6 +63,9 @@ export class UploadChunk {
    * 已上传分片数量
    */
   private uploadedChunkCount?: number
+  /**
+   * worker线程分片数量
+   */
   private workerChunkCount?: number
 
   constructor(file: File, index: number = 0) {
@@ -209,7 +212,6 @@ export class UploadChunk {
    * 是否已经上传完成
    * @param worker worker实例
    * @param statusCode 状态码
-   * @returns
    */
   private isCompleted(worker: Worker, statusCode: number) {
     this.workerCount!--
