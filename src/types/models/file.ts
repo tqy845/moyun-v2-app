@@ -191,7 +191,7 @@ export class UploadChunk {
           index: i,
           token: userStore.token,
           requestId,
-          url: `http://localhost/system/user/file/chunk`
+          url: `http://localhost/common/upload`
         })
 
         // 接收worker线程返回
@@ -212,8 +212,8 @@ export class UploadChunk {
    * @param worker worker实例
    * @param params 状态码
    */
-  private isCompleted(worker: Worker, params: { type: string; code: number }) {
-    const { type, code } = params
+  private isCompleted(worker: Worker, params: { type: string; fileName: string }) {
+    const { type, fileName } = params
     switch (type) {
       case ACTION_TYPE.COMPLETE:
         this.workerCount!--
@@ -234,6 +234,8 @@ export class UploadChunk {
           this.status = 'success'
           return ACTION_TYPE.COMPLETE
         }
+        console.log('fileName = ', fileName)
+        // todo:需要发起文件合并请求
         return ACTION_TYPE.UPLOAD
     }
   }

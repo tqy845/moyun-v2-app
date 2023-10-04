@@ -58,8 +58,11 @@ self.onmessage = async (event) => {
       })
 
       // 响应结果
-      const { code } = await response.json()
-      self.postMessage({ type: code === 200 ? ACTION_TYPE.UPLOAD : ACTION_TYPE.ERROR })
+      const { code, data } = await response.json()
+      self.postMessage({
+        type: code === 200 ? ACTION_TYPE.UPLOAD : ACTION_TYPE.ERROR,
+        fileName: data.fileName
+      })
     } catch (e) {
       self.postMessage({ type: ACTION_TYPE.ERROR })
     }
