@@ -92,10 +92,7 @@ export const getFileDefaultSettings = (): FileStore => {
 
   return {
     loading: false,
-    class: {
-      document: [],
-      media: []
-    },
+    class: {},
     list: [],
     renderList: [],
     view: 'icon',

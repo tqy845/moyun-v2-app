@@ -88,8 +88,13 @@
   "file.view.listLabel.text": "列表",
 
   "file.view.iconLabel.secondaryMenu.all.text": "全部文件",
+  "file.view.iconLabel.secondaryMenu.more.text": "更多",
   "file.view.iconLabel.secondaryMenu.document.text": "文档",
   "file.view.iconLabel.secondaryMenu.multimedia.text": "多媒体",
+  "file.view.iconLabel.secondaryMenu.folder.text": "文件夹",
+  "file.view.iconLabel.secondaryMenu.package.text": "压缩包",
+  "file.view.iconLabel.secondaryMenu.application.text": "应用程序",
+  "file.view.iconLabel.secondaryMenu.gho.text": "光碟",
 
   "file.view.null.text": "暂无文件",
   "file.view.null.button.text1": "点击",

@@ -13,6 +13,7 @@ import { createSharedComposable, useDebounceFn, useMagicKeys, useWindowSize } fr
 import { useAppStore, useFileStore } from '@/stores'
 import { fileUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileUploadAlert } from '.'
+import { FileType } from '@/types/enums'
 
 const windowSize = useWindowSize()
 
@@ -33,17 +34,17 @@ const data = reactive<{
     {
       label: 'file.view.iconLabel.secondaryMenu.all.text',
       icon: 'file',
-      key: 'all'
+      key: FileType.All
     },
     {
       label: 'file.view.iconLabel.secondaryMenu.document.text',
       icon: 'briefcase',
-      key: 'document'
+      key: FileType.Document
     },
     {
       label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
       icon: 'multimedia',
-      key: 'media'
+      key: FileType.Media
     }
   ]
 })
@@ -54,7 +55,7 @@ const data = reactive<{
 const pageItemNumber = computed(() => {
   const { iconViewPageItemNumber } = fileStore
   const _fileList = fileStore.classify(appStore.app.menuIndex['currentFileClassifyTab'].key)
-  return Math.ceil(_fileList.length / iconViewPageItemNumber)
+  return Math.ceil(_fileList?.length / iconViewPageItemNumber)
 })
 
 /**

@@ -24,19 +24,30 @@ export const useFileStore = defineStore('fileStore', {
         fileList: Array<FileProperties>
       }>()
       const { fileList } = data
-      this.list.length = this.class['document'].length = this.class['media'].length = 0
+      const keys = Object.keys(FileType)
+      this.list.length = 0
+      keys.forEach((key) => {
+        this.class[key] = []
+      })
+
       fileList.forEach((item) => {
         const _basicFile = new BasicFile({
           icon: fileUtils.getIcon(item),
           ...item
         })
         this.list.push(_basicFile)
-        if (fileUtils.isType(item.extension, FileType.Document)) {
-          this.class['document'].push(_basicFile)
-        } else if (fileUtils.isType(item.extension, FileType.Media)) {
-          this.class['media'].push(_basicFile)
+        for (const key of keys) {
+          console.log('fileUtils.isType(item.extension, key)', item.extension, key)
+
+          if (fileUtils.isType(item.extension, key)) {
+            this.class[key].push(_basicFile)
+          }
         }
       })
+      keys.forEach((key) => {
+        console.log(`this.class[${key}] = `, this.class[key])
+      })
+
       const { key } = appStore.app.menuIndex['currentFileClassifyTab']
       // 分类
       this.renderList = this.classify(key)
@@ -75,9 +86,9 @@ export const useFileStore = defineStore('fileStore', {
      * 文件分类
      * @param key 分类类型
      */
-    classify(key: 'all' | 'document' | 'media' = 'all') {
+    classify(key: FileType = FileType.All) {
       // console.log('分类', key)
-      if (key === 'all') return this.list
+      if (key === FileType.All) return this.list
       return this.class[key]
     },
     /**
@@ -92,7 +103,7 @@ export const useFileStore = defineStore('fileStore', {
      * 分页
      * @param item
      */
-    paging(item: any) {
+    paging(item: number) {
       // console.log('分页', item)
       const appStore = useAppStore()
       const { iconViewPageItemNumber } = this
@@ -109,10 +120,8 @@ export const useFileStore = defineStore('fileStore', {
      */
     changePage(page: number) {
       const appStore = useAppStore()
-
       this.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab'].key] = page
       this.paging(page)
-      console.log('this.classifyTabCurrentPage = ', this.classifyTabCurrentPage)
     },
     /**
      * 选中或移除一个文件
@@ -165,7 +174,7 @@ export const useFileStore = defineStore('fileStore', {
       this.list = this.list.filter((it) => it.name !== name)
       this.uploadQueue.all = this.uploadQueue.all.filter((it) => it.file.name !== name)
       this.selectedList = this.selectedList.filter((it) => it !== name)
-      const more = ['all', 'document', 'media']
+      const more = Object.keys(FileType)
       more.forEach((key) => {
         if (Array.isArray(this.class[key])) {
           this.class[key] = this.class[key].filter((it) => it?.name !== name)

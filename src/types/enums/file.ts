@@ -20,5 +20,7 @@ export enum FileType {
   Bat = 'Bat',
   PowerShell = 'PowerShell',
   Application = 'Application',
-  Media = 'Media'
+  Media = 'Media',
+  Ghost = 'Ghost',
+  All = 'All'
 }

@@ -116,6 +116,8 @@ const getIcon = (fileProperties: FileProperties) => {
     case 'tar':
     case 'gz':
     case 'bz2':
+    case 'xz':
+    case 'lz':
       return 'folder-zip'
     // 文件夹类
     case 'folder':
@@ -156,6 +158,11 @@ const getIcon = (fileProperties: FileProperties) => {
     case 'sh':
     case 'exe':
       return 'powershell'
+    // 光盘类
+    case 'iso':
+    case 'img':
+    case 'dmg':
+      return 'disc'
     default:
       return 'file-cloud' // 默认类型
   }
@@ -252,20 +259,8 @@ const listViewMouseWheel = (event: WheelEvent) => {
  *   console.log(`The file with extension ${extension} is not a ${fileType} type.`)
  * }
  */
-const isType = (extension: string, fileType: FileType) => {
+const isType = (extension: string, fileType: string) => {
   const extensions: { [key: string]: Array<string> } = {
-    Video: ['mp4', 'mkv', 'avi', 'flv', 'mov', 'wmv'],
-    Music: ['mp3', 'wav', 'ogg', 'm4a'],
-    Image: ['svg', 'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff'],
-    Excel: ['xls', 'xlsx', 'csv'],
-    Document: ['doc', 'docx', 'pdf', 'odt', 'txt', 'rtf'],
-    Word: ['doc', 'docx'],
-    PowerPoint: ['ppt', 'pptx'],
-    Slide: ['ppt', 'pptx'],
-    JSON: ['json'],
-    XML: ['xml'],
-    SQL: ['sql'],
-    Application: ['exe'],
     Media: [
       'jpg',
       'jpeg',
@@ -283,9 +278,39 @@ const isType = (extension: string, fileType: FileType) => {
       'mkv',
       'mov',
       'wmv'
-    ]
+    ],
+    Document: ['doc', 'docx', 'pdf', 'odt', 'txt', 'rtf', 'xls', 'xlsx', 'csv', 'ppt', 'pptx'],
+    Code: [
+      'json',
+      'sql',
+      'xml',
+      'js',
+      'ts',
+      'css',
+      'html',
+      'php',
+      'java',
+      'go',
+      'f90',
+      'c',
+      'kt',
+      'md',
+      'cpp',
+      'c#',
+      'lua',
+      'xaml',
+      'py',
+      'r',
+      'rb',
+      'rs',
+      'swift'
+    ],
+    Application: ['exe', 'sh', 'bat'],
+    Folder: ['folder'],
+    Ghost: ['iso', 'img', 'dmg'],
+    Zip: ['zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'xz', 'lz']
   }
-  return extensions[fileType].includes(extension.toLowerCase())
+  return extensions[fileType]?.includes(extension.toLowerCase())
 }
 
 /**

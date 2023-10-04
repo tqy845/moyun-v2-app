@@ -2,6 +2,8 @@
  * App Helper
  */
 
+import { FileType } from '@/types/enums'
+
 /**
  * 应用配置接口
  * @interface App
@@ -80,7 +82,7 @@ export const getAppDefaultSettings = (): AppStore => {
         // 文件分类默认选中分类
         currentFileClassifyTab: {
           index: 0,
-          key: 'all'
+          key: FileType.All
         },
         // 文件上传，打开的Tab项
         currentFileUploadOpenTab: ['upload-area']
