@@ -16,7 +16,7 @@ onMounted(() => {})
 <template>
   <v-parallax
     height="100%"
-    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+    src="https://c.wallhere.com/photos/13/67/abstract_fluid_liquid_illustration_graphic_design_artwork_digital_art_green-2094119.jpg!d"
     class="h-100"
   >
     <v-row

@@ -8,7 +8,7 @@ import { fetchFileList, fileDeleteByNameList, uploadFileChunk, fileDownloadByNam
 import { BasicFile, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore } from '..'
-import { ACTION_TYPE } from '@/types/enums'
+import { ACTION_TYPE, FileType } from '@/types/enums'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
@@ -31,9 +31,9 @@ export const useFileStore = defineStore('fileStore', {
           ...item
         })
         this.list.push(_basicFile)
-        if (fileUtils.isDocument(item.extension)) {
+        if (fileUtils.isType(item.extension, FileType.Document)) {
           this.class['document'].push(_basicFile)
-        } else if (fileUtils.isMedia(item.extension)) {
+        } else if (fileUtils.isType(item.extension, FileType.Media)) {
           this.class['media'].push(_basicFile)
         }
       })

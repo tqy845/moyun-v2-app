@@ -3,7 +3,7 @@
  */
 
 import { FileProperties, UploadChunk } from '@/types/models'
-import { FILE_ICON_TYPE } from '@/types/enums'
+import { FileType } from '@/types/enums'
 import { useAppStore, useFileStore } from '@/stores'
 
 /**
@@ -45,21 +45,120 @@ const upload = async (fileList: Array<File>) => {
 /**
  * 下载文件
  */
-const download = () => {
-  
-}
+const download = () => {}
+
+// // 使用示例
+// const extension = 'pdf'
+// const iconType = getFileIconType(extension)
+// console.log(`The file with extension ${extension} has icon type: ${iconType}`)
 
 /**
  * 获取文件Icon
  * @param fileProperties 文件属性
  */
 const getIcon = (fileProperties: FileProperties) => {
-  if (fileProperties.isDirectory) {
-    return fileProperties.size
-      ? FILE_ICON_TYPE[fileProperties.extension + '-size']
-      : FILE_ICON_TYPE[fileProperties.extension]
+  const { extension, isDirectory, size } = fileProperties
+  let _extension = extension
+  if (isDirectory) {
+    _extension = size > 0 ? 'folder-file' : 'folder'
   }
-  return FILE_ICON_TYPE[fileProperties.extension] || FILE_ICON_TYPE['default']
+  switch (_extension.toLowerCase()) {
+    // 视频类
+    case 'mp4':
+    case 'mkv':
+    case 'avi':
+    case 'flv':
+    case 'mov':
+    case 'wmv':
+      return 'file-video'
+    // 音频类
+    case 'mp3':
+    case 'wav':
+    case 'ogg':
+    case 'm4a':
+      return 'file-music'
+    // 图片类
+    case 'svg':
+    case 'png':
+    case 'jpg':
+    case 'jpeg':
+    case 'gif':
+    case 'bmp':
+    case 'webp':
+    case 'tiff':
+      return 'file-image'
+    // 表格类
+    case 'xls':
+    case 'xlsx':
+    case 'csv':
+      return 'file-excel'
+    // 文档类
+    case 'txt':
+    case 'odt':
+    case 'rtf':
+      return 'file-document'
+    case 'doc':
+    case 'docx':
+      return 'file-word'
+    case 'pdf':
+      return 'file-powerpoint'
+    // 幻灯片类
+    case 'ppt':
+    case 'pptx':
+      return 'file-eye'
+    // 链接类
+    case 'url':
+      return 'file-link'
+    // 压缩文件类
+    case 'zip':
+    case 'rar':
+    case '7z':
+    case 'tar':
+    case 'gz':
+    case 'bz2':
+      return 'folder-zip'
+    // 文件夹类
+    case 'folder':
+      return 'folder'
+    case 'folder-file':
+      return 'folder-file'
+    // 代码类
+    case 'js':
+    case 'ts':
+    case 'css':
+    case 'html':
+    case 'php':
+    case 'java':
+    case 'go':
+    case 'f90':
+    case 'c':
+    case 'kt':
+    case 'md':
+    case 'cpp':
+    case 'c#':
+    case 'lua':
+    case 'xaml':
+    case 'py':
+    case 'r':
+    case 'rb':
+    case 'rs':
+    case 'swift':
+      return 'language-javascript'
+    // 数据类
+    case 'json':
+      return 'code-json'
+    case 'xml':
+      return 'xml'
+    case 'sql':
+      return 'database'
+    // 程序类
+    case 'bat':
+    case 'sh':
+    case 'exe':
+      return 'powershell'
+    default:
+      return 'file-cloud' // 默认类型
+  }
 }
 
 /**
@@ -141,51 +240,52 @@ const listViewMouseWheel = (event: WheelEvent) => {
 }
 
 /**
- * 是否为文档类型
- * @param extension 文件后缀名
- * @description 判断是否为办公三件套或者普通文档
+ * 定义函数判断文件类型
+ * @param extension
+ * @param fileType
+ * const extension = 'pdf'
+ * const fileType = FileType.Document
+ *
+ * if (isType(extension, fileType)) {
+ *   console.log(`The file with extension ${extension} is a ${fileType} type.`)
+ * } else {
+ *   console.log(`The file with extension ${extension} is not a ${fileType} type.`)
+ * }
  */
-const isDocument = (extension: string) => {
-  const documentExtensions = [
-    'doc',
-    'docx',
-    'pdf',
-    'ppt',
-    'pptx',
-    'xls',
-    'xlsx',
-    'odt',
-    'txt',
-    'rtf'
-  ]
-  return documentExtensions.includes(extension.toLowerCase()) // 忽略大小写
-}
-
-/**
- * 是否为多媒体类型
- * @param extension 文件后缀名
- * @description 判断是否为多媒体类型
- */
-const isMedia = (extension: string) => {
-  const mediaExtensions = [
-    'jpg',
-    'jpeg',
-    'png',
-    'gif',
-    'bmp',
-    'svg',
-    'webp',
-    'tiff',
-    'mp3',
-    'wav',
-    'ogg',
-    'mp4',
-    'avi',
-    'mkv',
-    'mov',
-    'wmv'
-  ]
-  return mediaExtensions.includes(extension.toLowerCase()) // 忽略大小写
+const isType = (extension: string, fileType: FileType) => {
+  const extensions: { [key: string]: Array<string> } = {
+    Video: ['mp4', 'mkv', 'avi', 'flv', 'mov', 'wmv'],
+    Music: ['mp3', 'wav', 'ogg', 'm4a'],
+    Image: ['svg', 'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff'],
+    Excel: ['xls', 'xlsx', 'csv'],
+    Document: ['doc', 'docx', 'pdf', 'odt', 'txt', 'rtf'],
+    Word: ['doc', 'docx'],
+    PowerPoint: ['ppt', 'pptx'],
+    Slide: ['ppt', 'pptx'],
+    JSON: ['json'],
+    XML: ['xml'],
+    SQL: ['sql'],
+    Application: ['exe'],
+    Media: [
+      'jpg',
+      'jpeg',
+      'png',
+      'gif',
+      'bmp',
+      'svg',
+      'webp',
+      'tiff',
+      'mp3',
+      'wav',
+      'ogg',
+      'mp4',
+      'avi',
+      'mkv',
+      'mov',
+      'wmv'
+    ]
+  }
+  return extensions[fileType].includes(extension.toLowerCase())
 }
 
 /**
@@ -198,8 +298,7 @@ const fileUtils = {
   formatSize,
   iconViewMouseWheel,
   listViewMouseWheel,
-  isDocument,
-  isMedia
+  isType
 }
 
 export default fileUtils

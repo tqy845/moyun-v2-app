@@ -61,7 +61,7 @@ const data = reactive<{
  * @param item 标签项
  */
 const handleChangeTab = (item: unknown) => {
-  console.log('切换标签', item)
+  // console.log('切换标签', item)
   const _item = item as {
     label: string
     icon: string
