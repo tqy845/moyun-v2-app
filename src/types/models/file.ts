@@ -50,7 +50,7 @@ export class UploadChunk {
   /**
    * 状态
    */
-  status?: 'success' | 'error' | 'await' | 'init' | 're-upload' | 'cancel'
+  status?: 'success' | 'error' | 'await' | 'init' | 're-upload' | 'cancel' | 'uploading'
   /**
    * 是否删除中
    */
@@ -120,11 +120,11 @@ export class UploadChunk {
   async delete(deleteLocal: boolean = true): Promise<boolean> {
     this.deleting = true
     const fileStore = useFileStore()
-    const { code } = await fileDeleteByName(this.file.name)
-    if (code === 200 && deleteLocal) {
+    if (deleteLocal) {
       fileStore.deleteCache(this.file.name)
     }
     this.deleting = false
+    const { code } = await fileDeleteByName(this.file.name)
     return code === 200
   }
 
@@ -226,6 +226,7 @@ export class UploadChunk {
       default:
         // 上传成功，更新文件上传进度
         this.uploadedChunkCount!++
+        this.status = 'uploading'
         this.power = (this.uploadedChunkCount! / this.totalChunkCount!) * 100
         // 判断是否已经上传完毕
         if (this.uploadedChunkCount === this.totalChunkCount) {

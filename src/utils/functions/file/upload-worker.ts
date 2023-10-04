@@ -47,18 +47,22 @@ self.onmessage = async (event) => {
       }
     }
 
-    // 上传
-    const response = await sendRequest(requestId, url, {
-      method: 'PUT',
-      body: form,
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+    try {
+      // 上传
+      const response = await sendRequest(requestId, url, {
+        method: 'PUT',
+        body: form,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
 
-    // 响应结果
-    const { code } = await response.json()
-    self.postMessage({ type: ACTION_TYPE.UPLOAD, code })
+      // 响应结果
+      const { code } = await response.json()
+      self.postMessage({ type: code === 200 ? ACTION_TYPE.UPLOAD : ACTION_TYPE.ERROR })
+    } catch (e) {
+      self.postMessage({ type: ACTION_TYPE.ERROR })
+    }
   }
   self.postMessage({ type: ACTION_TYPE.COMPLETE })
 }

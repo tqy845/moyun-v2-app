@@ -44,7 +44,8 @@ const handleSelect = (item: number | string) => {
         icon="mdi-delete"
         class="mr-1"
         :loading="item.deleting"
-        :disabled="item.power! >= 0 && item.power! < 100"
+        :disabled="
+        item.status === 'uploading' && item.power! >= 0 && item.power! < 100"
       ></v-btn>
     </template>
     <v-card>
