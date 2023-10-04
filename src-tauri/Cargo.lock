@@ -1877,6 +1877,7 @@ dependencies = [
 name = "moyun-pc-sofware"
 version = "0.0.0"
 dependencies = [
+ "reqwest",
  "serde",
  "serde_json",
  "tauri",

@@ -2,7 +2,7 @@ import { fileDownloadByName, fileDeleteByName, fetchFileChunkNames, fetchFileChu
 import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
 import { useFileStore, useUserStore } from '@/stores'
-import { calculateFileSlices, mergeChunks, mergeUint8Arrays } from '@/utils/functions/file/helper'
+import { calculateFileSlices, mergeUint8Arrays } from '@/utils/functions/file/helper'
 import { ACTION_TYPE } from '../enums'
 import {
   BaseDirectory,
@@ -154,7 +154,7 @@ export class UploadChunk {
       // 前置任务
       this.status = 'init'
       this.uploadedChunkCount = 0
-      this.totalChunkCount = calculateFileSlices(this.file.size)
+      this.totalChunkCount = Math.ceil(this.file.size / CHUNK_SIZE)
       this.workerCount = 0
       this.workerChunkCount = Math.ceil(this.totalChunkCount / THREAD_COUNT)
 
@@ -168,7 +168,6 @@ export class UploadChunk {
         let endIndex = startIndex + this.workerChunkCount
         if (endIndex > this.totalChunkCount) {
           endIndex = this.totalChunkCount
-          break
         }
 
         // 创建worker线程
@@ -204,7 +203,7 @@ export class UploadChunk {
           if (result === ACTION_TYPE.COMPLETE) {
             resolve(true)
           } else if (result === ACTION_TYPE.ERROR) {
-            reject(e.data)
+            reject(e.data.code)
           }
         }
       }
@@ -214,32 +213,31 @@ export class UploadChunk {
   /**
    * 是否已经上传完成
    * @param worker worker实例
-   * @param statusCode 状态码
+   * @param params 状态码
    */
-  private isCompleted(worker: Worker, statusCode: number) {
-    this.workerCount!--
-    worker.terminate()
-
-    if (statusCode === ACTION_TYPE.CANCEL) {
-      // 取消上传
-      return ACTION_TYPE.CANCEL
-    } else if (statusCode) {
-      // 上传成功，更新文件上传进度
-      this.uploadedChunkCount! += this.workerChunkCount!
-      this.power = (this.uploadedChunkCount! / this.totalChunkCount!) * 100
-      // 判断是否已经上传完毕
-      if (this.uploadedChunkCount === this.totalChunkCount) {
-        this.status = 'success'
-        // console.log('文件 ' + this.file.name + ' 上传完成')
-        return ACTION_TYPE.COMPLETE
-      }
-    } else {
-      // 上传失败
-      this.status = 'error'
-      return ACTION_TYPE.ERROR
+  private isCompleted(worker: Worker, params: { type: string; code: number }) {
+    const { type, code } = params
+    switch (type) {
+      case ACTION_TYPE.COMPLETE:
+        this.workerCount!--
+        worker.terminate()
+        return ACTION_TYPE.UPLOAD
+      case ACTION_TYPE.CANCEL:
+        return ACTION_TYPE.CANCEL
+      case ACTION_TYPE.ERROR:
+        this.status = 'error'
+        return ACTION_TYPE.ERROR
+      default:
+        // 上传成功，更新文件上传进度
+        this.uploadedChunkCount!++
+        this.power = (this.uploadedChunkCount! / this.totalChunkCount!) * 100
+        // 判断是否已经上传完毕
+        if (this.uploadedChunkCount === this.totalChunkCount) {
+          this.status = 'success'
+          return ACTION_TYPE.COMPLETE
+        }
+        return ACTION_TYPE.UPLOAD
     }
-
-    return ACTION_TYPE.UPLOAD
   }
 }
 

@@ -20,14 +20,13 @@ self.onmessage = async (event) => {
         controllers[requestId].abort()
       }
     }
-    self.postMessage(ACTION_TYPE.CANCEL)
+    self.postMessage({ type: ACTION_TYPE.CANCEL })
   }
 
   /**
    * 发起网络请求
    */
   const { startIndex, endIndex, CHUNK_SIZE, index, requestId, url, token, file } = event.data
-  const flagList: Array<number> = []
 
   for (let i = startIndex; i < endIndex; i++) {
     // 切片
@@ -59,11 +58,9 @@ self.onmessage = async (event) => {
 
     // 响应结果
     const { code } = await response.json()
-    // 返回
-    flagList.push(code)
+    self.postMessage({ type: ACTION_TYPE.UPLOAD, code })
   }
-
-  self.postMessage(flagList.every((item) => item === 200))
+  self.postMessage({ type: ACTION_TYPE.COMPLETE })
 }
 
 /**
