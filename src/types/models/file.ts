@@ -1,8 +1,7 @@
 import { fileDownloadByName, fileDeleteByName, fetchFileChunkNames, fetchFileChunk } from '@/api'
 import { pinyin } from 'pinyin-pro'
-import { invoke } from '@tauri-apps/api'
 import { useFileStore, useUserStore } from '@/stores'
-import { calculateFileSlices, mergeUint8Arrays } from '@/utils/functions/file/helper'
+import { calculateFileSliceSize, mergeUint8Arrays } from '@/utils/functions/file/helper'
 import { ACTION_TYPE } from '../enums'
 import {
   BaseDirectory,
@@ -14,10 +13,6 @@ import {
   writeBinaryFile
 } from '@tauri-apps/api/fs'
 
-/**
- * 单个分片大小
- */
-const CHUNK_SIZE = 1024 * 1024 * 10
 /**
  * 线程数量
  */
@@ -152,9 +147,10 @@ export class UploadChunk {
   private partUpload(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       // 前置任务
+      const chunkSize = calculateFileSliceSize(this.file.size)
       this.status = 'init'
       this.uploadedChunkCount = 0
-      this.totalChunkCount = Math.ceil(this.file.size / CHUNK_SIZE)
+      this.totalChunkCount = Math.ceil(this.file.size / chunkSize)
       this.workerCount = 0
       this.workerChunkCount = Math.ceil(this.totalChunkCount / THREAD_COUNT)
 
@@ -188,7 +184,7 @@ export class UploadChunk {
         worker.postMessage({
           // 文件信息
           file: this.file,
-          CHUNK_SIZE,
+          chunkSize,
           startIndex,
           endIndex,
           index: i,

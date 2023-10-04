@@ -26,20 +26,20 @@ self.onmessage = async (event) => {
   /**
    * 发起网络请求
    */
-  const { startIndex, endIndex, CHUNK_SIZE, index, requestId, url, token, file } = event.data
+  const { startIndex, endIndex, chunkSize, index, requestId, url, token, file } = event.data
 
   for (let i = startIndex; i < endIndex; i++) {
     // 切片
     const object: { [key: string]: any } = {
       fileName: file.name,
-      ...(await createChunk(file, i, CHUNK_SIZE))
+      ...(await createChunk(file, i, chunkSize))
     }
     const { chunk, ...args } = object
 
     // 构建表单上传
     const form = new FormData()
     form.append('file', chunk, `chunk_${index}`)
-    form.append('chunkSize', String(CHUNK_SIZE))
+    form.append('chunkSize', String(chunkSize))
     for (const key in args) {
       if (Object.hasOwn(args, key)) {
         const element = args[key]

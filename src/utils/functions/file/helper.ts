@@ -29,24 +29,22 @@ export const createChunk = (file: File, index: number, chunkSize: number) => {
 }
 
 /**
- * 最大分片限制
+ * 根据文件大小计算分片大小
  * @param fileSize 文件大小
  */
-export const calculateFileSlices = (fileSize: number) => {
-  if (fileSize <= 300 * 1024 * 1024) {
-    return 1
-  } else if (fileSize <= 3 * 1024 * 1024 * 1024) {
-    return Math.ceil(fileSize / (600 * 1024 * 1024))
-  } else if (fileSize <= 6 * 1024 * 1024 * 1024) {
-    return Math.ceil(fileSize / (800 * 1024 * 1024))
-  } else if (fileSize <= 20 * 1024 * 1024 * 1024) {
-    return Math.ceil(fileSize / (1 * 1024 * 1024 * 1024))
+export const calculateFileSliceSize = (fileSize: number) => {
+  if (fileSize <= 1 * 1024 * 1024 * 1024) {
+    return 10 * 1024 * 1024 // 10 MB
+  } else if (fileSize <= 5 * 1024 * 1024 * 1024) {
+    return 50 * 1024 * 1024 // 50 MB
+  } else if (fileSize <= 10 * 1024 * 1024 * 1024) {
+    return 100 * 1024 * 1024 // 100 MB
   } else if (fileSize <= 50 * 1024 * 1024 * 1024) {
-    return Math.min(50, Math.ceil(fileSize / (1 * 1024 * 1024 * 1024)))
-  } else if (fileSize <= 2000 * 1024 * 1024 * 1024) {
-    return Math.min(100, Math.ceil(fileSize / (10 * 1024 * 1024 * 1024)))
+    return 500 * 1024 * 1024 // 500 MB
+  } else {
+    // 如果文件大小大于50 TB，则返回默认分片大小
+    return 1 * 1024 * 1024 * 1024 // 1 GB，默认分片大小
   }
-  return 100
 }
 
 /**
