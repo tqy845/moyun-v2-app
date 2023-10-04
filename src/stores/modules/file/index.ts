@@ -29,7 +29,7 @@ export const useFileStore = defineStore('fileStore', {
       keys.forEach((key) => {
         this.class[key] = []
       })
-
+      // 添加到分类
       fileList.forEach((item) => {
         const _basicFile = new BasicFile({
           icon: fileUtils.getIcon(item),
@@ -37,17 +37,11 @@ export const useFileStore = defineStore('fileStore', {
         })
         this.list.push(_basicFile)
         for (const key of keys) {
-          console.log('fileUtils.isType(item.extension, key)', item.extension, key)
-
           if (fileUtils.isType(item.extension, key)) {
             this.class[key].push(_basicFile)
           }
         }
       })
-      keys.forEach((key) => {
-        console.log(`this.class[${key}] = `, this.class[key])
-      })
-
       const { key } = appStore.app.menuIndex['currentFileClassifyTab']
       // 分类
       this.renderList = this.classify(key)

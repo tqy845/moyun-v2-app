@@ -58,6 +58,16 @@ const data = reactive<{
   ],
   tabMoreItems: [
     {
+      label: 'file.view.iconLabel.secondaryMenu.application.text',
+      icon: 'application',
+      key: FileType.Application
+    },
+    {
+      label: 'file.view.iconLabel.secondaryMenu.gho.text',
+      icon: 'ghost',
+      key: FileType.Ghost
+    },
+    {
       label: 'file.view.iconLabel.secondaryMenu.folder.text',
       icon: 'folder',
       key: FileType.Folder
@@ -66,16 +76,6 @@ const data = reactive<{
       label: 'file.view.iconLabel.secondaryMenu.package.text',
       icon: 'folder-zip',
       key: FileType.Zip
-    },
-    {
-      label: 'file.view.iconLabel.secondaryMenu.gho.text',
-      icon: 'disc',
-      key: FileType.Ghost
-    },
-    {
-      label: 'file.view.iconLabel.secondaryMenu.application.text',
-      icon: 'application',
-      key: FileType.Application
     }
   ]
 })
@@ -133,10 +133,18 @@ const fileUploading = computed(() => {
         <v-icon size="24">mdi-{{ item.icon }}</v-icon> {{ $t(item.label) }}
       </v-tab>
 
-      <!-- 更多分类 variant="tonal" -->
+      <!-- 更多分类  -->
       <v-menu v-if="data.tabMoreItems.length">
         <template v-slot:activator="{ props }">
-          <v-btn rounded="0" class="text-capitalize" height="100%" v-bind="props">
+          <v-btn
+            :variant="
+              appStore.app.menuIndex['currentFileClassifyTab']['index'] > 2 ? 'tonal' : 'text'
+            "
+            rounded="0"
+            class="text-capitalize"
+            height="100%"
+            v-bind="props"
+          >
             <v-row class="d-flex flex-column">
               <v-col cols="auto" class="pa-0 ma-0"
                 ><v-icon size="24">mdi-dots-horizontal-circle</v-icon>
@@ -148,12 +156,21 @@ const fileUploading = computed(() => {
           </v-btn>
         </template>
 
-        <v-list class="bg-grey-lighten-3" density="compact" nav>
+        <v-list
+          class="bg-grey-lighten-3"
+          density="compact"
+          nav
+          v-model="appStore.app.menuIndex['currentFileClassifyTab']['index']"
+        >
           <v-list-item
             v-for="(item, index) in data.tabMoreItems"
             :key="index"
             @click="handleChangeTab({ ...item, index: data.tabItems.length + index })"
             :value="item.key"
+            :active="
+              appStore.app.menuIndex['currentFileClassifyTab']['index'] ===
+              data.tabItems.length + index
+            "
           >
             <template v-slot:prepend>
               <v-icon>mdi-{{ item.icon }}</v-icon>
