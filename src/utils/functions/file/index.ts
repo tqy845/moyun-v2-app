@@ -43,6 +43,13 @@ const upload = async (fileList: Array<File>) => {
 }
 
 /**
+ * 下载文件
+ */
+const download = () => {
+  
+}
+
+/**
  * 获取文件Icon
  * @param fileProperties 文件属性
  */

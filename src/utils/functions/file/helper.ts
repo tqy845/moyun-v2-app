@@ -48,3 +48,22 @@ export const calculateFileSlices = (fileSize: number) => {
   }
   return 100
 }
+
+/**
+ * 合并Uint8Arrays
+ */
+export const mergeUint8Arrays = (...arrays: Uint8Array[]): Uint8Array => {
+  let totalLength = 0
+  for (const array of arrays) {
+    totalLength += array.length
+  }
+
+  const mergedArray = new Uint8Array(totalLength)
+  let offset = 0
+  for (const array of arrays) {
+    mergedArray.set(array, offset)
+    offset += array.length
+  }
+
+  return mergedArray
+}

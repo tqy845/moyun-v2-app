@@ -2,12 +2,15 @@ import { fileDownloadByName, fileDeleteByName, fetchFileChunkNames, fetchFileChu
 import { pinyin } from 'pinyin-pro'
 import { invoke } from '@tauri-apps/api'
 import { useFileStore, useUserStore } from '@/stores'
-import { calculateFileSlices } from '@/utils/functions/file/helper'
+import { calculateFileSlices, mergeChunks, mergeUint8Arrays } from '@/utils/functions/file/helper'
 import { ACTION_TYPE } from '../enums'
 import {
   BaseDirectory,
   BinaryFileContents,
+  createDir,
+  exists,
   readBinaryFile,
+  removeDir,
   writeBinaryFile
 } from '@tauri-apps/api/fs'
 
@@ -180,10 +183,10 @@ export class UploadChunk {
 
         // 递归检查用户是否取消上传
         this.isCancel(() => {
-          this.toWorker(worker, { type: 'cancel' })
+          worker.postMessage({ type: 'cancel' })
         })
 
-        this.toWorker(worker, {
+        worker.postMessage({
           // 文件信息
           file: this.file,
           CHUNK_SIZE,
@@ -191,7 +194,7 @@ export class UploadChunk {
           endIndex,
           index: i,
           token: userStore.token,
-          requestId: requestId,
+          requestId,
           url: `http://localhost/system/user/file/chunk`
         })
 
@@ -206,15 +209,6 @@ export class UploadChunk {
         }
       }
     })
-  }
-
-  /**
-   * 发送数据到worker线程
-   * @param worker worker实例
-   * @param data 数据
-   */
-  private toWorker(worker: Worker, data: { [key: string]: any }) {
-    worker.postMessage(data)
   }
 
   /**
@@ -320,14 +314,58 @@ export class BasicFile {
   async download(): Promise<void> {
     const fileStore = useFileStore()
     if (!this.isDirectory) {
-      // 下载文件分片名
-      const fileChunks = await this.getChunkNames()
-      // 下载分片
-      for (const chunkName of fileChunks) {
-        fileStore.downloadQueue.add(this.getChunk(chunkName), '')
+      const worker = new Worker(
+        new URL('@/utils/functions/file/download-worker.ts', import.meta.url),
+        {
+          type: 'module'
+        }
+      )
+
+      const userStore = useUserStore()
+      // const requestId = Math.random().toString(36).substring(7) // 生成一个唯一的请求标识
+
+      worker.postMessage({
+        // 文件信息
+        fileName: this.name,
+        token: userStore.token,
+        chunkNamesRequest: {
+          url: `http://localhost/system/user/file`
+        },
+        chunkNameRequest: {
+          url: `http://localhost/system/user/file/chunk`
+        }
+      })
+
+      let count = 1
+      let flag = false
+      worker.onmessage = async (e) => {
+        const { chunk, chunkName, chunkNames } = e.data
+        const path = this.name.replace('.' + this.extension, '') + '_part\\'
+        // console.log('chunk = ', chunk)
+        console.log('进度 = ', (count / chunkNames.length) * 100)
+
+        count++
+        // 分片写入本地磁盘
+        if (!flag || !(await exists(path, { dir: BaseDirectory.Desktop }))) {
+          await createDir(path, {
+            dir: BaseDirectory.Desktop,
+            recursive: true
+          })
+          flag = true
+        }
+
+        await writeBinaryFile(path + chunkName, chunk, {
+          dir: BaseDirectory.Desktop
+        })
+
+        // 判断分片是否传输完毕
+        if (count === chunkNames.length) {
+          // 合并分片
+          worker.terminate()
+          this.mergedChunks(chunkNames, path)
+          console.log('完成')
+        }
       }
-      // 合并
-      await this.mergedChunks(fileChunks)
     }
   }
 
@@ -353,41 +391,25 @@ export class BasicFile {
   }
 
   /**
-   * 获取文件分片名称列表
-   */
-  private async getChunkNames() {
-    const { data } = await fetchFileChunkNames<{ chunkNames: Array<string> }>({
-      fileName: this.name
-    })
-    return data.chunkNames
-  }
-
-  /**
-   * 获取文件分片
-   * @param 分片名
-   */
-  private async getChunk(chunkName: string) {
-    const { data } = await fetchFileChunk<{ chunk: BinaryFileContents }>({ chunkName })
-    return await writeBinaryFile(chunkName, data.chunk, { dir: BaseDirectory.Desktop })
-  }
-
-  /**
    * 分片合并
    * @param chunkNames 分片名列表
    */
-  private async mergedChunks(chunkNames: Array<string>) {
+  mergedChunks = async (chunkNames: Array<string>, path: string) => {
     try {
+      console.log('合并')
+
       const mergedContent = await Promise.all(
         chunkNames.map(async (chunkName) => {
-          const content = await readBinaryFile(chunkName, { dir: BaseDirectory.Desktop })
+          const content = await readBinaryFile(path + chunkName, {
+            dir: BaseDirectory.Desktop
+          })
           return new Uint8Array(content)
         })
       )
 
       // 合并所有文件内容
-      const mergedArray = new Uint8Array(
-        mergedContent.reduce((acc, chunk) => acc + chunk.length, 0)
-      )
+      const totalLength = mergedContent.reduce((acc, chunk) => acc + chunk.length, 0)
+      const mergedArray = new Uint8Array(Math.ceil(totalLength))
       let offset = 0
       for (const chunk of mergedContent) {
         mergedArray.set(chunk, offset)
@@ -396,8 +418,7 @@ export class BasicFile {
 
       // 将合并后的内容写入输出文件
       await writeBinaryFile(this.name, mergedArray, { dir: BaseDirectory.Desktop })
-      // await writeBinaryFile({ path: `C:/Users/64466/Desktop/${this.name}`, contents: mergedArray })
-
+      removeDir(path, { dir: BaseDirectory.Desktop, recursive: true })
       console.log('Files merged successfully.')
     } catch (error) {
       console.error('Error merging files:', error)
