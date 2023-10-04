@@ -11,7 +11,11 @@ fn main() {
             set_window_shadow(app);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![utils::download_file])
+        .invoke_handler(tauri::generate_handler![
+            utils::download_file,
+            utils::merge_chunks,
+            utils::download_and_merge_chunks
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -1,15 +1,10 @@
 <!-- App -->
 <script lang="ts" setup>
 import { AppNotification } from '@/components/custom'
-import { invoke } from '@tauri-apps/api'
 
 window.addEventListener('drop', (e) => e.preventDefault(), false)
 window.addEventListener('dragover', (e) => e.preventDefault(), false)
 window.addEventListener('contextmenu', (e) => e.preventDefault(), false)
-
-// invoke('download_file')
-// `invoke` 返回的是一个 Promise
-// .then((response) => console.log(response))
 </script>
 
 <template>
