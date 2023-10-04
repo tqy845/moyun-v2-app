@@ -6,7 +6,7 @@
 -->
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
 import { appWindow } from '@tauri-apps/api/window'
 
 const cs = reactive({
@@ -29,7 +29,6 @@ const handleMaximize = () => {
   } else {
     appWindow.maximize()
   }
-  cs.isMax = !cs.isMax
 }
 
 /**
@@ -38,13 +37,18 @@ const handleMaximize = () => {
 const handleClose = () => {
   appWindow.close()
 }
+
+onMounted(async () => {
+  await appWindow.onResized(async ({ payload: size }) => {
+    cs.isMax = await appWindow.isMaximized()
+  })
+})
 </script>
 
 <template>
   <v-system-bar window data-tauri-drag-region color="primary">
     <!-- <v-icon icon="mdi-message" class="me-2"></v-icon> -->
     <!-- <span>10条未读</span> -->
-
     <v-spacer></v-spacer>
 
     <v-btn icon="mdi-minus" variant="text" size="small" @click="handleMinimize"></v-btn>
