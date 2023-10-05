@@ -41,9 +41,11 @@ const cs = reactive<{
 const data = reactive<{
   rightMenu: any
   unlisten: any
+  rightMenuListen: any
 }>({
   rightMenu: null,
-  unlisten: null
+  unlisten: null,
+  rightMenuListen: null
 })
 
 onMounted(async () => {
@@ -68,7 +70,7 @@ onMounted(async () => {
     }
   })
 
-  const unlisten = await listen(
+  data.rightMenuListen = await listen(
     'click',
     async (event: {
       windowLabel: string
@@ -94,9 +96,10 @@ onMounted(async () => {
 })
 
 onUnmounted(async () => {
-  // console.log('卸载组件')
-  ;(await data.unlisten)()
+  console.log('卸载组件')
   data.rightMenu.close()
+  ;(await data.unlisten)()
+  ;(await data.rightMenuListen)()
 })
 
 /**

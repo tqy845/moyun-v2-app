@@ -202,7 +202,7 @@ export class UploadChunk {
           index: i,
           token: userStore.token,
           requestId,
-          url: `http://localhost/system/user/file/upload/chunk`,
+          url: `https://www.aigs.ltd:443/system/user/file/upload/chunk`,
           totalChunkCount: this.totalChunkCount
         })
 
@@ -371,6 +371,8 @@ export class BasicFile {
    * @param deleteLocal 是否删除本地缓存
    */
   async delete(deleteLocal: boolean = true): Promise<boolean> {
+    console.log('触发删除')
+
     const fileStore = useFileStore()
     const { code } = await fileDeleteByName(this.name)
     if (code === 200 && deleteLocal) {
