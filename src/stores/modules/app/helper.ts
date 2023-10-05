@@ -80,9 +80,7 @@ export const getAppDefaultSettings = (): AppStore => {
         // 二级菜单选中项
         currentSecondMenuTab: {},
         // 文件分类默认选中分类
-        currentFileClassifyTab: {
-          key: FileType.All
-        },
+        currentFileClassifyTab: FileType.All,
         // 文件上传，打开的Tab项
         currentFileUploadOpenTab: ['upload-area']
       },
