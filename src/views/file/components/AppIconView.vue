@@ -54,7 +54,7 @@ const data = reactive<{
  */
 const pageItemNumber = computed(() => {
   const { iconViewPageItemNumber } = fileStore
-  const _fileList = fileStore.classify(appStore.app.menuIndex['currentFileClassifyTab'].key)
+  const _fileList = fileStore.classify(appStore.app.menuIndex['currentFileClassifyTab'])
   return Math.ceil(_fileList?.length / iconViewPageItemNumber)
 })
 
@@ -114,7 +114,7 @@ const handleSelectItem = (index: any) => {
     <v-card-action>
       <v-pagination
         :model-value="
-          fileStore.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab'].key]
+          fileStore.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab']]
         "
         :length="pageItemNumber"
         total-visible="6"

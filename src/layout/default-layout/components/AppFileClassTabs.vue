@@ -64,18 +64,13 @@ const data = reactive<{
  */
 const handleChangeTab = (item: unknown) => {
   // console.log('切换标签', item)
-  const _item = item as {
-    label: string
-    icon: string
-    key: string
-    index: number
-  }
-  appStore.app.menuIndex['currentFileClassifyTab'] = _item
-  if (!fileStore.classifyTabCurrentPage[_item.key]) {
+  const key = item as string
+  appStore.app.menuIndex['currentFileClassifyTab'] = key
+  if (!fileStore.classifyTabCurrentPage[key]) {
     // 当前页
-    fileStore.classifyTabCurrentPage[_item.key] = 1
+    fileStore.classifyTabCurrentPage[key] = 1
   }
-  fileStore.paging(fileStore.classifyTabCurrentPage[_item.key])
+  fileStore.paging(fileStore.classifyTabCurrentPage[key])
 }
 </script>
 
@@ -83,7 +78,7 @@ const handleChangeTab = (item: unknown) => {
   <!-- 文件分类 -->
   <v-tabs
     v-show="!fileStore.search && appStore.app.menuIndex['currentSecondMenuTab']['id']"
-    :model-value="appStore.app.menuIndex['currentFileClassifyTab']['index']"
+    :model-value="appStore.app.menuIndex['currentFileClassifyTab']"
     centered
     stacked
     show-arrows
@@ -95,7 +90,7 @@ const handleChangeTab = (item: unknown) => {
       class="text-capitalize"
       v-for="(item, index) in data.tabItems"
       :key="index"
-      :value="{ ...item, index }"
+      :value="item.key"
     >
       <v-icon size="24">mdi-{{ item.icon }}</v-icon> {{ $t(item.label) }}
     </v-tab>
@@ -105,7 +100,11 @@ const handleChangeTab = (item: unknown) => {
       <template v-slot:activator="{ props }">
         <v-btn
           :variant="
-            appStore.app.menuIndex['currentFileClassifyTab']['index'] > 2 ? 'tonal' : 'text'
+            ![FileType.All, FileType.Document, FileType.Media].includes(
+              appStore.app.menuIndex['currentFileClassifyTab']
+            )
+              ? 'tonal'
+              : 'text'
           "
           rounded="0"
           class="text-capitalize"
@@ -127,9 +126,9 @@ const handleChangeTab = (item: unknown) => {
         <v-list-item
           v-for="(item, index) in data.tabMoreItems"
           :key="index"
-          @click="handleChangeTab({ ...item, index: 3 })"
+          @click="handleChangeTab(item.key)"
           :value="item.key"
-          :active="appStore.app.menuIndex['currentFileClassifyTab']['key'] === item.key"
+          :active="appStore.app.menuIndex['currentFileClassifyTab'] === item.key"
         >
           <template v-slot:prepend>
             <v-icon>mdi-{{ item.icon }}</v-icon>

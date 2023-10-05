@@ -42,7 +42,7 @@ export const useFileStore = defineStore('fileStore', {
           }
         }
       })
-      const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+      const key = appStore.app.menuIndex['currentFileClassifyTab']
       // 分类
       this.renderList = this.classify(key)
       // 分页
@@ -61,7 +61,7 @@ export const useFileStore = defineStore('fileStore', {
       if (name) {
         this.renderList = this.list.filter((file) => file.name === name)
       } else {
-        const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+        const key = appStore.app.menuIndex['currentFileClassifyTab']
         // 分类
         this.renderList = this.classify(key)
         // 分页
@@ -103,7 +103,7 @@ export const useFileStore = defineStore('fileStore', {
       const appStore = useAppStore()
       const startIndex = (item - 1) * this.iconViewPageItemNumber
       const endIndex = startIndex + this.iconViewPageItemNumber
-      const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+      const key = appStore.app.menuIndex['currentFileClassifyTab']
       this.renderList = this.classify(key).slice(startIndex, endIndex)
     },
     /**
@@ -112,7 +112,7 @@ export const useFileStore = defineStore('fileStore', {
      */
     changePage(page: number) {
       const appStore = useAppStore()
-      this.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab'].key] = page
+      this.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab']] = page
       this.paging(page)
     },
     /**
@@ -188,7 +188,7 @@ export const useFileStore = defineStore('fileStore', {
       })
       if (refreshLocal) {
         const appStore = useAppStore()
-        const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+        const key = appStore.app.menuIndex['currentFileClassifyTab']
         this.renderList = this.classify(key)
         this.paging(this.classifyTabCurrentPage[key] ?? 1)
       }
@@ -202,7 +202,7 @@ export const useFileStore = defineStore('fileStore', {
       for (const name of names) {
         this.deleteCache(name, false)
       }
-      const { key } = appStore.app.menuIndex['currentFileClassifyTab']
+      const key = appStore.app.menuIndex['currentFileClassifyTab']
       // 分类
       this.renderList = this.classify(key)
       // 分页

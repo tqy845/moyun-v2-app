@@ -81,7 +81,6 @@ export const getAppDefaultSettings = (): AppStore => {
         currentSecondMenuTab: {},
         // 文件分类默认选中分类
         currentFileClassifyTab: {
-          index: 0,
           key: FileType.All
         },
         // 文件上传，打开的Tab项

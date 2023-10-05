@@ -30,7 +30,6 @@ const handleChangeSecondMenuItem = (item: any) => {
 <template>
   <v-list :lines="false" nav @click:select="handleChangeSecondMenuItem">
     <!-- 二级菜单 -->
-    <!-- {{ appStore.app.menuIndex['currentFileClassifyTab'] }} -->
     <v-list-item
       v-for="(item, index) in items"
       :key="index"

@@ -6,15 +6,4 @@ import { DefaultLayout } from '@/layout'
 import { File } from '@/views'
 
 // Route rule definition
-export const routeFile: Readonly<RouteRecordRaw[]> = [
-  {
-    path: '/file',
-    component: DefaultLayout,
-    children: [
-      {
-        path: '',
-        component: File
-      }
-    ]
-  }
-]
+export const routeFile: Readonly<RouteRecordRaw[]> = []

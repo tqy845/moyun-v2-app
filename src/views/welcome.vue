@@ -18,7 +18,6 @@ onMounted(() => {})
 <template>
   <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)" class="h-100">
     <v-row
-      style="backdrop-filter: blur(50px); position: relative; top: 11px"
       justify="center"
       align="center"
       class="flex-column h-100 text-grey-lighten-4 text-center"
