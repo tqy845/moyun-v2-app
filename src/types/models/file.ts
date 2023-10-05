@@ -322,15 +322,39 @@ export class BasicFile {
   async download(): Promise<void> {
     const fileStore = useFileStore()
     if (!this.isDirectory) {
-      const {
-        data: { uint8Array }
-      } = await fileDownloadByName<{ uint8Array: Array<Uint8Array> }>(
+      const startByte = 0
+      const endByte = this.size
+      const { data: blob } = await fileDownloadByName<{ blob: Blob }>(
         this.name,
+        startByte,
+        endByte,
         (progress: number) => {
-          console.log('progress = ', progress)
+          // 计算相对于文件总大小的下载进度
+          const totalSize = endByte - startByte
+          const downloadedBytes = startByte + totalSize * (progress / 100)
+
+          // 更新进度
+          const calc = (downloadedBytes / this.size) * 100
+
+          // 将进度保存到 this.power 中
+          this.power = calc
         }
       )
-      console.log('chunks = ', uint8Array)
+      this.power = 0
+
+      // console.log('chunks = ', uint8Array)
+      // for (const iterator of uint8Array) {
+      //   console.log(iterator)
+
+      //   invoke('write_u8_array_to_file', {
+      //     data: uint8Array,
+      //     filePath: `C:/Users/64466/Desktop/${this.name}`
+      //   }).then((response) => {
+      //     console.log('保存结果 = ', response)
+      //     // 清空下载进度
+      //     this.power = undefined
+      //   })
+      // }
     }
   }
 

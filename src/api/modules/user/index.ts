@@ -6,7 +6,7 @@ import { tauriRequest, fetchRequest } from '@/utils/request'
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fetchCodeImage = <T = any>() => {
-  return tauriRequest<T>({
+  return fetchRequest<T>({
     url: `/captchaImage`,
     method: 'GET'
   })
@@ -19,7 +19,7 @@ export const fetchCodeImage = <T = any>() => {
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const registerByAccount = <T = any>(params: { email: string; password: string }) => {
-  return tauriRequest<T>({
+  return fetchRequest<T>({
     url: `/registerByEmail`,
     method: 'POST',
     data: params
@@ -32,7 +32,7 @@ export const registerByAccount = <T = any>(params: { email: string; password: st
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const loginByAccount = <T = any>(user: User) => {
-  return tauriRequest<T>({
+  return fetchRequest<T>({
     url: '/login',
     method: 'POST',
     data: user
@@ -58,7 +58,7 @@ export const logoutForUser = <T = any>(user: User) => {
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const registeredTouch = <T = any>(options: { [key: string]: any }) => {
-  return tauriRequest<T>({
+  return fetchRequest<T>({
     url: '/touch',
     method: 'POST',
     data: options

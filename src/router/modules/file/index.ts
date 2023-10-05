@@ -2,7 +2,7 @@
  * File Routes
  */
 import type { RouteRecordRaw } from 'vue-router'
-import { DefaultLayout, DefaultMenu } from '@/layout'
+import { DefaultLayout } from '@/layout'
 import { File } from '@/views'
 
 // Route rule definition

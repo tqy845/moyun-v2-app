@@ -11,6 +11,7 @@ import { useI18n } from 'vue-i18n'
 import type { App } from 'vue'
 import { VDataTable, VDataTableVirtual } from 'vuetify/labs/VDataTable'
 import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
+// @ts-ignore
 import colors from 'vuetify/lib/util/colors'
 
 // 创建 Vuetify 组件实例

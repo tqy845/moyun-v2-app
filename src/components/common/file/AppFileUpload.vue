@@ -5,6 +5,7 @@
   @description “文件上传”组件
 -->
 <script lang="ts" setup>
+// @ts-nocheck
 import { computed, reactive, ref } from 'vue'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore, useFileStore } from '@/stores'

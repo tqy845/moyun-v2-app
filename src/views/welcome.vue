@@ -13,12 +13,10 @@ const appStore = useAppStore()
 onMounted(() => {})
 </script>
 
+<!-- src="https://c.wallhere.com/photos/13/67/abstract_fluid_liquid_illustration_graphic_design_artwork_digital_art_green-2094119.jpg!d" -->
+
 <template>
-  <v-parallax
-    height="100%"
-    src="https://c.wallhere.com/photos/13/67/abstract_fluid_liquid_illustration_graphic_design_artwork_digital_art_green-2094119.jpg!d"
-    class="h-100"
-  >
+  <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)" class="h-100">
     <v-row
       style="backdrop-filter: blur(50px); position: relative; top: 11px"
       justify="center"
@@ -75,7 +73,7 @@ onMounted(() => {})
         </v-list>
       </v-col> -->
     </v-row>
-  </v-parallax>
+  </v-img>
 </template>
 
 <style lang="scss" scoped></style>

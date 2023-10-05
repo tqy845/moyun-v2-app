@@ -1,9 +1,8 @@
 import { useUserStore, useAppStore } from '@/stores'
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { BASE_URL, ResponseType } from './helper'
-import { useRouter } from 'vue-router'
 
-const controllerMap: { [key: string]: AbortController } = []
+const controllerMap: { [key: string]: AbortController } = {}
 
 /**
  * 发起请求
@@ -18,6 +17,7 @@ const fetchRequest = async <T = any>(
     onProgress?: (progress: number) => void
     data?: any
     key?: string
+    fileName?: string
   } & RequestInit
 ): Promise<ResponseType<T>> => {
   // 生成一个唯一的请求标识
@@ -30,7 +30,7 @@ const fetchRequest = async <T = any>(
     const appStore = useAppStore()
     const userStore = useUserStore()
     const cookies = useCookies(['locale'])
-    const { url, key, data, responseType, onProgress, ...args } = options
+    const { url, key, fileName, data, responseType, onProgress, ...args } = options
     let result = {
       code: 200,
       message: 'success',
@@ -83,39 +83,33 @@ const fetchRequest = async <T = any>(
       response.headers.get('content-type')?.includes('application/octet-stream') &&
       response.body
     ) {
-      const reader = response.body.getReader()
-      // 创建一个新的Uint8Array来存储合并的数据
-      const chunks: Uint8Array[] = [] // Array to store chunks
       const totalBytes = Number(response.headers.get('Content-Length'))
-
       let receivedBytes = 0
+      const reader = response.body.getReader()
+      const chunks = []
       const flag = true
       while (flag) {
         const { done, value } = await reader.read()
         if (done) {
           break
         }
-
         receivedBytes += value.length
-
+        chunks.push(value)
         if (onProgress && totalBytes) {
-          // 计算下载进度并触发回调
           const progress = (receivedBytes / totalBytes) * 100
           onProgress(progress)
         }
-
-        chunks.push(value)
       }
+      const downloadUrl = window.URL.createObjectURL(new Blob(chunks))
+      const link = document.createElement('a')
+      link.href = downloadUrl
+      link.target = '_blank'
+      link.download = fileName ?? '未知文件'
+      link.click()
+      window.URL.revokeObjectURL(downloadUrl)
 
-      // Concatenate all chunks into a single Uint8Array
-      const mergedArray = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0))
-      let offset = 0
-      for (const chunk of chunks) {
-        mergedArray.set(chunk, offset)
-        offset += chunk.length
-      }
       result.data = {
-        uint8Array: mergedArray
+        blob: new Blob(chunks)
       } as T
       return result
     } else {

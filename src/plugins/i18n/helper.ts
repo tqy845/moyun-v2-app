@@ -11,9 +11,9 @@ export interface LanguageItem {
 
   /**
    * 语言值，用于表示语言的标识符
-   * @type {'en' | 'zhHans' | 'jp' | 'vi'}
+   * @type {'en' | 'zh' | 'jp' | 'vi'}
    */
-  value: 'en' | 'zhHans' | 'jp' | 'vi'
+  value: 'en' | 'zh' | 'jp' | 'vi'
 }
 
 /**
@@ -24,7 +24,7 @@ export const languages: Array<LanguageItem> = [
   /**
    * 简体中文语言选项
    */
-  { label: '简体中文', value: 'zhHans' },
+  { label: '简体中文', value: 'zh' },
 
   /**
    * 英语语言选项

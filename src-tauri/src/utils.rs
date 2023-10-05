@@ -75,3 +75,15 @@ pub fn download_and_merge_chunks(
 
     Ok("Download and merge completed".to_string())
 }
+
+/**
+ * 保存到本地磁盘
+ */
+#[tauri::command]
+pub fn write_u8_array_to_file(data: Vec<u8>, file_path: &str) -> Result<(), String> {
+    let mut file = File::create(file_path).map_err(|e| e.to_string())?;
+
+    file.write_all(&data).map_err(|e| e.to_string())?;
+
+    Ok(())
+}

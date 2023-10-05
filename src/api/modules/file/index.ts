@@ -31,13 +31,24 @@ export const fileChunkUpload = <T = any>(formData: FormData, flag: string) => {
 /**
  * 下载文件
  * @param {string} fileName 文件名
+ * @param {number} startByte 开始字节，从0开始
+ * @param {number} endByte 结束字节
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const fileDownloadByName = <T = any>(fileName: string, downloadProgress: Function) => {
+export const fileDownloadByName = <T = any>(
+  fileName: string,
+  startByte: number,
+  endByte: number,
+  downloadProgress: Function
+) => {
   return fetchRequest<T>({
     url: `/system/user/file/${fileName}/download`,
+    fileName,
     method: 'GET',
     responseType: 'blob',
+    headers: {
+      Range: `bytes=${startByte}-${endByte}`
+    },
     onProgress: (progress) => {
       downloadProgress(progress)
     }
@@ -62,7 +73,7 @@ export const fileDeleteByName = <T = any>(fileName: string) => {
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string> }) => {
-  return tauriRequest<T>({
+  return fetchRequest<T>({
     url: `/system/user/file/delete-multiple`,
     method: 'DELETE',
     data: params
@@ -75,7 +86,7 @@ export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string>
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fileDownloadByNameList = <T = any>(params: { fileNames: Array<string> }) => {
-  return tauriRequest<T>({
+  return fetchRequest<T>({
     url: `/system/user/file/download-multiple`,
     method: 'GET',
     data: params
