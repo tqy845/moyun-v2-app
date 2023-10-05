@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 // @ts-nocheck
 import { onMounted, ref } from 'vue'
-import { useDateFormat, useElementSize, useWindowSize } from '@vueuse/core'
+import { useDateFormat, useWindowSize } from '@vueuse/core'
 import { fileUtils } from '@/utils/functions'
 import { useFileStore } from '@/stores'
 
@@ -39,14 +39,9 @@ window.addEventListener('wheel', fileUtils.listViewMouseWheel)
 const handleClickTableRow = (item: any) => {
   fileStore.selected(item.name, props.multiple)
 }
-
-onMounted(() => {
-  console.log('触发')
-})
 </script>
 
 <template>
-  <!-- {{ fileStore.selectedList }} -->
   <v-data-table
     :loading="fileStore.loading"
     fixed-header

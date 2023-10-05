@@ -99,12 +99,14 @@ export const useFileStore = defineStore('fileStore', {
      */
     paging(item: number) {
       // console.log('分页', item)
-      if (this.view !== 'icon') return
       const appStore = useAppStore()
-      const startIndex = (item - 1) * this.iconViewPageItemNumber
-      const endIndex = startIndex + this.iconViewPageItemNumber
       const key = appStore.app.menuIndex['currentFileClassifyTab']
-      this.renderList = this.classify(key).slice(startIndex, endIndex)
+      this.renderList = this.classify(key)
+      if (this.view !== 'list') {
+        const startIndex = (item - 1) * this.iconViewPageItemNumber
+        const endIndex = startIndex + this.iconViewPageItemNumber
+        this.renderList = this.renderList.slice(startIndex, endIndex)
+      }
     },
     /**
      * 换页

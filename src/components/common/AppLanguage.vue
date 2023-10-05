@@ -19,7 +19,7 @@ const handleSwitchLanguage = (item: LanguageItem) => {
   locale.value = item.value
   cookies.set('locale', item.value)
   // 如果未登录，则不需要提示
-  if (route.path !== '/login') {
+  if (!['/login', '/signup'].includes(route.path)) {
     cs.hint.show = true
   }
 }
