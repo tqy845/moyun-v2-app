@@ -7,16 +7,12 @@
 <script lang="ts" setup>
 import { onUnmounted, onMounted, reactive, ref } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
-import { AppBottomBar, AppBaseRightClickMenu, AppIconView, AppListView } from './components'
-import { AppFileDeleteConfirm } from '@/components/common'
+import { AppIconView, AppListView } from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile } from '@/types/models'
 import { usePointer } from '@vueuse/core'
-import { LogicalPosition, WebviewWindow, LogicalSize } from '@tauri-apps/api/window'
-import { onUpdated } from 'vue'
+import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
 import { listen } from '@tauri-apps/api/event'
-import { emit } from '@tauri-apps/api/event'
-import { ACTION_TYPE } from '@/types/enums'
 
 const pointer = usePointer()
 const containerRef = ref(null)

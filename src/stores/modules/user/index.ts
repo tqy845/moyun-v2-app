@@ -7,7 +7,6 @@ import { getUserDefaultSettings, User, UserStore } from './helper'
 import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
 import { cryptUtils } from '@/utils/functions'
 import { useAppStore } from '@/stores'
-import { useRouter } from 'vue-router'
 
 export const useUserStore = defineStore('userStore', {
   state: (): UserStore => getUserDefaultSettings(),

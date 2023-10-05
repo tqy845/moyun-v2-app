@@ -47,11 +47,6 @@ const upload = async (fileList: Array<File>) => {
  */
 const download = () => {}
 
-// // 使用示例
-// const extension = 'pdf'
-// const iconType = getFileIconType(extension)
-// console.log(`The file with extension ${extension} has icon type: ${iconType}`)
-
 /**
  * 获取文件Icon
  * @param fileProperties 文件属性

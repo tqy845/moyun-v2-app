@@ -1,8 +1,9 @@
 import { useUserStore, useAppStore } from '@/stores'
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { BASE_URL, ResponseType } from './helper'
-import { invoke } from '@tauri-apps/api'
-import { BaseDirectory, writeBinaryFile } from '@tauri-apps/api/fs'
+import { useRouter } from 'vue-router'
+
+const controllerMap: { [key: string]: AbortController } = []
 
 /**
  * 发起请求
@@ -19,6 +20,12 @@ const fetchRequest = async <T = any>(
     key?: string
   } & RequestInit
 ): Promise<ResponseType<T>> => {
+  // 生成一个唯一的请求标识
+  const requestId = Math.random().toString(36).substring(7)
+  // abort信号
+  const controller = new AbortController()
+  controllerMap[requestId] = controller
+
   try {
     const appStore = useAppStore()
     const userStore = useUserStore()
@@ -30,7 +37,6 @@ const fetchRequest = async <T = any>(
       data: {} as T
     }
 
-    const controller = new AbortController()
     if (key) {
       if (!appStore.requestQueue[key] || !Array.isArray(appStore.requestQueue[key])) {
         throw new Error('request aborted')
@@ -109,7 +115,7 @@ const fetchRequest = async <T = any>(
         offset += chunk.length
       }
       result.data = {
-        chunks: mergedArray
+        uint8Array: mergedArray
       } as T
       return result
     } else {
@@ -117,6 +123,20 @@ const fetchRequest = async <T = any>(
       result = await response.json()
       // 拦截数据
       console.log('Response:', result)
+
+      // 针对401认证失败进行处理
+
+      if (result.code === 401) {
+        // const router = useRouter()
+        // userStore.logout(() => {
+        //   router.replace('/login')
+        // })
+        for (const key of Object.keys(controllerMap)) {
+          // 无权限，故取消所有网络请求
+          controllerMap[key].abort()
+        }
+      }
+
       return result
     }
   } catch (err) {
@@ -126,6 +146,9 @@ const fetchRequest = async <T = any>(
       message: 'error',
       data: {} as T
     }
+  } finally {
+    delete controllerMap[requestId]
+    // console.log('controllerMap = ', controllerMap)
   }
 }
 

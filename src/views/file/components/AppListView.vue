@@ -39,6 +39,10 @@ window.addEventListener('wheel', fileUtils.listViewMouseWheel)
 const handleClickTableRow = (item: any) => {
   fileStore.selected(item.name, props.multiple)
 }
+
+onMounted(() => {
+  console.log('触发')
+})
 </script>
 
 <template>

@@ -323,89 +323,14 @@ export class BasicFile {
     const fileStore = useFileStore()
     if (!this.isDirectory) {
       const {
-        data: { chunks }
-      } = await fileDownloadByName(this.name, (progress: number) => {
-        console.log('progress = ', progress)
-      })
-      console.log('chunks = ', chunks)
-
-      // const userStore = useUserStore()
-      // const promises = []
-      // invoke('download_and_merge_chunks', {
-      //   chunkNames: chunkNames,
-      //   fileName: this.name,
-      //   token: userStore.token
-      // }).then((response) => {
-      //   console.log('response = ', response)
-      // })
-      // for (const chunkName of chunkNames) {
-      //   const promise = invoke('download_file', {
-      //     url: `http://localhost/system/user/file/chunk/${chunkName}`,
-      //     fileName: chunkName,
-      //     token: userStore.token
-      //   })
-      //   promises.push(promise)
-      // }
-      // Promise.all(promises)
-      //   .then((response) => {
-      //     console.log('完成', response)
-      //     // this.mergedChunks(chunkNames, this.name)
-      //     invoke('merge_chunks', {
-      //       chunkPaths: chunkNames,
-      //       outputPath: `C:/Users/64466/Desktop/`
-      //     })
-      //   })
-      //   .catch((error) => {
-      //     console.error('下载失败', error)
-      //   })
-
-      // const requestId = Math.random().toString(36).substring(7) // 生成一个唯一的请求标识
-
-      // worker.postMessage({
-      //   // 文件信息
-      //   fileName: this.name,
-      //   token: userStore.token,
-      //   chunkNamesRequest: {
-      //     url: `http://localhost/system/user/file`
-      //   },
-      //   chunkNameRequest: {
-      //     url: `http://localhost/system/user/file/chunk`
-      //   }
-      // })
-
-      // let count = 1
-      // let flag = false
-      // worker.onmessage = async (e) => {
-      //   const { chunk, chunkName, chunkNames } = e.data
-      //   const path = this.name.replace('.' + this.extension, '') + '_part\\'
-      //   // console.log('chunk = ', chunk)
-      //   console.log('进度 = ', (count / chunkNames.length) * 100)
-
-      //   // 分片写入本地磁盘
-      //   if (!flag || !(await exists(path, { dir: BaseDirectory.Desktop }))) {
-      //     await createDir(path, {
-      //       dir: BaseDirectory.Desktop,
-      //       recursive: true
-      //     })
-      //     flag = true
-      //   }
-
-      //   await writeBinaryFile(path + chunkName, chunk, {
-      //     dir: BaseDirectory.Desktop
-      //   })
-
-      //   // 判断分片是否传输完毕
-      //   if (count === chunkNames.length) {
-      //     // 合并分片
-      //     console.log('开始合并')
-
-      //     worker.terminate()
-      //     this.mergedChunks(chunkNames, path)
-      //     console.log('完成')
-      //   }
-
-      //   count++
-      // }
+        data: { uint8Array }
+      } = await fileDownloadByName<{ uint8Array: Array<Uint8Array> }>(
+        this.name,
+        (progress: number) => {
+          console.log('progress = ', progress)
+        }
+      )
+      console.log('chunks = ', uint8Array)
     }
   }
 
