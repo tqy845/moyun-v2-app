@@ -10,6 +10,7 @@ import {
 } from '@tauri-apps/api/notification'
 import { defineStore } from 'pinia'
 import { AppStore, getAppDefaultSettings } from './helper'
+import { useFileStore } from '..'
 
 export const useAppStore = defineStore(`appStore`, {
   state: (): AppStore => getAppDefaultSettings(),
@@ -47,6 +48,29 @@ export const useAppStore = defineStore(`appStore`, {
       this.asideMenu.itemList.forEach((i) => {
         i.active = i.route === item.route ? true : false
       })
+    },
+    /**
+     * 全局搜索
+     */
+    globalSearch(key: string) {
+      const fileStore = useFileStore()
+      console.log('搜索', key)
+      if (key) {
+        // 记录搜索
+        if (this.searchRecord.indexOf(key) === -1) {
+          this.searchRecord.push(key)
+        }
+        // 开始查找
+        this.searchResult.length = 0
+        fileStore.filter(key).forEach((item) => {
+          this.searchResult.push({
+            title: '文件',
+            subtitle: item.name,
+            value: item,
+            to: `/personal/file`
+          })
+        })
+      }
     }
   },
   /**
@@ -56,7 +80,7 @@ export const useAppStore = defineStore(`appStore`, {
   persist: [
     {
       storage: localStorage,
-      paths: ['asideMenu', 'app']
+      paths: ['asideMenu', 'app', 'searchRecord']
     }
   ]
 })

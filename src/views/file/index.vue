@@ -87,11 +87,14 @@ onMounted(async () => {
   )
 
   if (fileStore.search) return
-  fileStore.fetch()
+  // 没有全局搜索才执行
+  if (!appStore.search) {
+    fileStore.fetch()
+  }
 })
 
 onUnmounted(async () => {
-  console.log('卸载组件')
+  // console.log('卸载组件')
   ;(await data.unlisten)()
   data.rightMenu.close()
 })

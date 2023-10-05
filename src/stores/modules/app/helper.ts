@@ -65,6 +65,19 @@ export interface AppStore {
    * @type { [key: string]: Array<AbortController>}
    */
   requestQueue: { [key: string]: Array<AbortController> }
+
+  /**
+   * 全局搜索关键字
+   */
+  search: string
+  /**
+   * 全局搜索结果
+   */
+  searchResult: Array<{ [key: string]: any }>
+  /**
+   * 全局搜索记录
+   */
+  searchRecord: Array<string>
 }
 
 /**
@@ -127,6 +140,9 @@ export const getAppDefaultSettings = (): AppStore => {
         //   route: '/login'
         // }
       ]
-    }
+    },
+    search: '',
+    searchResult: [],
+    searchRecord: []
   }
 }

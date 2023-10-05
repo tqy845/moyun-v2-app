@@ -7,6 +7,7 @@
 
 <script lang="ts" setup>
 import { useFileStore } from '@/stores'
+import { FileType } from '@/types/enums'
 import { useDebounceFn } from '@vueuse/core'
 import { reactive } from 'vue'
 
@@ -18,7 +19,7 @@ const cs = reactive({
   }
 })
 
-const handleSearchItem = useDebounceFn((name: string) => fileStore.filter(name), 300)
+const handleSearch = useDebounceFn((name: string) => fileStore.filter(name), 300)
 </script>
 
 <template>
@@ -27,11 +28,11 @@ const handleSearchItem = useDebounceFn((name: string) => fileStore.filter(name),
       clearable
       :label="$t('file.search.placeholder.text')"
       variant="outlined"
-      :items="fileStore.classify()"
+      :items="fileStore.classify(FileType.All)"
       item-title="name"
       item-value="name"
       autofocus
-      @update:modelValue="handleSearchItem"
+      @update:search="handleSearch"
       v-model="fileStore.search"
     >
       <template #prepend>

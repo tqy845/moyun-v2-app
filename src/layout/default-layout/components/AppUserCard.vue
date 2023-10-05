@@ -74,9 +74,9 @@ const toSettingPage = () => {
           <v-list-item-title> {{ $t('preferences.text') }} </v-list-item-title>
         </v-list-item>
 
-        <v-list-item>
+        <!-- <v-list-item>
           <v-switch v-model="cs.message" color="purple" label="接收消息" hide-details></v-switch>
-        </v-list-item>
+        </v-list-item> -->
       </v-list>
 
       <v-card-actions>

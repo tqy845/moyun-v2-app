@@ -83,7 +83,7 @@ const toLogin = () => {
 <template>
   <v-form class="pa-5 w-100">
     <div class="w-100 text-center text-h5 mb-10">{{ $t('register') }}</div>
-    <v-row class="form-item my-3" justify="center">
+    <!-- <v-row class="form-item my-3" justify="center">
       <c-btn
         block
         class="text-none button-item"
@@ -102,7 +102,7 @@ const toLogin = () => {
         variant="outlined"
         ><span class="font-weight-medium">{{ $t('qq.login') }}</span></c-btn
       >
-    </v-row>
+    </v-row> -->
     <v-divider class="my-6"></v-divider>
     <v-row align="center" class="my-2 flex-column" justify="center">
       <!-- 邮箱号 -->

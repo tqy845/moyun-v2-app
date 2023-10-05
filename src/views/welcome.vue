@@ -16,7 +16,7 @@ onMounted(() => {})
 <!-- src="https://c.wallhere.com/photos/13/67/abstract_fluid_liquid_illustration_graphic_design_artwork_digital_art_green-2094119.jpg!d" -->
 
 <template>
-  <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)" class="h-100">
+  <v-img gradient="to top right, rgba(19,84,122), rgba(128,208,199)" class="h-100">
     <v-row
       justify="center"
       align="center"

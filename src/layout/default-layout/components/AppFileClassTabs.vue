@@ -77,7 +77,9 @@ const handleChangeTab = (item: unknown) => {
 <template>
   <!-- 文件分类 -->
   <v-tabs
-    v-show="!fileStore.search && appStore.app.menuIndex['currentSecondMenuTab']['id']"
+    v-show="
+      !fileStore.search && !appStore.search && appStore.app.menuIndex['currentSecondMenuTab']['id']
+    "
     :model-value="appStore.app.menuIndex['currentFileClassifyTab']"
     centered
     stacked

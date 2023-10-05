@@ -102,7 +102,7 @@ const onLoginByTouchID = async () => {
 <template>
   <v-form class="pa-5 w-100">
     <div class="w-100 text-center text-h5 mb-10">{{ $t('login') }}</div>
-    <v-row class="form-item my-3" justify="center">
+    <!-- <v-row class="form-item my-3" justify="center">
       <c-btn
         block
         size="large"
@@ -124,7 +124,7 @@ const onLoginByTouchID = async () => {
         @target="onLoginByQQ"
         ><span class="font-weight-medium">{{ $t('qq.login') }}</span></c-btn
       >
-    </v-row>
+    </v-row> -->
 
     <v-row class="form-item my-3" justify="center">
       <c-btn
@@ -138,7 +138,7 @@ const onLoginByTouchID = async () => {
       >
     </v-row>
 
-    <v-row class="form-item my-3" justify="center">
+    <!-- <v-row class="form-item my-3" justify="center">
       <c-btn
         block
         size="large"
@@ -153,7 +153,7 @@ const onLoginByTouchID = async () => {
         </template>
         <span class="font-weight-medium">{{ $t('biometric.login') }}</span>
       </c-btn>
-    </v-row>
+    </v-row> -->
 
     <v-row align="center" justify="center">
       <span class="text-none text-button">{{ $t('account.null') }}</span>

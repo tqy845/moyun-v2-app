@@ -68,6 +68,7 @@ export const useFileStore = defineStore('fileStore', {
         this.paging(this.classifyTabCurrentPage[key] ?? 1)
       }
       this.loading = false
+      return this.renderList
     },
     /**
      * 文件查找

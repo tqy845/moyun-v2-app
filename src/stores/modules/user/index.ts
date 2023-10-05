@@ -6,7 +6,7 @@ import { defineStore } from 'pinia'
 import { getUserDefaultSettings, User, UserStore } from './helper'
 import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
 import { cryptUtils } from '@/utils/functions'
-import { useAppStore } from '@/stores'
+import { useAppStore, useFileStore } from '@/stores'
 
 export const useUserStore = defineStore('userStore', {
   state: (): UserStore => getUserDefaultSettings(),
@@ -49,17 +49,20 @@ export const useUserStore = defineStore('userStore', {
      * @param {User} user - 包含邮箱和密码的用户对象
      */
     async userLoginByAccount(user: User) {
-      useAppStore().$reset()
+      const appStore = useAppStore()
+      const fileStore = useFileStore()
+
+      appStore.$reset()
       // const _user = { ...user, password: encrypt(user.password) }
       const _user = user
       const { code, data } = await loginByAccount<{ token: string }>(_user)
 
       if (code === 200) {
         this.token = data['token']
+        // 加载文件列表
+        fileStore.fetch()
         return true
       }
-
-      return false
     },
 
     /**

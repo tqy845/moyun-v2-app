@@ -7,7 +7,6 @@
 
 <script lang="ts" setup>
 import { AsideMenuItem, useAppStore } from '@/stores'
-import { onClickOutside } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -18,7 +17,7 @@ const appStore = useAppStore()
  * @param item 选中的菜单项
  */
 const handleSelectItem = (item: AsideMenuItem) => {
-  console.log('选择菜单项', item)
+  // console.log('选择菜单项', item)
   appStore.updateAsideMenuItem(item)
   router.push(item.route)
 }

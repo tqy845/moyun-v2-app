@@ -6,60 +6,22 @@
 -->
 
 <script lang="ts" setup>
+import { useAppStore, useFileStore } from '@/stores'
+import { FileType } from '@/types/enums'
+import { useDebounceFn } from '@vueuse/core'
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const props = defineProps({
-  demoEvent: {
-    type: Function
+const appStore = useAppStore()
+const fileStore = useFileStore()
+
+const cs = reactive({
+  dialog: {
+    show: false
   }
 })
 
-const data = reactive({
-  items: [
-    {
-      prependIcon: 'mdi-clock-outline',
-      title: 'recipe with chicken'
-    },
-    {
-      prependIcon: 'mdi-clock-outline',
-      title: 'best hiking trails near me'
-    },
-    {
-      prependIcon: 'mdi-clock-outline',
-      title: 'how to learn a new language'
-    },
-    {
-      prependIcon: 'mdi-clock-outline',
-      title: 'DIY home organization ideas'
-    },
-    {
-      prependIcon: 'mdi-clock-outline',
-      title: 'latest fashion trends'
-    }
-  ],
-  shortcuts: [
-    {
-      icon: 'mdi-github',
-      title: 'Master ',
-      href: 'https://github.com/vuetifyjs/vuetify'
-    },
-    {
-      icon: 'mdi-github',
-      title: 'Dev',
-      href: 'https://github.com/vuetifyjs/vuetify/tree/dev'
-    },
-    {
-      icon: 'mdi-github',
-      title: 'Stable',
-      href: 'https://github.com/vuetifyjs/vuetify/tree/v2-stable'
-    },
-    {
-      icon: 'mdi-github',
-      title: 'My Pull Requests',
-      href: 'https://github.com/vuetifyjs/vuetify/pulls/johnleider'
-    }
-  ]
-})
+const handleSearch = useDebounceFn((name: string) => appStore.globalSearch(name), 300)
 </script>
 
 <template>
@@ -97,29 +59,45 @@ const data = reactive({
       </v-list>
     </template>
 
-    <template v-slot:default="{}">
+    <template v-slot:default="{ isActive }">
       <v-card :title="$t('global.search.title.text')">
         <v-card-text>
           <v-autocomplete
             autofocus
-            :items="data.items"
+            :items="appStore.searchRecord"
             auto-select-first
-            class="flex-full-width"
             density="comfortable"
             item-props
             menu-icon=""
+            item-title="name"
+            item-value="name"
             :placeholder="$t('global.search.placeholder.text')"
             prepend-inner-icon="mdi-magnify"
-            theme="light"
             variant="outlined"
+            v-model="appStore.search"
+            @update:search="handleSearch"
+            clearable
           ></v-autocomplete>
 
-          <v-row justify="center" align="center">
-            <v-icon icon="mdi-text-search-variant" size="150" color="grey-lighten-1"></v-icon>
-          </v-row>
-          <v-row justify="center" align="center">
-            <p class="text-grey-lighten-1">{{ $t('global.search.text') }}</p>
-          </v-row>
+          <div v-if="!appStore.search">
+            <v-row justify="center" align="center">
+              <v-icon icon="mdi-text-search-variant" size="150" color="grey-lighten-1"></v-icon>
+            </v-row>
+            <v-row justify="center" align="center">
+              <p class="text-grey-lighten-1">
+                {{ $t('global.search.text') }}
+              </p>
+            </v-row>
+          </div>
+          <v-list v-else lines="one">
+            <v-list-item
+              v-for="(item, index) in appStore.searchResult"
+              :key="index"
+              :title="item.title"
+              :subtitle="item.subtitle"
+              @click="() => ($router.push(item.to), (isActive.value = false))"
+            ></v-list-item>
+          </v-list>
         </v-card-text>
 
         <v-card-actions>
