@@ -80,12 +80,24 @@ const fetchRequest = async <T = any>(
       const reader = response.body.getReader()
       // 创建一个新的Uint8Array来存储合并的数据
       const chunks: Uint8Array[] = [] // Array to store chunks
+      const totalBytes = Number(response.headers.get('Content-Length'))
+
+      let receivedBytes = 0
       const flag = true
       while (flag) {
         const { done, value } = await reader.read()
         if (done) {
           break
         }
+
+        receivedBytes += value.length
+
+        if (onProgress && totalBytes) {
+          // 计算下载进度并触发回调
+          const progress = (receivedBytes / totalBytes) * 100
+          onProgress(progress)
+        }
+
         chunks.push(value)
       }
 
@@ -97,7 +109,7 @@ const fetchRequest = async <T = any>(
         offset += chunk.length
       }
       result.data = {
-        chunk: mergedArray
+        chunks: mergedArray
       } as T
       return result
     } else {

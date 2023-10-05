@@ -6,7 +6,7 @@ import { ResponseType } from '@tauri-apps/api/http'
  * 文件列表
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const fetchFileList = <T = any>() => {
+export const fileListFetch = <T = any>() => {
   return fetchRequest<T>({
     url: `/system/user/file/list`,
     method: 'GET'
@@ -19,7 +19,7 @@ export const fetchFileList = <T = any>() => {
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  * @description 暂时废弃，因为worker线程无法使用该接口，已在worker线程中单独使用fetch
  */
-export const uploadFileChunk = <T = any>(formData: FormData, flag: string) => {
+export const fileChunkUpload = <T = any>(formData: FormData, flag: string) => {
   return fetchRequest<T>({
     url: `/system/user/file/chunk`,
     method: 'PUT',
@@ -35,7 +35,7 @@ export const uploadFileChunk = <T = any>(formData: FormData, flag: string) => {
  */
 export const fileDownloadByName = <T = any>(fileName: string, downloadProgress: Function) => {
   return fetchRequest<T>({
-    url: `/system/user/file/${fileName}`,
+    url: `/system/user/file/${fileName}/download`,
     method: 'GET',
     responseType: 'blob',
     onProgress: (progress) => {
@@ -66,32 +66,6 @@ export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string>
     url: `/system/user/file/delete-multiple`,
     method: 'DELETE',
     data: params
-  })
-}
-
-/**
- * 获取下载文件分片列表<single>
- * @param {string} params 包含文件名的对象
- * @param {string} params.fileName 文件名
- * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
- */
-export const fetchFileChunkNames = <T = any>(params: { fileName: string }) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/${params.fileName}`,
-    method: 'GET'
-  })
-}
-
-/**
- * 获取下载文件分片<single>
- * @param {string} params 包含文件名的对象
- * @param {string} params.fileName 文件名
- * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
- */
-export const fetchFileChunk = <T = any>(params: { chunkName: string }) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/chunk/${params.chunkName}`,
-    method: 'GET'
   })
 }
 

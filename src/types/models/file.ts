@@ -1,4 +1,4 @@
-import { fileDownloadByName, fileDeleteByName, fetchFileChunkNames, fetchFileChunk } from '@/api'
+import { fileDownloadByName, fileDeleteByName } from '@/api'
 import { pinyin } from 'pinyin-pro'
 import { useFileStore, useUserStore } from '@/stores'
 import { calculateFileSliceSize, mergeUint8Arrays } from '@/utils/functions/file/helper'
@@ -191,7 +191,7 @@ export class UploadChunk {
           index: i,
           token: userStore.token,
           requestId,
-          url: `http://localhost/common/upload/chunk`,
+          url: `http://localhost/system/user/file/upload/chunk`,
           totalChunkCount: this.totalChunkCount
         })
 
@@ -311,26 +311,22 @@ export class BasicFile {
   async download(): Promise<void> {
     const fileStore = useFileStore()
     if (!this.isDirectory) {
-      // const worker = new Worker(
-      //   new URL('@/utils/functions/file/download-worker.ts', import.meta.url),
-      //   {
-      //     type: 'module'
-      //   }
-      // )
       const {
-        data: { chunkNames }
-      } = await fetchFileChunkNames<{ chunkNames: Array<string> }>({ fileName: this.name })
-      console.log('chunkNames = ', chunkNames)
-
-      const userStore = useUserStore()
-      const promises = []
-      invoke('download_and_merge_chunks', {
-        chunkNames: chunkNames,
-        fileName: this.name,
-        token: userStore.token
-      }).then((response) => {
-        console.log('response = ', response)
+        data: { chunks }
+      } = await fileDownloadByName(this.name, (progress: number) => {
+        console.log('progress = ', progress)
       })
+      console.log('chunks = ', chunks)
+
+      // const userStore = useUserStore()
+      // const promises = []
+      // invoke('download_and_merge_chunks', {
+      //   chunkNames: chunkNames,
+      //   fileName: this.name,
+      //   token: userStore.token
+      // }).then((response) => {
+      //   console.log('response = ', response)
+      // })
       // for (const chunkName of chunkNames) {
       //   const promise = invoke('download_file', {
       //     url: `http://localhost/system/user/file/chunk/${chunkName}`,

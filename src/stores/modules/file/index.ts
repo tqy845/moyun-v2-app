@@ -4,7 +4,7 @@
 
 import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
-import { fetchFileList, fileDeleteByNameList, uploadFileChunk, fileDownloadByNameList } from '@/api'
+import { fileListFetch, fileDeleteByNameList, fileChunkUpload, fileDownloadByNameList } from '@/api'
 import { BasicFile, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore } from '..'
@@ -20,7 +20,7 @@ export const useFileStore = defineStore('fileStore', {
     async fetch() {
       this.loading = true
       const appStore = useAppStore()
-      const { data } = await fetchFileList<{
+      const { data } = await fileListFetch<{
         fileList: Array<FileProperties>
       }>()
       const { fileList } = data
@@ -91,7 +91,7 @@ export const useFileStore = defineStore('fileStore', {
      * @param 网络请求标记
      */
     async uploadChunk<T>(formData: FormData, flag: string) {
-      return await uploadFileChunk<T>(formData, flag)
+      return await fileChunkUpload<T>(formData, flag)
     },
     /**
      * 分页
