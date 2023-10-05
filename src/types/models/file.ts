@@ -86,17 +86,28 @@ export class UploadChunk {
    */
   top(): void {
     const fileStore = useFileStore()
-    fileStore.uploadTop(this.file.name)
+    fileStore.top(this.file.name)
+  }
+
+  /**
+   * 置底
+   */
+  bottom(): void {
+    const fileStore = useFileStore()
+    fileStore.bottom(this.file.name)
   }
 
   /**
    * 上传
    */
   async upload(): Promise<boolean> {
-    // 置顶
+    // 开始上传，置顶
     this.top()
     // 分片上传
-    return await this.partUpload()
+    const result = await this.partUpload()
+    // 上传完毕，置底
+    // this.bottom()
+    return result
   }
 
   /**

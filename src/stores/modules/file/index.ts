@@ -145,10 +145,10 @@ export const useFileStore = defineStore('fileStore', {
       }
     },
     /**
-     * 上传置顶
+     * 置顶
      * @param name 文件名
      */
-    uploadTop(name: string) {
+    top(name: string) {
       const index: number = this.uploadQueue.all.findIndex((file) => file.file.name === name)
       if (index !== -1) {
         // 如果找到匹配的文件对象
@@ -156,6 +156,20 @@ export const useFileStore = defineStore('fileStore', {
         const fileToMove = this.uploadQueue.all.splice(index, 1)[0]
         // 然后将它插入到数组的首位
         this.uploadQueue.all.unshift(fileToMove)
+      }
+    },
+    /**
+     * 置底
+     * @param name 文件名
+     */
+    bottom(name: string) {
+      const index: number = this.uploadQueue.all.findIndex((file) => file.file.name === name)
+      if (index !== -1) {
+        // 如果找到匹配的文件对象
+        // 先将该文件对象从数组中删除
+        const fileToMove = this.uploadQueue.all.splice(index, 1)[0]
+        // 然后将它插入到数组的末尾
+        this.uploadQueue.all.push(fileToMove)
       }
     },
     /**
