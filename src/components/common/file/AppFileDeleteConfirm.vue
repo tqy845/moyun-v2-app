@@ -45,7 +45,8 @@ const handleSelect = (item: number | string) => {
         class="mr-1"
         :loading="item.deleting"
         :disabled="
-        item.status === 'uploading' && item.power! >= 0 && item.power! < 100"
+        (item.status === 'uploading' || item.status === 'await' || item.status === 'init'  ) &&
+        item.power! >= 0 && item.power! < 100"
       ></v-btn>
     </template>
     <v-card>

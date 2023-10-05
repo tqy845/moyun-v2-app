@@ -341,7 +341,11 @@ const handleClickArea = () => {
                     color="warning"
                     icon="mdi-upload-off"
                     class="mr-1"
-                    :disabled="item.status !== 'uploading'"
+                    :disabled="
+                      item.status !== 'uploading' &&
+                      item.status !== 'await' &&
+                      item.status !== 'init'
+                    "
                     @click="() => item.cancelUpload()"
                   ></v-btn>
                 </template>

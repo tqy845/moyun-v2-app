@@ -26,7 +26,8 @@ self.onmessage = async (event) => {
   /**
    * 发起网络请求
    */
-  const { startIndex, endIndex, chunkSize, index, requestId, url, token, file } = event.data
+  const { startIndex, endIndex, chunkSize, index, requestId, url, token, file, totalChunkCount } =
+    event.data
 
   for (let i = startIndex; i < endIndex; i++) {
     // 切片
@@ -40,6 +41,7 @@ self.onmessage = async (event) => {
     const form = new FormData()
     form.append('file', chunk, `chunk_${index}`)
     form.append('chunkSize', String(chunkSize))
+    form.append('totalChunkCount', String(totalChunkCount))
     for (const key in args) {
       if (Object.hasOwn(args, key)) {
         const element = args[key]
@@ -58,10 +60,9 @@ self.onmessage = async (event) => {
       })
 
       // 响应结果
-      const { code, data } = await response.json()
+      const { code, data, message } = await response.json()
       self.postMessage({
-        type: code === 200 ? ACTION_TYPE.UPLOAD : ACTION_TYPE.ERROR,
-        fileName: data.fileName
+        type: code === 200 ? ACTION_TYPE.UPLOAD : ACTION_TYPE.ERROR
       })
     } catch (e) {
       self.postMessage({ type: ACTION_TYPE.ERROR })
