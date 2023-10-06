@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "摸云 Safe and sound - Mo yun",
-    "version": "0.0.0"
+    "version": "2.0.3"
   },
   "tauri": {
     "allowlist": {
@@ -56,12 +56,12 @@
       },
       "active": true,
       "targets": "all",
-      "identifier": "com.example.moyun",
+      "identifier": "moyun.aigs.ltd",
       "icon": [
         "../public/img/icons/192x192.png",
         "../public/img/icons/192x192.png",
         "../public/img/icons/512x512.png",
-        "icons/icon.icns",
+        "../public/img/icons/icon.icns",
         "../public/favicon.ico"
       ]
     },
