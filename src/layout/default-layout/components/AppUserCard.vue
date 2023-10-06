@@ -19,12 +19,12 @@ const cs = reactive({
   hints: true
 })
 
-const user = reactive({
-  initials: '谭',
-  fullName: '谭期元',
-  username: '卡的淋漓尽致',
-  email: 'tqy845@outlook.com'
-})
+// const user = reactive({
+//   initials: '谭',
+//   fullName: '谭期元',
+//   username: '卡的淋漓尽致',
+//   email: 'tqy845@outlook.com'
+// })
 
 /**
  * 前往设置页面
@@ -39,9 +39,11 @@ const toSettingPage = () => {
   <v-menu v-model="cs.menu" :close-on-content-click="false" location="end">
     <template v-slot:activator="{ props }">
       <v-list v-bind="props">
-        <v-list-item :subtitle="user?.email" :title="user?.username">
+        <v-list-item :subtitle="userStore.user.email" :title="userStore.user.email[0]">
           <template #prepend>
-            <v-avatar size="x-small" color="surface-variant">{{ user.initials }}</v-avatar>
+            <v-avatar size="x-small" color="surface-variant">{{
+              userStore.user.email[0]
+            }}</v-avatar>
           </template>
         </v-list-item>
       </v-list>
@@ -49,9 +51,9 @@ const toSettingPage = () => {
 
     <v-card min-width="300">
       <v-list>
-        <v-list-item :subtitle="user?.email" :title="user?.username">
+        <v-list-item :subtitle="userStore.user.email" :title="userStore.user.email[0]">
           <template #prepend>
-            <v-avatar color="surface-variant">{{ user.initials }}</v-avatar>
+            <v-avatar color="surface-variant">{{ userStore.user.email[0] }}</v-avatar>
           </template>
           <template v-slot:append>
             <v-btn

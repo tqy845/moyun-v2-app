@@ -20,13 +20,6 @@ const cs = reactive({
   }
 })
 
-const user = reactive({
-  initials: '谭',
-  fullName: '谭期元',
-  username: '卡的淋漓尽致',
-  email: 'tqy845@outlook.com'
-})
-
 /**
  * 点击外部缩放侧边栏
  */

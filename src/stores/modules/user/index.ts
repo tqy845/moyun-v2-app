@@ -58,6 +58,8 @@ export const useUserStore = defineStore('userStore', {
       const { code, data } = await loginByAccount<{ token: string }>(_user)
 
       if (code === 200) {
+        this.user.email = _user.username!
+        this.user.username = _user.username
         this.token = data['token']
         // 加载文件列表
         fileStore.fetch()
