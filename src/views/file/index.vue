@@ -53,6 +53,7 @@ onMounted(async () => {
     url: '/right-menu',
     width: 256,
     height: 219,
+
     resizable: false,
     decorations: false,
     contentProtected: false,
@@ -62,6 +63,14 @@ onMounted(async () => {
     visible: false
   })
 
+  data.rightMenu.once('tauri://created', function () {
+    // webview window successfully created
+    console.log('rightMenu created')
+  })
+  data.rightMenu.once('tauri://error', function (e:Event) {
+    // an error happened creating the webview window
+    console.error(e)
+  })
   // 监听右键菜单聚焦
   // @ts-ignore
   data.unlisten = data.rightMenu.onFocusChanged(async ({ payload: focused }) => {
@@ -136,19 +145,21 @@ const handleContextMenu = (event: MouseEvent) => {
 }
 
 const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
-  // console.log('右键文件菜单', event, file)
-  event.preventDefault()
-  // 没有批量选中，就选当前这条
+  event.preventDefault();
+
   if (fileStore.selectedList.length <= 1) {
-    fileStore.selected(file.name)
+    fileStore.selected(file.name);
   }
-  const { x, y } = pointer
+
+
+  // 获取相对于浏览器窗口的鼠标坐标
+  const clientX = event.clientX;
+  const clientY = event.clientY;
+
   // 重设位置
-  data.rightMenu.setPosition(
-    new LogicalPosition(x.value + window.screenX, y.value + window.screenY)
-  )
-  data.rightMenu.show() // 显示
-  data.rightMenu.setFocus() // 置顶
+  data.rightMenu.setPosition(new LogicalPosition(clientX, clientY));
+  data.rightMenu.show(); // 显示
+  data.rightMenu.setFocus(); // 置顶
 }
 </script>
 

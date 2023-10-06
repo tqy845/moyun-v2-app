@@ -6,7 +6,7 @@ import { tauriRequest, fetchRequest } from '@/utils/request'
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fetchCodeImage = <T = any>() => {
-  return tauriRequest<T>({
+  return fetchRequest<T>({
     url: `/captchaImage`,
     method: 'GET'
   })
