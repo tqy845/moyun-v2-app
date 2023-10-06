@@ -19,13 +19,6 @@ const cs = reactive({
   hints: true
 })
 
-// const user = reactive({
-//   initials: '谭',
-//   fullName: '谭期元',
-//   username: '卡的淋漓尽致',
-//   email: 'tqy845@outlook.com'
-// })
-
 /**
  * 前往设置页面
  */
@@ -54,14 +47,6 @@ const toSettingPage = () => {
         <v-list-item :subtitle="userStore.user.email" :title="userStore.user.email[0]">
           <template #prepend>
             <v-avatar color="surface-variant">{{ userStore.user.email[0] }}</v-avatar>
-          </template>
-          <template v-slot:append>
-            <v-btn
-              variant="text"
-              :class="cs.fav ? 'text-red' : ''"
-              icon="mdi-heart"
-              @click="cs.fav = !cs.fav"
-            ></v-btn>
           </template>
         </v-list-item>
       </v-list>
