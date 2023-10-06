@@ -67,7 +67,7 @@ onMounted(async () => {
     // webview window successfully created
     console.log('rightMenu created')
   })
-  data.rightMenu.once('tauri://error', function (e:Event) {
+  data.rightMenu.once('tauri://error', function (e: Event) {
     // an error happened creating the webview window
     console.error(e)
   })
@@ -136,7 +136,7 @@ const handleDoubleClick = (item: BasicFile) => {
 }
 
 const handleContextMenu = (event: MouseEvent) => {
-  console.log('右键菜单')
+  console.log('内容区右键菜单')
   event.preventDefault()
   const { clientX, clientY } = event
   console.log(clientX, clientY)
@@ -144,22 +144,26 @@ const handleContextMenu = (event: MouseEvent) => {
   cs.rightClickMenu.y = clientY
 }
 
+/**
+ * 文件右键菜单
+ * @param event 菜单原生事件
+ * @param file 文件
+ */
 const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
-  event.preventDefault();
+  event.preventDefault()
 
   if (fileStore.selectedList.length <= 1) {
-    fileStore.selected(file.name);
+    fileStore.selected(file.name)
   }
 
-
-  // 获取相对于浏览器窗口的鼠标坐标
-  const clientX = event.clientX;
-  const clientY = event.clientY;
+  // 获取屏幕绝对的鼠标坐标
+  const screenX = event.screenX
+  const screenY = event.screenY
 
   // 重设位置
-  data.rightMenu.setPosition(new LogicalPosition(clientX, clientY));
-  data.rightMenu.show(); // 显示
-  data.rightMenu.setFocus(); // 置顶
+  data.rightMenu.setPosition(new LogicalPosition(screenX, screenY))
+  data.rightMenu.show() // 显示
+  data.rightMenu.setFocus() // 置顶
 }
 </script>
 
@@ -185,23 +189,6 @@ const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
       @doubleClick="handleDoubleClick"
       @rightClick="handleRightClick"
     />
-
-    <!--文件底部操作菜单-->
-    <!-- <AppBottomBar /> -->
-
-    <!-- 右键菜单 -->
-    <!-- {{ cs.rightClickMenu }}
-    <AppBaseRightClickMenu
-      :style="{ top: cs.rightClickMenu.y + 'px', left: cs.rightClickMenu.x + 'px' }"
-    /> -->
-
-    <!-- <AppFileRightClickMenu
-      :file="cs.rightClickMenu.file"
-      v-show="cs.rightClickMenu.show"
-      :style="{ top: cs.rightClickMenu.y + 'px', left: cs.rightClickMenu.x + 'px' }"
-      @close="cs.rightClickMenu.show = false"
-    /> -->
-    <!-- <AppDownWindow /> -->
   </v-container>
 </template>
 

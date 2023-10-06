@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "摸云 Safe and sound - Mo yun",
-    "version": "2.0.3 Aipha"
+    "version": "2.0.3"
   },
   "tauri": {
     "allowlist": {
