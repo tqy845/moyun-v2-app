@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue'
 import { useAppStore } from '@/stores'
-
+import tauriConfig from '../../src-tauri/tauri.conf.json'
 const appStore = useAppStore()
 
 onMounted(() => {})
@@ -23,14 +23,15 @@ onMounted(() => {})
       class="flex-column h-100 text-grey-lighten-4 text-center"
     >
       <div class="text-h4 font-weight-bold mb-4 font-italic" style="text-shadow: 1px 1px 1px black">
-        摸云 Safe and sound - Mo yun
+        {{ tauriConfig['package']['productName'] }}
       </div>
       <v-btn
         variant="text"
+        size="large"
         class="text-none align-center d-flex"
         style="text-shadow: 1px 1px 1px black"
       >
-        欢迎您的使用，当前版本： v2.x Aipha
+        欢迎使用： {{ tauriConfig['package']['version'] }} 版本
       </v-btn>
       <v-list
         lines="two"
