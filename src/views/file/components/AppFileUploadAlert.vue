@@ -34,7 +34,7 @@ const cs = reactive({
     border="top"
     :title="title ?? $t('file.view.null.text')"
     class="ma-5"
-    v-if="fileStore.show"
+    v-show="fileStore.show"
   >
     <template #text>
       <p class="pa-1">

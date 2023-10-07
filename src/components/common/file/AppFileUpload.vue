@@ -135,7 +135,7 @@ const handleClickArea = () => {
     :fullscreen="appStore.app.settings['uploadDialogFullscreen']"
     :scrim="false"
     persistent
-    transition="dialog-bottom-transition"
+    :transition="fileStore.show ? 'dialog-bottom-transition' : 'dialog-top-transition'"
   >
     <v-card>
       <v-toolbar dark color="primary">
