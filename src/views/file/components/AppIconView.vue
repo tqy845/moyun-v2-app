@@ -74,6 +74,7 @@ const handleSelectItem = (index: any) => {
 <template>
   <!-- 文件图标列表 -->
   <v-card class="w-100" :height="windowSize.height.value - 130">
+    <!-- <v-toolbar border density="compact" title="文件"></v-toolbar> -->
     <div :style="{ height: `${windowSize.height.value - 190}px` }" style="overflow: auto">
       <!-- 读取中 -->
       <!-- {{ fileStore.selectedList }} -->

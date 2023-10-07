@@ -20,19 +20,11 @@ onMounted(() => {})
     <v-row
       justify="center"
       align="center"
-      class="flex-column h-100 text-grey-lighten-4 text-center"
+      class="flex-column h-100 text-grey-lighten-4 text-center px-16"
     >
       <div class="text-h4 font-weight-bold mb-4 font-italic" style="text-shadow: 1px 1px 1px black">
-        {{ tauriConfig['package']['productName'] }}
+        {{ tauriConfig['package']['productName'] }} - v.{{ tauriConfig['package']['version'] }}
       </div>
-      <v-btn
-        variant="text"
-        size="large"
-        class="text-none align-center d-flex"
-        style="text-shadow: 1px 1px 1px black"
-      >
-        欢迎使用： {{ tauriConfig['package']['version'] }} 版本
-      </v-btn>
       <v-list
         lines="two"
         bg-color="transparent"
@@ -55,23 +47,15 @@ onMounted(() => {})
           title="SpringBoot + Redis + Mysql"
           subtitle="结合Spring Boot、Redis和MySQL构建高性能、可扩展的后端应用，实现数据持久化和缓存支持。"
         ></v-list-item>
+        <v-list-item
+          title="HTTP2"
+          subtitle="此外，我们选择了使用HTTP2协议，它是一种二进制协议，旨在为HTTP提供低延迟和高吞吐量。HTTP2协议的性能比HTTP1.1协议快quite a bit，并且它还支持多路复用、服务器推送、请求优先级、压缩和加密。"
+        ></v-list-item>
+        <v-list-item
+          title="Minio"
+          subtitle="最终用于存储大量数据、文件和媒体使用的是Minio，Minio作为一种对象存储解决方案，是一个开源的对象存储服务器，Minio的优势包括开源、S3兼容、高性能、可扩展、数据安全、纠删编码、高可用性、易用性、积极社区支持、数据生命周期管理以及经济实惠。"
+        ></v-list-item>
       </v-list>
-      <!-- <v-col cols="12" class="px-3">
-        <v-list lines="two" bg-color="transparent">
-          <v-list-item
-            title="Rust + Tauri"
-            subtitle="使用Rust和Tauri构建快速、安全、可跨平台的桌面应用程序，实现前端与后端分离。"
-          ></v-list-item>
-          <v-list-item
-            title="Vue3 + TypeScript + Sass"
-            subtitle="利用Vue 3、TypeScript和Sass创建现代、类型安全、样式可维护的前端Web应用。"
-          ></v-list-item>
-          <v-list-item
-            title="SpringBoot + Redis + Mysql"
-            subtitle="结合Spring Boot、Redis和MySQL构建高性能、可扩展的后端应用，实现数据持久化和缓存支持。"
-          ></v-list-item>
-        </v-list>
-      </v-col> -->
     </v-row>
   </v-img>
 </template>
