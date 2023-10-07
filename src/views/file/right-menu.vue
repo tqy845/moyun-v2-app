@@ -36,7 +36,6 @@ onMounted(async () => {
       // console.log(width.value, height.value)
       cs.menuItems = actionData as Array<RightMenuItem>
       const { width, height } = cardSize
-
       appWindow.show() // 显示
       appWindow.setFocus() // 置顶
     }

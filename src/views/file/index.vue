@@ -114,9 +114,7 @@ const handleContextRightMenu = (event: MouseEvent) => {
   // 获取屏幕绝对的鼠标坐标
   const { screenX, screenY } = event
   // 重设位置
-  setTimeout(() => {
-    data.rightMenuInstance!.setPosition(new LogicalPosition(screenX, screenY))
-  }, 30)
+  data.rightMenuInstance!.setPosition(new LogicalPosition(screenX, screenY))
 }
 
 /**
@@ -136,11 +134,7 @@ const handleFileRightClick = async (event: MouseEvent, file: BasicFile) => {
   // 获取屏幕绝对的鼠标坐标
   const { screenX, screenY } = event
   // 重设位置
-  setTimeout(() => {
-    data.rightMenuInstance!.setPosition(new LogicalPosition(screenX, screenY))
-    // data.rightMenuInstance!.show() // 显示
-    // data.rightMenuInstance!.setFocus() // 置顶
-  }, 30)
+  data.rightMenuInstance!.setPosition(new LogicalPosition(screenX, screenY))
 }
 </script>
 
