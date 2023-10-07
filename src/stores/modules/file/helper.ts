@@ -1,6 +1,7 @@
 import { BasicFile } from '@/types/models'
 import { useAppStore } from '..'
 import { Concurrent } from '@/utils/functions/queue'
+import { ACTION_TYPE } from '@/types/enums'
 
 /**
  * 文件存储对象接口
@@ -78,6 +79,15 @@ export interface FileStore {
    * 当前选中的文件
    */
   selectedList: Array<string>
+
+  /**
+   * 文件右键菜单项
+   */
+  fileRightMenuItems: Array<{}>
+  /**
+   * 上下文右键菜单项
+   */
+  contextRightMenuItems: Array<{}>
 }
 
 /**
@@ -102,6 +112,67 @@ export const getFileDefaultSettings = (): FileStore => {
     uploadChunkQueue: [],
     search: '',
     selectedList: [],
+    fileRightMenuItems: [
+      {
+        text: 'right.menu.open.text',
+        icon: 'mdi-open-in-app',
+        actionType: ACTION_TYPE.OPEN,
+        shortcutKey: 'Enter'
+      },
+      {
+        text: 'right.menu.download.text',
+        icon: 'mdi-cloud-download',
+        actionType: ACTION_TYPE.DOWNLOAD
+      },
+      {
+        text: 'right.menu.shared.text',
+        icon: 'mdi-account-multiple',
+        actionType: ACTION_TYPE.SHARE
+      },
+      {
+        text: 'right.menu.property.text',
+        icon: 'mdi-wrench',
+        actionType: ACTION_TYPE.PROPERTY,
+        shortcutKey: 'Alt+Enter'
+      },
+      {
+        text: 'right.menu.delete.text',
+        icon: 'mdi-delete',
+        actionType: ACTION_TYPE.DELETE,
+        color: 'red',
+        shortcutKey: 'Ctrl+D'
+      }
+    ],
+    contextRightMenuItems: [
+      {
+        text: 'right.menu.refresh.text',
+        icon: 'mdi-refresh',
+        actionType: ACTION_TYPE.REFRESH
+      },
+      {
+        text: 'right.menu.upload.text',
+        icon: 'mdi-cloud-upload',
+        actionType: ACTION_TYPE.UPLOAD,
+        shortcutKey: ''
+      },
+      {
+        text: 'right.menu.newFolder.text',
+        icon: 'mdi-folder-plus-outline',
+        actionType: ACTION_TYPE.NEW_FOLDER
+      },
+      {
+        text: 'right.menu.viewMode.text',
+        icon: 'mdi-view-comfy',
+        actionType: ACTION_TYPE.VIEW_MODE,
+        shortcutKey: ''
+      },
+      {
+        text: 'right.menu.sortMode.text',
+        icon: 'mdi-sort',
+        actionType: ACTION_TYPE.SORT_MODE,
+        shortcutKey: ''
+      }
+    ],
     uploadQueue: new Concurrent(maxUploadCount),
     downloadQueue: new Concurrent(maxDownLoadCount)
   }

@@ -224,10 +224,32 @@ export const useFileStore = defineStore('fileStore', {
       return await fileDownloadByNameList({ fileNames: names })
     },
     /**
-     * 右键菜单
-     * @param event 事件
+     * 文件右键菜单回调事件
+     * @param actionType 事件类型
+     * @param actionData 传递数据
      */
-    async rightMenu(actionType: number | string, actionData: any) {
+    async fileRightMenuCallBack(actionType: number | string, actionData: any) {
+      const isBatch: boolean = this.selectedList.length > 1
+      switch (actionType) {
+        case ACTION_TYPE.DELETE:
+          isBatch
+            ? this.deleteByNameList(this.selectedList)
+            : this.renderList.find((item) => item.name === this.selectedList[0])?.delete()
+          break
+        case ACTION_TYPE.DOWNLOAD:
+          // console.log('下载', this.selectedList)
+          isBatch
+            ? this.downloadByNameList(this.selectedList)
+            : this.renderList.find((item) => item.name === this.selectedList[0])?.download()
+          break
+      }
+    },
+    /**
+     * 上下文右键菜单回调事件
+     * @param actionType 事件类型
+     * @param actionData 传递数据
+     */
+    async contextRightMenuCallBack(actionType: number | string, actionData: any) {
       const isBatch: boolean = this.selectedList.length > 1
       switch (actionType) {
         case ACTION_TYPE.DELETE:

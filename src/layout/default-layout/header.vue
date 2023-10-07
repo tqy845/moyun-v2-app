@@ -31,7 +31,7 @@ import { AppFileClassTabs, AppFileMiniUploadProgress } from './components'
     <AppFileView />
 
     <!-- I18n 语言切换 -->
-    <AppLanguage />
+    <!-- <AppLanguage /> -->
   </v-app-bar>
 </template>
 

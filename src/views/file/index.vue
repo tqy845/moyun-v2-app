@@ -91,7 +91,7 @@ onMounted(async () => {
       } = event
       // 右键菜单
       if (windowLabel === 'right-menu') {
-        fileStore.rightMenu(actionType, actionData)
+        fileStore.fileRightMenuCallBack(actionType, actionData)
       }
       data.rightMenu.hide()
     }
@@ -155,6 +155,7 @@ const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
   if (fileStore.selectedList.length <= 1) {
     fileStore.selected(file.name)
   }
+  console.log('右键文件菜单')
 
   // 获取屏幕绝对的鼠标坐标
   const screenX = event.screenX

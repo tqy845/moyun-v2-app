@@ -102,7 +102,17 @@ export const getAppDefaultSettings = (): AppStore => {
         maxDownLoadCount: 3, // 最大下载并发
         uploadDialogFullscreen: false, // 上传弹窗全屏
         uploadAutoHideUploadArea: true, // 上传时自动隐藏上传区域
-        uploadDialogAutoClose: false // 上传完毕后自动关闭对话框
+        uploadDialogAutoClose: false, // 上传完毕后自动关闭对话框
+        // 右键菜单基本配置
+        basicRightMenu: {
+          resizable: false, // 可拉伸大小
+          decorations: false, // 边框
+          contentProtected: false, // 内容隐私不可见（截图的时候不可见）
+          skipTaskbar: true, // 任务栏显示该子窗体
+          fileDropEnabled: false, // 启用文件拖拽监听
+          transparent: true, // 背景透明
+          visible: false // 立即可见
+        }
       }
     },
     messageQueue: [],
