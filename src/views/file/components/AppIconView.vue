@@ -73,7 +73,21 @@ const handleSelectItem = (index: any) => {
 <template>
   <!-- 文件图标列表 -->
   <v-card class="w-100" :height="windowSize.height.value - 130">
-    <!-- <v-toolbar border density="compact" title="文件"></v-toolbar> -->
+    <v-toolbar border density="compact">
+      <template #title>
+        <v-row align="center">
+          <v-col cols="auto" class="">
+            <v-icon :icon="'mdi-' + 'folder-open'"></v-icon>
+          </v-col>
+          <v-col class=""> / </v-col>
+          <v-col cols="auto" class="">
+            <v-btn icon="mdi-folder-plus-outline"></v-btn>
+            <v-btn icon="mdi-refresh"></v-btn>
+          </v-col>
+        </v-row>
+      </template>
+      <template> 123123 </template>
+    </v-toolbar>
     <div :style="{ height: `${windowSize.height.value - 240}px` }" style="overflow: auto">
       <!-- 读取中 -->
       <!-- {{ fileStore.selectedList }} -->
