@@ -116,31 +116,31 @@ export const getFileDefaultSettings = (): FileStore => {
     fileRightMenuItems: [
       {
         text: 'right.menu.open.text',
-        icon: 'mdi-open-in-app',
+        icon: 'open-in-app',
         type: ACTION_TYPE.OPEN,
         shortcutKey: 'Enter',
         color: 'primary'
       },
       {
         text: 'right.menu.download.text',
-        icon: 'mdi-cloud-download',
+        icon: 'cloud-download',
         type: ACTION_TYPE.DOWNLOAD,
         color: 'info'
       },
       {
         text: 'right.menu.shared.text',
-        icon: 'mdi-account-multiple',
+        icon: 'account-multiple',
         type: ACTION_TYPE.SHARE
       },
       {
         text: 'right.menu.property.text',
-        icon: 'mdi-wrench',
+        icon: 'wrench',
         type: ACTION_TYPE.PROPERTY,
         shortcutKey: 'Alt+Enter'
       },
       {
         text: 'right.menu.delete.text',
-        icon: 'mdi-delete',
+        icon: 'delete',
         type: ACTION_TYPE.DELETE,
         color: 'red',
         shortcutKey: 'Ctrl+D'
@@ -149,34 +149,36 @@ export const getFileDefaultSettings = (): FileStore => {
     contextRightMenuItems: [
       {
         text: 'right.menu.refresh.text',
-        icon: 'mdi-refresh',
+        icon: 'refresh',
         type: ACTION_TYPE.REFRESH,
         color: ''
       },
       { type: 'divider' },
       {
         text: 'right.menu.upload.text',
-        icon: 'mdi-cloud-upload',
+        icon: 'cloud-upload',
         type: ACTION_TYPE.UPLOAD,
         shortcutKey: ''
       },
       {
         text: 'right.menu.newFolder.text',
-        icon: 'mdi-folder-plus-outline',
+        icon: 'folder-plus-outline',
         type: ACTION_TYPE.NEW_FOLDER
       },
       { type: 'divider' },
       {
         text: 'right.menu.viewMode.text',
-        icon: 'mdi-view-comfy',
+        icon: 'view-comfy',
         type: ACTION_TYPE.VIEW_MODE,
-        shortcutKey: ''
+        shortcutKey: '',
+        rightIcon: 'chevron-right'
       },
       {
         text: 'right.menu.sortMode.text',
-        icon: 'mdi-sort',
+        icon: 'sort',
         type: ACTION_TYPE.SORT_MODE,
-        shortcutKey: ''
+        shortcutKey: '',
+        rightIcon: 'chevron-right'
       }
     ],
     uploadQueue: new Concurrent(maxUploadCount),

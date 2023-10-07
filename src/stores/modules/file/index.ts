@@ -252,17 +252,14 @@ export const useFileStore = defineStore('fileStore', {
     async contextRightMenuCallBack(actionType: number | string, actionData: any) {
       const isBatch: boolean = this.selectedList.length > 1
       switch (actionType) {
-        case ACTION_TYPE.DELETE:
-          isBatch
-            ? this.deleteByNameList(this.selectedList)
-            : this.renderList.find((item) => item.name === this.selectedList[0])?.delete()
+        case ACTION_TYPE.REFRESH:
+          this.fetch()
           break
-        case ACTION_TYPE.DOWNLOAD:
-          // console.log('下载', this.selectedList)
-          isBatch
-            ? this.downloadByNameList(this.selectedList)
-            : this.renderList.find((item) => item.name === this.selectedList[0])?.download()
+        case ACTION_TYPE.UPLOAD:
           break
+        case ACTION_TYPE.NEW_FOLDER:
+          break
+        
       }
     }
   },

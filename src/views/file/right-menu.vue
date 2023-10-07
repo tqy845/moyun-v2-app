@@ -52,8 +52,8 @@ onMounted(async () => {
   >
     <v-list class="px-2" lines="one" density="compact">
       <div v-for="(item, i) in cs.menuItems" :key="i">
-        <v-divider v-if="item.type === 'divider'"></v-divider>
-        <v-list-item v-else rounded="xl" @click="emit('click', { actionType: item.type })">
+        <v-divider v-if="item.type === 'divider'" class="my-2"></v-divider>
+        <v-list-item v-else rounded="xl" @click="emit('click', { actionType: item.type })" >
           <v-list-item-title>
             <v-row align="center">
               <v-col
@@ -61,14 +61,16 @@ onMounted(async () => {
                 class="text-caption font-weight-bold"
                 :class="[`text-${item.color ?? 'grey-darken-2'}`]"
               >
-                <v-icon :icon="item.icon" :color="item?.color" class="mr-2"></v-icon>
+                <v-icon :icon="'mdi-' + item.icon" :color="item?.color" class="mr-2"></v-icon>
                 {{ $t(item.text ?? '') }}</v-col
               >
               <v-col
                 cols="6"
                 class="text-end font-weight-regular font-italic text-caption pr-4"
                 style="font-size: 12px"
-                >{{ item.shortcutKey }}
+              >
+                <span v-if="!item.rightIcon">{{ item.shortcutKey }}</span>
+                <v-icon v-else :icon="'mdi-' + item.rightIcon"></v-icon>
               </v-col>
             </v-row>
           </v-list-item-title>
