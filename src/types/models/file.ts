@@ -167,6 +167,7 @@ export class UploadChunk {
       this.workerChunkCount = Math.ceil(this.totalChunkCount / THREAD_COUNT)
 
       const userStore = useUserStore()
+      const fileStore = useFileStore()
       const requestId = Math.random().toString(36).substring(7) // 生成一个唯一的请求标识
 
       // 开启多线程
@@ -202,7 +203,7 @@ export class UploadChunk {
           index: i,
           token: userStore.token,
           requestId,
-          url: `https://www.aigs.ltd:443/system/user/file/upload/chunk`,
+          url: fileStore.uploadAddress,
           totalChunkCount: this.totalChunkCount
         })
 

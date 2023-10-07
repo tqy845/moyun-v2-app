@@ -12,7 +12,13 @@ import { ACTION_TYPE, FileType } from '@/types/enums'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
-  getters: {},
+  getters: {
+    /**
+     * 上传地址
+     */
+    uploadAddress: (): string =>
+      `${import.meta.env.VITE_APP_API_ENDPOINT}/system/user/file/upload/chunk`
+  },
   actions: {
     /**
      * 获取文件列表
