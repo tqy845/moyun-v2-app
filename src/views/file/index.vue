@@ -48,15 +48,25 @@ onMounted(async () => {
     'click',
     async (event: {
       windowLabel: string
-      payload: { actionType: number | string; actionData: { [key: string]: any } }
+      payload: {
+        labelType: string
+        actionType: number | string
+        actionData: { [key: string]: any }
+      }
     }) => {
       const {
-        windowLabel,
-        payload: { actionType, actionData }
+        payload: { actionType, labelType, actionData }
       } = event
       // 右键菜单
-      if (windowLabel === 'right-menu') {
-        fileStore.fileRightMenuCallBack(actionType, actionData)
+      console.log('actionType = ', labelType)
+
+      switch (labelType) {
+        case 'fileRightMenu':
+          fileStore.fileRightMenuCallBack(actionType, actionData)
+          break
+        case 'contextRightFileMenu':
+          fileStore.contextRightMenuCallBack(actionType, actionData)
+          break
       }
       data.rightMenuInstance?.hide()
     }
@@ -126,7 +136,7 @@ const handleFileRightClick = async (event: MouseEvent, file: BasicFile) => {
   // console.log('右键文件菜单')
   event.preventDefault()
   // 更新菜单项
-  emit('action', { actionType: 'fileFileMenu', actionData: fileStore.fileRightMenuItems })
+  emit('action', { actionType: 'fileRightMenu', actionData: fileStore.fileRightMenuItems })
   // 是否多选
   if (fileStore.selectedList.length <= 1) {
     fileStore.selected(file.name)

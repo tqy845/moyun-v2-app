@@ -7,9 +7,8 @@
 
 <script lang="ts" setup>
 import { reactive, computed, onMounted, watch, onUpdated } from 'vue'
-import { BasicFile } from '@/types/models'
-import { AppFile, AppFileUpload } from '@/components/common'
-import { createSharedComposable, useDebounceFn, useMagicKeys, useWindowSize } from '@vueuse/core'
+import { AppFile } from '@/components/common'
+import { useWindowSize } from '@vueuse/core'
 import { useAppStore, useFileStore } from '@/stores'
 import { fileUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileUploadAlert } from '.'

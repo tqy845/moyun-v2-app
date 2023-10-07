@@ -10,6 +10,11 @@ import { RightMenuItem } from '@/types/enums/right-menu'
  */
 export interface FileStore {
   /**
+   * 显示上传区域
+   */
+  show: boolean
+
+  /**
    * 加载中
    * @type {boolean}
    */
@@ -102,6 +107,7 @@ export const getFileDefaultSettings = (): FileStore => {
   const maxDownLoadCount = appStore.app.settings['maxDownLoadCount']
 
   return {
+    show: false,
     loading: false,
     class: {},
     list: [],

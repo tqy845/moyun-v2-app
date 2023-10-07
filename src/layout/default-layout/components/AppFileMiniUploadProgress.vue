@@ -33,10 +33,7 @@ const fileUploading = computed(() => {
 
 <template>
   <!-- 文件上传 -->
-  <AppFileUpload
-    :show="cs.fileUploadPopUp.show"
-    @update:show="(show:boolean) => (cs.fileUploadPopUp.show = show)"
-  />
+  <AppFileUpload />
 
   <v-progress-circular
     v-if="!isNaN(fileUploading) && fileUploading > 0"
@@ -45,9 +42,9 @@ const fileUploading = computed(() => {
     :model-value="fileUploading"
     color="yellow-darken-1"
   >
-    <v-btn icon="mdi-cloud-upload" @click="cs.fileUploadPopUp.show = true"> </v-btn>
+    <v-btn icon="mdi-cloud-upload" @click="fileStore.show = true"> </v-btn>
   </v-progress-circular>
-  <v-btn v-else icon="mdi-cloud-upload" @click="cs.fileUploadPopUp.show = true"> </v-btn>
+  <v-btn v-else icon="mdi-cloud-upload" @click="fileStore.show = true"> </v-btn>
 </template>
 
 <style lang="scss" scoped></style>

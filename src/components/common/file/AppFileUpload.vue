@@ -6,7 +6,7 @@
 -->
 <script lang="ts" setup>
 // @ts-nocheck
-import { computed, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore, useFileStore } from '@/stores'
 import { AppFileDeleteConfirm } from '.'
@@ -18,21 +18,11 @@ const { t } = useI18n()
 const appStore = useAppStore()
 const fileStore = useFileStore()
 
-const props = defineProps({
-  show: {
-    type: Boolean
-  }
-})
-
 const emits = defineEmits(['update:show'])
 
 const cs = reactive<{
-  dialog: { show: boolean }
   tableHeight: number
 }>({
-  dialog: {
-    show: false
-  },
   tableHeight: appStore.app.menuIndex['currentFileUploadOpenTab'].includes('upload-area')
     ? 150
     : 370
@@ -74,8 +64,6 @@ const data = reactive({
     ]
   }
 })
-
-const _show = computed(() => props.show)
 
 /**
  * 展开/收起上传区域
@@ -142,8 +130,8 @@ const handleClickArea = () => {
 
 <template>
   <v-dialog
-    v-show="_show"
-    v-model="_show"
+    v-show="fileStore.show"
+    v-model="fileStore.show"
     :fullscreen="appStore.app.settings['uploadDialogFullscreen']"
     :scrim="false"
     persistent
@@ -179,7 +167,7 @@ const handleClickArea = () => {
         </v-row>
         <v-tooltip :text="$t('file.upload.uploadList.dialog.hideButton.text')" location="bottom">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" class="ml-3" icon dark @click="emits('update:show', false)">
+            <v-btn v-bind="props" class="ml-3" icon dark @click="fileStore.show = false">
               <v-icon>mdi-eye-off</v-icon>
             </v-btn>
           </template>

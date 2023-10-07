@@ -18,6 +18,7 @@ const cardSize = useElementSize(cardRef)
 
 const cs = reactive<{
   menuItems: Array<RightMenuItem>
+  labelType?: string | number
 }>({
   menuItems: []
 })
@@ -35,6 +36,7 @@ onMounted(async () => {
       // console.log('action', actionType, actionData)
       // console.log(width.value, height.value)
       cs.menuItems = actionData as Array<RightMenuItem>
+      cs.labelType = actionType
       const { width, height } = cardSize
       appWindow.show() // 显示
       appWindow.setFocus() // 置顶
@@ -53,7 +55,11 @@ onMounted(async () => {
     <v-list class="px-2" lines="one" density="compact">
       <div v-for="(item, i) in cs.menuItems" :key="i">
         <v-divider v-if="item.type === 'divider'" class="my-2"></v-divider>
-        <v-list-item v-else rounded="xl" @click="emit('click', { actionType: item.type })" >
+        <v-list-item
+          v-else
+          rounded="xl"
+          @click="emit('click', { labelType: cs.labelType, actionType: item.type })"
+        >
           <v-list-item-title>
             <v-row align="center">
               <v-col

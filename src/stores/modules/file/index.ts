@@ -256,10 +256,10 @@ export const useFileStore = defineStore('fileStore', {
           this.fetch()
           break
         case ACTION_TYPE.UPLOAD:
+          this.show = true
           break
         case ACTION_TYPE.NEW_FOLDER:
           break
-        
       }
     }
   },

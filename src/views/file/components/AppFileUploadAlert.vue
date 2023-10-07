@@ -7,12 +7,12 @@
 
 <script lang="ts" setup>
 import { AppFileUpload } from '@/components/common'
+import { useFileStore } from '@/stores'
 import { reactive } from 'vue'
 
+const fileStore = useFileStore()
+
 const props = defineProps({
-  show: {
-    type: Boolean
-  },
   title: {
     type: String
   }
@@ -26,7 +26,7 @@ const cs = reactive({
 </script>
 
 <template>
-  <AppFileUpload :show="cs.fileUpload.show" @update:show="(show) => (cs.fileUpload.show = show)" />
+  <AppFileUpload />
   <v-alert
     density="compact"
     variant="outlined"
@@ -34,7 +34,7 @@ const cs = reactive({
     border="top"
     :title="title ?? $t('file.view.null.text')"
     class="ma-5"
-    v-if="show"
+    v-if="fileStore.show"
   >
     <template #text>
       <p class="pa-1">
