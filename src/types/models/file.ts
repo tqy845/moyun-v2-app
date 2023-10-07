@@ -30,6 +30,7 @@ export interface FileProperties {
   lastModified: Date
   extension: string
   icon?: string
+  isEmpty: boolean
 }
 
 /**

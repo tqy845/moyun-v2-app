@@ -52,10 +52,10 @@ const download = () => {}
  * @param fileProperties 文件属性
  */
 const getIcon = (fileProperties: FileProperties) => {
-  const { extension, isDirectory, size } = fileProperties
+  const { extension, isDirectory, isEmpty } = fileProperties
   let _extension = extension
   if (isDirectory) {
-    _extension = size > 0 ? 'folder-file' : 'folder'
+    _extension = isEmpty ? 'folder' : 'folder-file'
   }
   switch (_extension.toLowerCase()) {
     // 视频类
