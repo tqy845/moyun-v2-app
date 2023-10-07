@@ -2,6 +2,7 @@ import { BasicFile } from '@/types/models'
 import { useAppStore } from '..'
 import { Concurrent } from '@/utils/functions/queue'
 import { ACTION_TYPE } from '@/types/enums'
+import { RightMenuItem } from '@/types/enums/right-menu'
 
 /**
  * 文件存储对象接口
@@ -83,11 +84,11 @@ export interface FileStore {
   /**
    * 文件右键菜单项
    */
-  fileRightMenuItems: Array<{}>
+  fileRightMenuItems: Array<RightMenuItem>
   /**
    * 上下文右键菜单项
    */
-  contextRightMenuItems: Array<{}>
+  contextRightMenuItems: Array<RightMenuItem>
 }
 
 /**
@@ -116,29 +117,31 @@ export const getFileDefaultSettings = (): FileStore => {
       {
         text: 'right.menu.open.text',
         icon: 'mdi-open-in-app',
-        actionType: ACTION_TYPE.OPEN,
-        shortcutKey: 'Enter'
+        type: ACTION_TYPE.OPEN,
+        shortcutKey: 'Enter',
+        color: 'primary'
       },
       {
         text: 'right.menu.download.text',
         icon: 'mdi-cloud-download',
-        actionType: ACTION_TYPE.DOWNLOAD
+        type: ACTION_TYPE.DOWNLOAD,
+        color: 'info'
       },
       {
         text: 'right.menu.shared.text',
         icon: 'mdi-account-multiple',
-        actionType: ACTION_TYPE.SHARE
+        type: ACTION_TYPE.SHARE
       },
       {
         text: 'right.menu.property.text',
         icon: 'mdi-wrench',
-        actionType: ACTION_TYPE.PROPERTY,
+        type: ACTION_TYPE.PROPERTY,
         shortcutKey: 'Alt+Enter'
       },
       {
         text: 'right.menu.delete.text',
         icon: 'mdi-delete',
-        actionType: ACTION_TYPE.DELETE,
+        type: ACTION_TYPE.DELETE,
         color: 'red',
         shortcutKey: 'Ctrl+D'
       }
@@ -147,29 +150,32 @@ export const getFileDefaultSettings = (): FileStore => {
       {
         text: 'right.menu.refresh.text',
         icon: 'mdi-refresh',
-        actionType: ACTION_TYPE.REFRESH
+        type: ACTION_TYPE.REFRESH,
+        color: ''
       },
+      { type: 'divider' },
       {
         text: 'right.menu.upload.text',
         icon: 'mdi-cloud-upload',
-        actionType: ACTION_TYPE.UPLOAD,
+        type: ACTION_TYPE.UPLOAD,
         shortcutKey: ''
       },
       {
         text: 'right.menu.newFolder.text',
         icon: 'mdi-folder-plus-outline',
-        actionType: ACTION_TYPE.NEW_FOLDER
+        type: ACTION_TYPE.NEW_FOLDER
       },
+      { type: 'divider' },
       {
         text: 'right.menu.viewMode.text',
         icon: 'mdi-view-comfy',
-        actionType: ACTION_TYPE.VIEW_MODE,
+        type: ACTION_TYPE.VIEW_MODE,
         shortcutKey: ''
       },
       {
         text: 'right.menu.sortMode.text',
         icon: 'mdi-sort',
-        actionType: ACTION_TYPE.SORT_MODE,
+        type: ACTION_TYPE.SORT_MODE,
         shortcutKey: ''
       }
     ],

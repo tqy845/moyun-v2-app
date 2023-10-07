@@ -10,6 +10,9 @@ import { onMounted, reactive } from 'vue'
 import { appWindow } from '@tauri-apps/api/window'
 
 const cs = reactive({
+  /**
+   * 窗口是否最大化
+   */
   isMax: false
 })
 
@@ -39,7 +42,10 @@ const handleClose = () => {
 }
 
 onMounted(async () => {
-  await appWindow.onResized(async ({ payload: size }) => {
+  /**
+   * 监听窗口大小变化
+   */
+  await appWindow.onResized(async () => {
     cs.isMax = await appWindow.isMaximized()
   })
 })

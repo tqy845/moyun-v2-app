@@ -6,88 +6,75 @@
 -->
 
 <script lang="ts" setup>
-import { useFileStore } from '@/stores'
-import { ACTION_TYPE } from '@/types/enums'
-import { BasicFile } from '@/types/models'
-import { emit } from '@tauri-apps/api/event'
-import { reactive } from 'vue'
+import { RightMenuItem } from '@/types/enums/right-menu'
+import { emit, listen } from '@tauri-apps/api/event'
+import { appWindow } from '@tauri-apps/api/window'
+import { useElementSize } from '@vueuse/core'
+import { onMounted, reactive, ref } from 'vue'
 
-const fileStore = useFileStore()
-const props = defineProps({
-  file: {
-    type: BasicFile,
-    required: true
-  }
+const cardRef = ref()
+
+const cardSize = useElementSize(cardRef)
+
+const cs = reactive<{
+  menuItems: Array<RightMenuItem>
+}>({
+  menuItems: []
 })
 
-const cs = reactive({
-  deleteConfirm: {
-    show: false
-  }
-})
+onMounted(async () => {
+  await listen(
+    'action',
+    async (event: {
+      windowLabel: string
+      payload: { actionType: number | string; actionData: { [key: string]: any } }
+    }) => {
+      const {
+        payload: { actionType, actionData }
+      } = event
+      // console.log('action', actionType, actionData)
+      // console.log(width.value, height.value)
+      cs.menuItems = actionData as Array<RightMenuItem>
+      const { width, height } = cardSize
 
-const items = [
-  {
-    text: 'right.menu.open.text',
-    icon: 'mdi-open-in-app',
-    actionType: ACTION_TYPE.OPEN,
-    shortcutKey: 'Enter'
-  },
-  {
-    text: 'right.menu.download.text',
-    icon: 'mdi-cloud-download',
-    actionType: ACTION_TYPE.DOWNLOAD
-  },
-  {
-    text: 'right.menu.shared.text',
-    icon: 'mdi-account-multiple',
-    actionType: ACTION_TYPE.SHARE
-  },
-  {
-    text: 'right.menu.property.text',
-    icon: 'mdi-wrench',
-    actionType: ACTION_TYPE.PROPERTY,
-    shortcutKey: 'Alt+Enter'
-  },
-  {
-    text: 'right.menu.delete.text',
-    icon: 'mdi-delete',
-    actionType: ACTION_TYPE.DELETE,
-    color: 'red',
-    shortcutKey: 'Ctrl+D'
-  }
-]
+      appWindow.show() // 显示
+      appWindow.setFocus() // 置顶
+    }
+  )
+})
 </script>
 
 <template>
-  <v-card class="mx-auto elevation-1 rounded-lg" width="256" style="border: 1px solid #dcdcdc8a">
+  <v-card
+    ref="cardRef"
+    class="mx-auto elevation-1 rounded-lg"
+    width="256"
+    style="border: 1px solid #dcdcdc8a"
+  >
     <v-list class="px-2" lines="one" density="compact">
-      <v-list-item
-        v-for="(item, i) in items"
-        :key="i"
-        color="primary"
-        rounded="xl"
-        @click="emit('click', { actionType: item.actionType })"
-      >
-        <v-list-item-title>
-          <v-row align="center">
-            <v-col
-              cols="6"
-              class="text-caption font-weight-bold"
-              :class="[`text-${item.color ?? 'grey-darken-2'}`]"
-            >
-              <v-icon :icon="item.icon" :color="item?.color" class="mr-2"></v-icon>
-              {{ $t(item.text) }}</v-col
-            >
-            <v-col
-              cols="6"
-              class="text-end font-weight-regular font-italic text-caption pr-4"
-              style="font-size: 12px"
-              >{{ item.shortcutKey }}
-            </v-col>
-          </v-row>
-        </v-list-item-title>
-      </v-list-item>
+      <div v-for="(item, i) in cs.menuItems" :key="i">
+        <v-divider v-if="item.type === 'divider'"></v-divider>
+        <v-list-item v-else rounded="xl" @click="emit('click', { actionType: item.type })">
+          <v-list-item-title>
+            <v-row align="center">
+              <v-col
+                cols="6"
+                class="text-caption font-weight-bold"
+                :class="[`text-${item.color ?? 'grey-darken-2'}`]"
+              >
+                <v-icon :icon="item.icon" :color="item?.color" class="mr-2"></v-icon>
+                {{ $t(item.text ?? '') }}</v-col
+              >
+              <v-col
+                cols="6"
+                class="text-end font-weight-regular font-italic text-caption pr-4"
+                style="font-size: 12px"
+                >{{ item.shortcutKey }}
+              </v-col>
+            </v-row>
+          </v-list-item-title>
+        </v-list-item>
+      </div>
     </v-list>
   </v-card>
 </template>

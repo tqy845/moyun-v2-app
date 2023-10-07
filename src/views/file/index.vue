@@ -5,16 +5,15 @@
   @description “文件展示”首页
 -->
 <script lang="ts" setup>
-import { onUnmounted, onMounted, reactive, ref } from 'vue'
+import { onUnmounted, onMounted, reactive, ref, nextTick } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
 import { AppIconView, AppListView } from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile } from '@/types/models'
 import { usePointer } from '@vueuse/core'
 import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
-import { listen } from '@tauri-apps/api/event'
+import { emit, listen } from '@tauri-apps/api/event'
 
-const pointer = usePointer()
 const containerRef = ref(null)
 const { width } = useElementSize(containerRef)
 const controlState = useKeyModifier('Control') // 绑定Control键实现 多选
@@ -22,62 +21,28 @@ const controlState = useKeyModifier('Control') // 绑定Control键实现 多选
 const appStore = useAppStore()
 const fileStore = useFileStore()
 
-const cs = reactive<{
-  rightClickMenu: {
-    show: boolean
-    file: BasicFile
-    x: number
-    y: number
-  }
-}>({
-  rightClickMenu: {
-    show: false,
-    file: {} as BasicFile,
-    x: 0,
-    y: 0
-  }
-})
-
 const data = reactive<{
-  rightMenu: any
-  unlisten: any
-  rightMenuListen: any
-}>({
-  rightMenu: null,
-  unlisten: null,
-  rightMenuListen: null
-})
+  rightMenuInstance?: WebviewWindow
+  rightMenuFocusListen?: Function
+  rightMenuListen?: Function
+}>({})
 
 onMounted(async () => {
-  data.rightMenu = new WebviewWindow('right-menu', {
+  const basicSettings = appStore.app.settings['basicRightMenu']
+  data.rightMenuInstance = new WebviewWindow('right-menu', {
     url: '/right-menu',
     width: 256,
-    height: 219,
-
-    resizable: false,
-    decorations: false,
-    contentProtected: false,
-    skipTaskbar: true,
-    fileDropEnabled: false,
-    transparent: true,
-    visible: false
+    ...basicSettings
   })
 
-  data.rightMenu.once('tauri://created', function () {
-    // webview window successfully created
-    console.log('rightMenu created')
-  })
-  data.rightMenu.once('tauri://error', function (e: Event) {
-    // an error happened creating the webview window
-    console.error(e)
-  })
   // 监听右键菜单聚焦
-  // @ts-ignore
-  data.unlisten = data.rightMenu.onFocusChanged(async ({ payload: focused }) => {
-    if (!focused) {
-      data.rightMenu.hide()
+  data.rightMenuFocusListen = await data.rightMenuInstance!.onFocusChanged(
+    async ({ payload: focused }) => {
+      if (!focused) {
+        data.rightMenuInstance?.hide()
+      }
     }
-  })
+  )
 
   data.rightMenuListen = await listen(
     'click',
@@ -93,7 +58,7 @@ onMounted(async () => {
       if (windowLabel === 'right-menu') {
         fileStore.fileRightMenuCallBack(actionType, actionData)
       }
-      data.rightMenu.hide()
+      data.rightMenuInstance?.hide()
     }
   )
 
@@ -106,9 +71,9 @@ onMounted(async () => {
 
 onUnmounted(async () => {
   console.log('卸载组件')
-  data.rightMenu.close()
-  ;(await data.unlisten)()
-  ;(await data.rightMenuListen)()
+  data.rightMenuInstance!.close()
+  data.rightMenuFocusListen!()
+  data.rightMenuListen!()
 })
 
 /**
@@ -134,14 +99,24 @@ const handleDoubleClick = (item: BasicFile) => {
     console.log('音乐')
   }
 }
-
-const handleContextMenu = (event: MouseEvent) => {
-  console.log('内容区右键菜单')
+/**
+ * 上下文右键菜单
+ * @param event
+ */
+const handleContextRightMenu = (event: MouseEvent) => {
+  // console.log('内容区右键菜单')
   event.preventDefault()
-  const { clientX, clientY } = event
-  console.log(clientX, clientY)
-  cs.rightClickMenu.x = clientX
-  cs.rightClickMenu.y = clientY
+  // 更新菜单项
+  emit('action', {
+    actionType: 'contextRightFileMenu',
+    actionData: fileStore.contextRightMenuItems
+  })
+  // 获取屏幕绝对的鼠标坐标
+  const { screenX, screenY } = event
+  // 重设位置
+  setTimeout(() => {
+    data.rightMenuInstance!.setPosition(new LogicalPosition(screenX, screenY))
+  }, 30)
 }
 
 /**
@@ -149,22 +124,23 @@ const handleContextMenu = (event: MouseEvent) => {
  * @param event 菜单原生事件
  * @param file 文件
  */
-const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
+const handleFileRightClick = async (event: MouseEvent, file: BasicFile) => {
+  // console.log('右键文件菜单')
   event.preventDefault()
-
+  // 更新菜单项
+  emit('action', { actionType: 'fileFileMenu', actionData: fileStore.fileRightMenuItems })
+  // 是否多选
   if (fileStore.selectedList.length <= 1) {
     fileStore.selected(file.name)
   }
-  console.log('右键文件菜单')
-
   // 获取屏幕绝对的鼠标坐标
-  const screenX = event.screenX
-  const screenY = event.screenY
-
+  const { screenX, screenY } = event
   // 重设位置
-  data.rightMenu.setPosition(new LogicalPosition(screenX, screenY))
-  data.rightMenu.show() // 显示
-  data.rightMenu.setFocus() // 置顶
+  setTimeout(() => {
+    data.rightMenuInstance!.setPosition(new LogicalPosition(screenX, screenY))
+    // data.rightMenuInstance!.show() // 显示
+    // data.rightMenuInstance!.setFocus() // 置顶
+  }, 30)
 }
 </script>
 
@@ -172,7 +148,7 @@ const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
   <v-container
     ref="containerRef"
     class="w-min fill-height align-start"
-    @contextmenu="handleContextMenu"
+    @contextmenu="handleContextRightMenu"
   >
     <!-- 图标视图 -->
     <AppIconView
@@ -180,7 +156,7 @@ const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
       :width="width"
       :multiple="!!controlState"
       @doubleClick="handleDoubleClick"
-      @rightClick="handleRightClick"
+      @rightClick="handleFileRightClick"
     />
 
     <!-- 列表视图 -->
@@ -188,7 +164,7 @@ const handleRightClick = async (event: MouseEvent, file: BasicFile) => {
       v-else-if="fileStore.view === 'list'"
       :multiple="!!controlState"
       @doubleClick="handleDoubleClick"
-      @rightClick="handleRightClick"
+      @rightClick="handleFileRightClick"
     />
   </v-container>
 </template>
