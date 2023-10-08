@@ -4,7 +4,7 @@
 
 import { defineStore } from 'pinia'
 import { getUserDefaultSettings, User, UserStore } from './helper'
-import { fetchCodeImage, loginByAccount, logoutForUser, registerByAccount } from '@/api'
+import { fetchCodeImage, isLogin, loginByAccount, logoutForUser, registerByAccount } from '@/api'
 import { cryptUtils } from '@/utils/functions'
 import { useAppStore, useFileStore } from '@/stores'
 
@@ -85,6 +85,13 @@ export const useUserStore = defineStore('userStore', {
       if (callback) {
         callback()
       }
+    },
+    /**
+     * 是否已经登录
+     */
+    async isLogin(): Promise<boolean> {
+      const { code } = await isLogin()
+      return code === 200
     }
   },
 

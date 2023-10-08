@@ -64,3 +64,14 @@ export const registeredTouch = <T = any>(options: { [key: string]: any }) => {
     data: options
   })
 }
+
+/**
+ * 是否在线
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const isLogin = <T = any>() => {
+  return fetchRequest<T>({
+    url: '/system/user',
+    method: 'GET'
+  })
+}
