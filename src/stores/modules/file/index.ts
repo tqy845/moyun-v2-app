@@ -9,6 +9,7 @@ import {BasicFile, FileProperties} from '@/types/models'
 import {fileUtils} from '@/utils/functions'
 import {useAppStore} from '..'
 import {ACTION_TYPE, FileType} from '@/types/enums'
+import {useFileDialog} from "@vueuse/core";
 
 export const useFileStore = defineStore('fileStore', {
     state: (): FileStore => getFileDefaultSettings(),
@@ -252,13 +253,23 @@ export const useFileStore = defineStore('fileStore', {
          * @param actionData 传递数据
          */
         async contextRightMenuCallBack(actionType: number | string, actionData: any) {
-            const isBatch: boolean = this.selectedList.length > 1
             switch (actionType) {
                 case ACTION_TYPE.REFRESH:
                     this.fetch()
                     break
                 case ACTION_TYPE.UPLOAD:
-                    this.show = true
+                    // eslint-disable-next-line no-case-declarations
+                    const {open, onChange} = useFileDialog({
+                        accept: '*', // Set to accept only image files
+                    })
+                    // 选择文件
+                    open()
+                    // 开始上传
+                    onChange((files) => {
+                        if (files != null){
+                            fileUtils.upload(Object.values(files))
+                        }
+                    })
                     break
                 case ACTION_TYPE.NEW_FOLDER:
                     break
