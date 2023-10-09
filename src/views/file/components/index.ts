@@ -3,7 +3,7 @@ import AppDownWindow from './AppDownWindow.vue'
 import AppBaseRightClickMenu from './AppBaseRightClickMenu.vue'
 import AppListView from './AppListView.vue'
 import AppIconView from './AppIconView.vue'
-import AppFileUploadAlert from './AppFileUploadAlert.vue'
+import AppFileNullAlert from './AppFileNullAlert.vue'
 import AppFileLoading from './AppFileLoading.vue'
 
 export {
@@ -12,6 +12,6 @@ export {
   AppBaseRightClickMenu,
   AppListView,
   AppIconView,
-  AppFileUploadAlert,
+  AppFileNullAlert,
   AppFileLoading
 }
