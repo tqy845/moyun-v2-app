@@ -27,7 +27,7 @@ const props = defineProps({
     border="top"
     :title="title ?? $t('file.view.null.text')"
     class="ma-5"
-    v-if="!fileStore.renderList.length"
+    v-if="!fileStore.renderList.length && !fileStore.loading"
   >
     <template #text>
       <p class="pa-1">
