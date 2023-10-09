@@ -10,6 +10,7 @@ import { AppSidebar, AppUserCard } from './components'
 import { AppSystemBar } from '../components'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores'
+import { AppFilePreview } from '@/components/common'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -63,6 +64,7 @@ const handleClickOutside = () => {
       <!-- 头部菜单栏 -->
       <RouterView name="header" />
 
+      <AppFilePreview />
       <!-- 内容区域 -->
       <RouterView />
     </v-main>
