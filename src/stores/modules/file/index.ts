@@ -45,7 +45,7 @@ export const useFileStore = defineStore('fileStore', {
                 })
                 this.list.push(_basicFile)
                 for (const key of keys) {
-                    if (fileUtils.isType(item.extension, key)) {
+                    if (fileUtils.isType(item.type, key)) {
                         this.class[key].push(_basicFile)
                     }
                 }
