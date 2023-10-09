@@ -1,16 +1,15 @@
-import { FileChunk } from '@/types/models'
-import { fetchRequest, tauriRequest } from '@/utils/request'
-import { ResponseType } from '@tauri-apps/api/http'
+import {fetchRequest, tauriRequest} from '@/utils/request'
 
 /**
  * 文件列表
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const fileListFetch = <T = any>() => {
-  return fetchRequest<T>({
-    url: `/system/user/file/list`,
-    method: 'GET'
-  })
+export const fileListFetch = <T = any>(params: { path: string }) => {
+    return fetchRequest<T>({
+        url: `/system/user/file/list`,
+        method: 'POST',
+        data: params
+    })
 }
 
 /**
@@ -20,12 +19,12 @@ export const fileListFetch = <T = any>() => {
  * @description 暂时废弃，因为worker线程无法使用该接口，已在worker线程中单独使用fetch
  */
 export const fileChunkUpload = <T = any>(formData: FormData, flag: string) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/chunk`,
-    method: 'PUT',
-    body: formData,
-    key: flag
-  })
+    return fetchRequest<T>({
+        url: `/system/user/file/chunk`,
+        method: 'PUT',
+        body: formData,
+        key: flag
+    })
 }
 
 /**
@@ -36,23 +35,23 @@ export const fileChunkUpload = <T = any>(formData: FormData, flag: string) => {
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fileDownloadByName = <T = any>(
-  fileName: string,
-  startByte: number,
-  endByte: number,
-  downloadProgress: Function
+    fileName: string,
+    startByte: number,
+    endByte: number,
+    downloadProgress: Function
 ) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/${fileName}/download`,
-    fileName,
-    method: 'GET',
-    responseType: 'blob',
-    headers: {
-      Range: `bytes=${startByte}-${endByte}`
-    },
-    onProgress: (progress) => {
-      downloadProgress(progress)
-    }
-  })
+    return fetchRequest<T>({
+        url: `/system/user/file/${fileName}/download`,
+        fileName,
+        method: 'GET',
+        responseType: 'blob',
+        headers: {
+            Range: `bytes=${startByte}-${endByte}`
+        },
+        onProgress: (progress) => {
+            downloadProgress(progress)
+        }
+    })
 }
 
 /**
@@ -61,10 +60,10 @@ export const fileDownloadByName = <T = any>(
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fileDeleteByName = <T = any>(fileName: string) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/${fileName}`,
-    method: 'DELETE'
-  })
+    return fetchRequest<T>({
+        url: `/system/user/file/${fileName}`,
+        method: 'DELETE'
+    })
 }
 
 /**
@@ -73,11 +72,11 @@ export const fileDeleteByName = <T = any>(fileName: string) => {
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string> }) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/delete-multiple`,
-    method: 'DELETE',
-    data: params
-  })
+    return fetchRequest<T>({
+        url: `/system/user/file/delete-multiple`,
+        method: 'DELETE',
+        data: params
+    })
 }
 
 /**
@@ -86,9 +85,9 @@ export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string>
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fileDownloadByNameList = <T = any>(params: { fileNames: Array<string> }) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/download-multiple`,
-    method: 'GET',
-    data: params
-  })
+    return fetchRequest<T>({
+        url: `/system/user/file/download-multiple`,
+        method: 'GET',
+        data: params
+    })
 }

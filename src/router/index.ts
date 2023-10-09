@@ -81,4 +81,4 @@ const checkAuth: NavigationGuard = async (
 /**
  * 在路由前执行拦截器
  */
-router.beforeEach(checkAuth)
+// router.beforeEach(checkAuth)
