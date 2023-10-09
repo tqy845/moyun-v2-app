@@ -121,11 +121,14 @@ const handleSelectItem = (index: any) => {
               @click="handleSelectItem(index)"
               @dblclick="emits('doubleClick', iterator)"
               @contextmenu.stop="emits('rightClick', $event, iterator)"
+              v-click-outside="{
+                handler: () => (fileStore.selectedList.length = 0),
+                closeConditional: () => fileStore.selectedList.includes(iterator.name)
+              }"
             />
           </v-col>
         </v-row>
       </v-btn-toggle>
-
       <!-- 无内容 -->
       <AppFileNullAlert />
     </div>
