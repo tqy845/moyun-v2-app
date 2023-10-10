@@ -60,6 +60,12 @@ export const useFileStore = defineStore('fileStore', {
       return this.list
     },
     /**
+     * 获取垃圾篓数据
+     */
+    fetchTrashBasket: {
+      
+    },
+    /**
      * 文件过滤
      * @param name 文件名
      */

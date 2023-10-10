@@ -28,15 +28,6 @@ const props = defineProps<{
 }>()
 
 /**
- * 计算分页数
- */
-const pageItemNumber = computed(() => {
-  const {iconViewPageItemNumber} = fileStore
-  const _fileList = fileStore.classify(appStore.app.menuIndex['currentFileClassifyTab'])
-  return Math.ceil(_fileList?.length / iconViewPageItemNumber)
-})
-
-/**
  * 鼠标事件
  */
 window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
@@ -57,7 +48,7 @@ const handleSelectItem = (index: any) => {
       <template #title>
         <v-row align="center">
           <v-col class="">
-            <v-breadcrumbs :items="fileStore.breadcrumbItems">
+            <v-breadcrumbs :items="['','垃圾篓']">
               <template v-slot:divider>
                 <v-icon icon="mdi-chevron-right"></v-icon>
               </template>
@@ -67,15 +58,14 @@ const handleSelectItem = (index: any) => {
             </v-breadcrumbs>
           </v-col>
           <v-col cols="auto" class="">
-            <v-btn icon="mdi-folder-plus-outline"></v-btn>
-            <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
+            <v-btn prepend-icon="mdi-delete-empty" size="large">清空垃圾篓</v-btn>
+            <v-btn prepend-icon="mdi-delete-restore" size="large" @click="fileStore.fetch()">还原所有内容</v-btn>
           </v-col>
         </v-row>
       </template>
     </v-toolbar>
     <div :style="{ height: `${windowSize.height.value - 240}px` }" style="overflow: auto">
       <!-- 读取中 -->
-      <!-- {{ fileStore.selectedList }} -->
       <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading"/>
       <!-- 渲染 -->
       <v-btn-toggle
@@ -115,20 +105,15 @@ const handleSelectItem = (index: any) => {
       <!-- 无内容 -->
       <AppFileNullAlert/>
     </div>
-    <v-card-action>
-      <v-pagination
-          :model-value="
-          fileStore.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab']]
-        "
-          :length="pageItemNumber"
-          total-visible="6"
-          @update:modelValue="fileStore.changePage"
-      ></v-pagination>
-    </v-card-action>
   </v-card>
 
   <!-- 右键菜单 -->
   <AppFileRightClickMenu/>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.v-breadcrumbs-item--disabled) {
+  opacity: inherit !important;
+}
+
+</style>

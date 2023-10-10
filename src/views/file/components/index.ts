@@ -5,6 +5,7 @@ import AppListView from './AppListView.vue'
 import AppIconView from './AppIconView.vue'
 import AppFileNullAlert from './AppFileNullAlert.vue'
 import AppFileLoading from './AppFileLoading.vue'
+import AppTrashCanIconView from './AppTrashCanIconView.vue'
 
 export {
   AppBottomBar,
@@ -13,5 +14,6 @@ export {
   AppListView,
   AppIconView,
   AppFileNullAlert,
-  AppFileLoading
+  AppFileLoading,
+  AppTrashCanIconView
 }
