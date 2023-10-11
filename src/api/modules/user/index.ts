@@ -75,3 +75,15 @@ export const isLogin = <T = any>() => {
     method: 'GET'
   })
 }
+
+
+/**
+ * 个人信息
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const personalInfo = <T = any>() => {
+  return fetchRequest<T>({
+    url: '/getInfo',
+    method: 'GET'
+  })
+}

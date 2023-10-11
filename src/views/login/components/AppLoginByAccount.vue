@@ -6,6 +6,7 @@
 -->
 <script lang="ts" setup>
 import { reactive } from 'vue'
+import { UserProperties } from '@/types/models/user.ts'
 
 const props = defineProps({
   img: {
@@ -77,8 +78,8 @@ const emits = defineEmits(['close', 'save', 'refresh'])
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn class="text-none" variant="outlined" @click="emits('close')">
-          {{ $t('cancel.text') }}</v-btn
-        >
+          {{ $t('cancel.text') }}
+        </v-btn>
         <v-btn
           class="text-none ms-4 px-10 text-white"
           color="blue-darken-1"

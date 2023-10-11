@@ -10,10 +10,11 @@ import { IconBiometric } from '@/components/icons'
 import { AppPromiseButton as cBtn } from '@/components/custom'
 import { touchUtils } from '@/utils/functions'
 import { useRouter } from 'vue-router'
-import { useUserStore, useAppStore, type User } from '@/stores'
+import { useUserStore, useAppStore } from '@/stores'
 import { AppLoginByAccount } from './components'
 import { reactive } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
+import {UserProperties} from "@/types/models/user.ts";
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -67,7 +68,7 @@ const onLoginByQQ = () => {
 /**
  * 使用账户密码登录
  */
-const loginByAccountHandler = async (form: User) => {
+const loginByAccountHandler = async (form: UserProperties) => {
   console.log('使用账户登录')
   if (await userStore.userLoginByAccount(form)) {
     toWelcome()
