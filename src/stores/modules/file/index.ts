@@ -24,13 +24,13 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 获取文件列表
      */
-    async fetch() {
+    async fetch(isDeleted: boolean = false) {
       this.loading = true
       const appStore = useAppStore()
       const path = this.breadcrumbItems.map((item) => item.path).join('')
       const { data } = await fileListFetch<{
         fileList: Array<FileProperties>
-      }>({ path })
+      }>({ path, isDeleted })
 
       const { fileList } = data
       const keys = Object.keys(FileType)
@@ -62,9 +62,7 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 获取垃圾篓数据
      */
-    fetchTrashBasket: {
-      
-    },
+    fetchTrashBasket: {},
     /**
      * 文件过滤
      * @param name 文件名

@@ -36,45 +36,46 @@ onMounted(async () => {
 
   // 监听右键菜单聚焦
   data.rightMenuFocusListen = await data.rightMenuInstance!.onFocusChanged(
-      async ({ payload: focused }) => {
-        if (!focused) {
-          data.rightMenuInstance?.hide()
-        }
+    async ({ payload: focused }) => {
+      if (!focused) {
+        data.rightMenuInstance?.hide()
       }
+    }
   )
 
   data.rightMenuListen = await listen(
-      'click',
-      async (event: {
-        windowLabel: string
-        payload: {
-          labelType: string
-          actionType: number | string
-          actionData: { [key: string]: any }
-        }
-      }) => {
-        const {
-          payload: { actionType, labelType, actionData }
-        } = event
-        // 右键菜单
-        console.log('actionType = ', labelType)
-
-        switch (labelType) {
-          case 'fileRightMenu':
-            fileStore.fileRightMenuCallBack(actionType, actionData)
-            break
-          case 'contextRightFileMenu':
-            fileStore.contextRightMenuCallBack(actionType, actionData)
-            break
-        }
-        data.rightMenuInstance?.hide()
+    'click',
+    async (event: {
+      windowLabel: string
+      payload: {
+        labelType: string
+        actionType: number | string
+        actionData: { [key: string]: any }
       }
+    }) => {
+      const {
+        payload: { actionType, labelType, actionData }
+      } = event
+      // 右键菜单
+      console.log('actionType = ', labelType)
+
+      switch (labelType) {
+        case 'fileRightMenu':
+          fileStore.fileRightMenuCallBack(actionType, actionData)
+          break
+        case 'contextRightFileMenu':
+          fileStore.contextRightMenuCallBack(actionType, actionData)
+          break
+      }
+      data.rightMenuInstance?.hide()
+    }
   )
 
   if (fileStore.search) return
   // 没有全局搜索才执行
   if (!appStore.search) {
-    fileStore.fetch()
+    // 查询已经删除的文件
+    fileStore.fetch(true)
   }
 })
 
@@ -115,6 +116,7 @@ const handleDoubleClick = (item: BasicFile) => {
 const handleContextRightMenu = (event: MouseEvent) => {
   // console.log('内容区右键菜单')
   event.preventDefault()
+  return
   // 更新菜单项
   emit('action', {
     actionType: 'contextRightFileMenu',
@@ -134,6 +136,7 @@ const handleContextRightMenu = (event: MouseEvent) => {
 const handleFileRightClick = async (event: MouseEvent, file: BasicFile) => {
   // console.log('右键文件菜单')
   event.preventDefault()
+  return
   // 更新菜单项
   emit('action', { actionType: 'fileRightMenu', actionData: fileStore.fileRightMenuItems })
   // 是否多选
@@ -149,26 +152,26 @@ const handleFileRightClick = async (event: MouseEvent, file: BasicFile) => {
 
 <template>
   <v-container
-      ref="containerRef"
-      class="w-min fill-height align-start"
-      @contextmenu="handleContextRightMenu"
+    ref="containerRef"
+    class="w-min fill-height align-start"
+    @contextmenu="handleContextRightMenu"
   >
     <!-- 图标视图 -->
     <AppTrashCanIconView
-        v-if="fileStore.view === 'icon'"
-        :fileList="fileStore"
-        :width="width"
-        :multiple="!!controlState"
-        @doubleClick="handleDoubleClick"
-        @rightClick="handleFileRightClick"
+      v-if="fileStore.view === 'icon'"
+      :fileList="fileStore"
+      :width="width"
+      :multiple="!!controlState"
+      @doubleClick="handleDoubleClick"
+      @rightClick="handleFileRightClick"
     />
 
     <!-- 列表视图 -->
     <AppListView
-        v-else-if="fileStore.view === 'list'"
-        :multiple="!!controlState"
-        @doubleClick="handleDoubleClick"
-        @rightClick="handleFileRightClick"
+      v-else-if="fileStore.view === 'list'"
+      :multiple="!!controlState"
+      @doubleClick="handleDoubleClick"
+      @rightClick="handleFileRightClick"
     />
   </v-container>
 </template>

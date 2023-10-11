@@ -6,14 +6,14 @@
 -->
 
 <script lang="ts" setup>
-import {reactive, computed, onMounted, watch, onUpdated} from 'vue'
-import {AppFile} from '@/components/common'
-import {useWindowSize} from '@vueuse/core'
-import {useAppStore, useFileStore} from '@/stores'
-import {fileUtils} from '@/utils/functions'
-import {AppFileLoading, AppFileNullAlert} from '.'
-import {FileType} from '@/types/enums'
-import {BasicFile} from "@/types/models";
+import { reactive, computed, onMounted, watch, onUpdated } from 'vue'
+import { AppFile } from '@/components/common'
+import { useWindowSize } from '@vueuse/core'
+import { useAppStore, useFileStore } from '@/stores'
+import { fileUtils } from '@/utils/functions'
+import { AppFileLoading, AppFileNullAlert } from '.'
+import { FileType } from '@/types/enums'
+import { BasicFile } from '@/types/models'
 
 const windowSize = useWindowSize()
 
@@ -32,8 +32,7 @@ const props = defineProps<{
  */
 window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 
-onMounted(() => {
-})
+onMounted(() => {})
 
 const handleSelectItem = (index: any) => {
   // console.log('select', fileStore.renderList[index].name)
@@ -48,7 +47,7 @@ const handleSelectItem = (index: any) => {
       <template #title>
         <v-row align="center">
           <v-col class="">
-            <v-breadcrumbs :items="['','垃圾篓']">
+            <v-breadcrumbs :items="['', '垃圾篓']">
               <template v-slot:divider>
                 <v-icon icon="mdi-chevron-right"></v-icon>
               </template>
@@ -59,21 +58,23 @@ const handleSelectItem = (index: any) => {
           </v-col>
           <v-col cols="auto" class="">
             <v-btn prepend-icon="mdi-delete-empty" size="large">清空垃圾篓</v-btn>
-            <v-btn prepend-icon="mdi-delete-restore" size="large" @click="fileStore.fetch()">还原所有内容</v-btn>
+            <v-btn prepend-icon="mdi-delete-restore" size="large" @click="fileStore.fetch()"
+              >还原所有内容</v-btn
+            >
           </v-col>
         </v-row>
       </template>
     </v-toolbar>
     <div :style="{ height: `${windowSize.height.value - 240}px` }" style="overflow: auto">
       <!-- 读取中 -->
-      <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading"/>
+      <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
       <!-- 渲染 -->
       <v-btn-toggle
-          v-else-if="fileStore.renderList.length"
-          v-show="!fileStore.show"
-          :density="null"
-          class="pa-5 w-100"
-          :model-value="
+        v-else-if="fileStore.renderList.length"
+        v-show="!fileStore.show"
+        :density="null"
+        class="pa-5 w-100"
+        :model-value="
           fileStore.selectedList.map((it_name) =>
             fileStore.renderList.findIndex((it) => it.name === it_name)
           )
@@ -81,20 +82,20 @@ const handleSelectItem = (index: any) => {
       >
         <v-row v-if="width" :style="{ 'padding-left': `${(width % 158) / 2 + 15}px` }">
           <v-col
-              v-for="(iterator, index) in fileStore.renderList"
-              :key="index"
-              class="px-1"
-              cols="auto"
+            v-for="(iterator, index) in fileStore.renderList"
+            :key="index"
+            class="px-1"
+            cols="auto"
           >
             <!-- 渲染文件-->
             <AppFile
-                :file-item="iterator"
-                elevation="0"
-                style="background-color: rgba(0, 0, 0, 0)"
-                @click="handleSelectItem(index)"
-                @dblclick="emits('doubleClick', iterator)"
-                @contextmenu.stop="emits('rightClick', $event, iterator)"
-                v-click-outside="{
+              :file-item="iterator"
+              elevation="0"
+              style="background-color: rgba(0, 0, 0, 0)"
+              @click="handleSelectItem(index)"
+              @dblclick="emits('doubleClick', iterator)"
+              @contextmenu.stop="emits('rightClick', $event, iterator)"
+              v-click-outside="{
                 handler: () => (fileStore.selectedList.length = 0),
                 closeConditional: () => fileStore.selectedList.includes(iterator.name)
               }"
@@ -103,17 +104,18 @@ const handleSelectItem = (index: any) => {
         </v-row>
       </v-btn-toggle>
       <!-- 无内容 -->
-      <AppFileNullAlert/>
+      <v-row v-else justify="center" align="center" class="fill-height ma-0 pa-0">
+        无内容...
+      </v-row>
     </div>
   </v-card>
 
   <!-- 右键菜单 -->
-  <AppFileRightClickMenu/>
+  <AppFileRightClickMenu />
 </template>
 
 <style lang="scss" scoped>
 :deep(.v-breadcrumbs-item--disabled) {
   opacity: inherit !important;
 }
-
 </style>
