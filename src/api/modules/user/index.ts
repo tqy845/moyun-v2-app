@@ -1,4 +1,4 @@
-import { User } from '@/stores'
+import { User, UserProperties } from '@/types/models/user'
 import { tauriRequest, fetchRequest } from '@/utils/request'
 
 /**
@@ -28,14 +28,14 @@ export const registerByAccount = <T = any>(params: { email: string; password: st
 
 /**
  * 使用账户登录
- * @param {User} param - 用户对象
+ * @param {UserProperties} user - 用户属性
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const loginByAccount = <T = any>(user: User) => {
+export const loginByAccount = <T = any>(UserProperties: UserProperties) => {
   return fetchRequest<T>({
     url: '/login',
     method: 'POST',
-    data: user
+    data: UserProperties
   })
 }
 
@@ -69,19 +69,18 @@ export const registeredTouch = <T = any>(options: { [key: string]: any }) => {
  * 是否在线
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const isLogin = <T = any>() => {
+export const userIsLogin = <T = any>() => {
   return fetchRequest<T>({
     url: '/system/user',
     method: 'GET'
   })
 }
 
-
 /**
- * 个人信息
+ * 用户信息
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const personalInfo = <T = any>() => {
+export const userInfoFetch = <T = any>() => {
   return fetchRequest<T>({
     url: '/getInfo',
     method: 'GET'
