@@ -8,9 +8,9 @@ import { fetchRequest, tauriRequest } from '@/utils/request'
  * @param {boolean} params.isDeleted 是否已经删除的文件
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const fileListFetch = <T = any>(params: { path: string; isDeleted: boolean }) => {
+export const fileListFetch = <T = any>(params: { path: string; delFlag: 1 | 0 }) => {
   return fetchRequest<T>({
-    url: `/system/user/file/list`,
+    url: `/system/user/file/`,
     method: 'POST',
     data: params
   })

@@ -31,13 +31,13 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 获取文件列表
      */
-    async fetch(isDeleted: boolean = false) {
+    async fetch(delFlag: 1 | 0 = 0) {
       this.loading = true
       const appStore = useAppStore()
       const path = this.breadcrumbItems.map((item) => item.path).join('')
       const { data } = await fileListFetch<{
         fileList: Array<FileProperties>
-      }>({ path, isDeleted })
+      }>({ path, delFlag })
 
       const { fileList } = data
       const keys = Object.keys(FileType)

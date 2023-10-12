@@ -75,7 +75,7 @@ onMounted(async () => {
   // 没有全局搜索才执行
   if (!appStore.search) {
     // 查询已经删除的文件
-    fileStore.fetch(true)
+    fileStore.fetch(1)
   }
 })
 
