@@ -2,20 +2,21 @@
  * File Store
  */
 
-import { defineStore } from 'pinia'
-import { getFileDefaultSettings, FileStore } from './helper'
 import {
-  fileListFetch,
-  fileDeleteByNameList,
   fileChunkUpload,
   fileDownloadByNameList,
+  fileDropAll,
+  fileListFetch,
+  fileDeleteByNameList,
   fileRestoreAll
 } from '@/api'
+import { ACTION_TYPE, FileType } from '@/types/enums'
 import { BasicFile, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
-import { useAppStore } from '..'
-import { ACTION_TYPE, FileType } from '@/types/enums'
 import { useFileDialog } from '@vueuse/core'
+import { defineStore } from 'pinia'
+import { useAppStore } from '..'
+import { FileStore, getFileDefaultSettings } from './helper'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
@@ -218,7 +219,7 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 通过文件名列表删除文件
      */
-    deleteByNameList(names: Array<string>) {
+    removeByNameList(names: Array<string>) {
       const appStore = useAppStore()
       fileDeleteByNameList({ fileNames: names })
       for (const name of names) {
@@ -249,7 +250,7 @@ export const useFileStore = defineStore('fileStore', {
           break
         case ACTION_TYPE.DELETE:
           isBatch
-            ? this.deleteByNameList(this.selectedList)
+            ? this.removeByNameList(this.selectedList)
             : this.renderList.find((item) => item.name === this.selectedList[0])?.delete()
           break
         case ACTION_TYPE.DOWNLOAD:
@@ -302,8 +303,10 @@ export const useFileStore = defineStore('fileStore', {
      * 清空垃圾篓（回收站）全部文件
      */
     async clearAll() {
-      const { code } = await fileRestoreAll()
-
+      const { code } = await fileDropAll()
+      if (code === 200) {
+        this.renderList.length = 0
+      }
       return code === 200
     }
   },

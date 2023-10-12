@@ -60,50 +60,7 @@ export const fileDownloadByName = <T = any>(
 }
 
 /**
- * 删除文件<single>
- * @param {string} fileName 文件名
- * @description 软删除
- * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
- */
-export const fileDeleteByName = <T = any>(fileName: string) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/${fileName}`,
-    method: 'DELETE'
-  })
-}
-
-/**
- * 删除文件<batch>
- * @param {Object} params 传递对象
- * @param {Array<string>} params.fileNames 文件名列表
- * @description 软删除
- * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
- */
-export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string> }) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/delete-multiple`,
-    method: 'DELETE',
-    data: params
-  })
-}
-
-/**
- * 移除文件<batch>
- * @param {Object} params 传递对象
- * @param {Array<string>} params.fileNames 文件名列表
- * @description 硬删除
- * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
- */
-export const fileRemoveByNameList = <T = any>(params: { fileNames: Array<string> }) => {
-  return fetchRequest<T>({
-    url: `/system/user/file/remove/multiple`,
-    method: 'DELETE',
-    data: params
-  })
-}
-
-/**
- * 下载文件<batch>
+ * 下载文件<multiple>
  * @param {string} fileNameList 文件名列表
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
@@ -111,6 +68,34 @@ export const fileDownloadByNameList = <T = any>(params: { fileNames: Array<strin
   return fetchRequest<T>({
     url: `/system/user/file/download-multiple`,
     method: 'GET',
+    data: params
+  })
+}
+
+/**
+ * 移除文件<single>
+ * @param {string} fileName 文件名
+ * @description 软删除
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fileDeleteByName = <T = any>(fileName: string) => {
+  return fetchRequest<T>({
+    url: `/system/user/file/remove/${fileName}`,
+    method: 'PUT'
+  })
+}
+
+/**
+ * 移除文件<multiple>
+ * @param {Object} params 传递对象
+ * @param {Array<string>} params.fileNames 文件名列表
+ * @description 硬删除
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string> }) => {
+  return fetchRequest<T>({
+    url: `/system/user/file/remove/multiple/`,
+    method: 'PUT',
     data: params
   })
 }
@@ -130,12 +115,24 @@ export const fileRestoreByFileName = <T = any>(params: { fileName: string }) => 
 }
 
 /**
- * 还原所有已经删除的文件<all>
+ * 还原文件<all>
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fileRestoreAll = <T = any>() => {
   return fetchRequest<T>({
-    url: `/system/user/file/restore/all`,
+    url: `/system/user/file/restore/all/`,
     method: 'PUT'
+  })
+}
+
+/**
+ * 彻底删除文件<all>
+ * @description 硬删除
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fileDropAll = <T = any>() => {
+  return fetchRequest<T>({
+    url: `/system/user/file/delete/all/`,
+    method: 'DELETE'
   })
 }
