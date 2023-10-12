@@ -90,7 +90,7 @@ export interface FileStore {
   /**
    * 文件菜单选项
    */
-  menuItems:Array< { text: string, icon: string, path: string }>
+  menuItems: Array<{ text: string; icon: string; path: string }>
 
   /**
    * 文件右键菜单项
@@ -137,7 +137,7 @@ export const getFileDefaultSettings = (): FileStore => {
     uploadChunkQueue: [],
     search: '',
     selectedList: [],
-    menuItems:[
+    menuItems: [
       { text: 'menu.file.text', icon: 'folder', path: '/personal/file' },
       // {
       //   text: 'menu.synchro.disk.text',
@@ -222,11 +222,10 @@ export const getFileDefaultSettings = (): FileStore => {
     downloadQueue: new Concurrent(maxDownLoadCount),
     breadcrumbItems: [
       {
-        title: '',
+        title: '/',
         path: '/',
         disabled: true
-      },
-
+      }
     ],
     preview: false,
     trashBasket: []

@@ -47,12 +47,12 @@ const handleSelectItem = (index: any) => {
       <template #title>
         <v-row align="center">
           <v-col class="">
-            <v-breadcrumbs :items="['', '垃圾篓']">
+            <v-breadcrumbs :items="['垃圾篓']">
               <template v-slot:divider>
                 <v-icon icon="mdi-chevron-right"></v-icon>
               </template>
               <template v-slot:prepend>
-                <v-icon size="small" :icon="'mdi-' + 'folder-open'"></v-icon>
+                <v-icon size="small" :icon="'mdi-' + 'folder-open'" class="pr-5"></v-icon>
               </template>
             </v-breadcrumbs>
           </v-col>

@@ -73,20 +73,20 @@ export const fileDownloadByNameList = <T = any>(params: { fileNames: Array<strin
 }
 
 /**
- * 移除文件<single>
+ * 删除文件<single>
  * @param {string} fileName 文件名
  * @description 软删除
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fileDeleteByName = <T = any>(fileName: string) => {
   return fetchRequest<T>({
-    url: `/system/user/file/remove/${fileName}`,
+    url: `/system/user/file/delete/${fileName}`,
     method: 'PUT'
   })
 }
 
 /**
- * 移除文件<multiple>
+ * 删除文件<multiple>
  * @param {Object} params 传递对象
  * @param {Array<string>} params.fileNames 文件名列表
  * @description 硬删除
@@ -94,23 +94,22 @@ export const fileDeleteByName = <T = any>(fileName: string) => {
  */
 export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string> }) => {
   return fetchRequest<T>({
-    url: `/system/user/file/remove/multiple/`,
+    url: `/system/user/file/delete/multiple/`,
     method: 'PUT',
     data: params
   })
 }
 
 /**
- * 还原已经删除的文件<single>
+ * 还原文件<single>
  * @param {Object} params 传递对象
  * @param {string} params.fileName 文件名
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const fileRestoreByFileName = <T = any>(params: { fileName: string }) => {
+export const fileRestoreByFileName = <T = any>(fileName: string) => {
   return fetchRequest<T>({
-    url: `/system/user/file/restore`,
-    method: 'PUT',
-    data: params
+    url: `/system/user/file/restore/${fileName}`,
+    method: 'PUT'
   })
 }
 
@@ -126,13 +125,25 @@ export const fileRestoreAll = <T = any>() => {
 }
 
 /**
+ * 彻底删除文件<single>
+ * @description 硬删除
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fileDrop = <T = any>(fileName: string) => {
+  return fetchRequest<T>({
+    url: `/system/user/file/drop/${fileName}`,
+    method: 'DELETE'
+  })
+}
+
+/**
  * 彻底删除文件<all>
  * @description 硬删除
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
 export const fileDropAll = <T = any>() => {
   return fetchRequest<T>({
-    url: `/system/user/file/delete/all/`,
+    url: `/system/user/file/drop/all/`,
     method: 'DELETE'
   })
 }

@@ -6,14 +6,14 @@
 -->
 
 <script lang="ts" setup>
-import {reactive, computed, onMounted, watch, onUpdated} from 'vue'
-import {AppFile} from '@/components/common'
-import {useWindowSize} from '@vueuse/core'
-import {useAppStore, useFileStore} from '@/stores'
-import {fileUtils} from '@/utils/functions'
-import {AppFileLoading, AppFileNullAlert} from '.'
-import {FileType} from '@/types/enums'
-import {BasicFile} from "@/types/models";
+import { reactive, computed, onMounted, watch, onUpdated } from 'vue'
+import { AppFile } from '@/components/common'
+import { useWindowSize } from '@vueuse/core'
+import { useAppStore, useFileStore } from '@/stores'
+import { fileUtils } from '@/utils/functions'
+import { AppFileLoading, AppFileNullAlert } from '.'
+import { FileType } from '@/types/enums'
+import { BasicFile } from '@/types/models'
 
 const windowSize = useWindowSize()
 
@@ -31,7 +31,7 @@ const props = defineProps<{
  * 计算分页数
  */
 const pageItemNumber = computed(() => {
-  const {iconViewPageItemNumber} = fileStore
+  const { iconViewPageItemNumber } = fileStore
   const _fileList = fileStore.classify(appStore.app.menuIndex['currentFileClassifyTab'])
   return Math.ceil(_fileList?.length / iconViewPageItemNumber)
 })
@@ -41,8 +41,7 @@ const pageItemNumber = computed(() => {
  */
 window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 
-onMounted(() => {
-})
+onMounted(() => {})
 
 const handleSelectItem = (index: any) => {
   // console.log('select', fileStore.renderList[index].name)
@@ -62,7 +61,7 @@ const handleSelectItem = (index: any) => {
                 <v-icon icon="mdi-chevron-right"></v-icon>
               </template>
               <template v-slot:prepend>
-                <v-icon size="small" :icon="'mdi-' + 'folder-open'"></v-icon>
+                <v-icon size="small" :icon="'mdi-' + 'folder-open'" class="pr-5"></v-icon>
               </template>
             </v-breadcrumbs>
           </v-col>
@@ -75,15 +74,14 @@ const handleSelectItem = (index: any) => {
     </v-toolbar>
     <div :style="{ height: `${windowSize.height.value - 240}px` }" style="overflow: auto">
       <!-- 读取中 -->
-      <!-- {{ fileStore.selectedList }} -->
-      <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading"/>
+      <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
       <!-- 渲染 -->
       <v-btn-toggle
-          v-else-if="fileStore.renderList.length"
-          v-show="!fileStore.show"
-          :density="null"
-          class="pa-5 w-100"
-          :model-value="
+        v-else-if="fileStore.renderList.length"
+        v-show="!fileStore.show"
+        :density="null"
+        class="pa-5 w-100"
+        :model-value="
           fileStore.selectedList.map((it_name) =>
             fileStore.renderList.findIndex((it) => it.name === it_name)
           )
@@ -91,20 +89,20 @@ const handleSelectItem = (index: any) => {
       >
         <v-row v-if="width" :style="{ 'padding-left': `${(width % 158) / 2 + 15}px` }">
           <v-col
-              v-for="(iterator, index) in fileStore.renderList"
-              :key="index"
-              class="px-1"
-              cols="auto"
+            v-for="(iterator, index) in fileStore.renderList"
+            :key="index"
+            class="px-1"
+            cols="auto"
           >
             <!-- 渲染文件-->
             <AppFile
-                :file-item="iterator"
-                elevation="0"
-                style="background-color: rgba(0, 0, 0, 0)"
-                @click="handleSelectItem(index)"
-                @dblclick="emits('doubleClick', iterator)"
-                @contextmenu.stop="emits('rightClick', $event, iterator)"
-                v-click-outside="{
+              :file-item="iterator"
+              elevation="0"
+              style="background-color: rgba(0, 0, 0, 0)"
+              @click="handleSelectItem(index)"
+              @dblclick="emits('doubleClick', iterator)"
+              @contextmenu.stop="emits('rightClick', $event, iterator)"
+              v-click-outside="{
                 handler: () => (fileStore.selectedList.length = 0),
                 closeConditional: () => fileStore.selectedList.includes(iterator.name)
               }"
@@ -113,22 +111,22 @@ const handleSelectItem = (index: any) => {
         </v-row>
       </v-btn-toggle>
       <!-- 无内容 -->
-      <AppFileNullAlert/>
+      <AppFileNullAlert />
     </div>
     <v-card-action>
       <v-pagination
-          :model-value="
+        :model-value="
           fileStore.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab']]
         "
-          :length="pageItemNumber"
-          total-visible="6"
-          @update:modelValue="fileStore.changePage"
+        :length="pageItemNumber"
+        total-visible="6"
+        @update:modelValue="fileStore.changePage"
       ></v-pagination>
     </v-card-action>
   </v-card>
 
   <!-- 右键菜单 -->
-  <AppFileRightClickMenu/>
+  <AppFileRightClickMenu />
 </template>
 
 <style lang="scss" scoped></style>
