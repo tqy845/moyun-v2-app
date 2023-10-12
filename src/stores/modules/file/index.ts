@@ -4,7 +4,13 @@
 
 import { defineStore } from 'pinia'
 import { getFileDefaultSettings, FileStore } from './helper'
-import { fileListFetch, fileDeleteByNameList, fileChunkUpload, fileDownloadByNameList } from '@/api'
+import {
+  fileListFetch,
+  fileDeleteByNameList,
+  fileChunkUpload,
+  fileDownloadByNameList,
+  fileRestoreAll
+} from '@/api'
 import { BasicFile, FileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
 import { useAppStore } from '..'
@@ -281,6 +287,24 @@ export const useFileStore = defineStore('fileStore', {
         case ACTION_TYPE.NEW_FOLDER:
           break
       }
+    },
+    /**
+     * 恢复垃圾篓（回收站）全部文件
+     */
+    async restoreAll() {
+      const { code } = await fileRestoreAll()
+      if (code === 200) {
+        this.renderList.length = 0
+      }
+      return code === 200
+    },
+    /**
+     * 清空垃圾篓（回收站）全部文件
+     */
+    async clearAll() {
+      const { code } = await fileRestoreAll()
+
+      return code === 200
     }
   },
 

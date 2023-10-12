@@ -57,8 +57,10 @@ const handleSelectItem = (index: any) => {
             </v-breadcrumbs>
           </v-col>
           <v-col cols="auto" class="">
-            <v-btn prepend-icon="mdi-delete-empty" size="large">清空垃圾篓</v-btn>
-            <v-btn prepend-icon="mdi-delete-restore" size="large" @click="fileStore.fetch()"
+            <v-btn prepend-icon="mdi-delete-empty" size="large" @click="fileStore.clearAll()"
+              >清空垃圾篓</v-btn
+            >
+            <v-btn prepend-icon="mdi-delete-restore" size="large" @click="fileStore.restoreAll()"
               >还原所有内容</v-btn
             >
           </v-col>
