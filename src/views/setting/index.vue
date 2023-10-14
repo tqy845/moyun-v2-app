@@ -6,7 +6,10 @@
 -->
 
 <script lang="ts" setup>
+import { useAppStore } from '@/stores'
 import { reactive } from 'vue'
+
+const appStore = useAppStore()
 
 const cs = reactive({
   tab: 'option-1'
@@ -50,15 +53,18 @@ const handleSave = () => {
           <v-window-item value="option-1">
             <v-card flat>
               <v-card-item>
-                <form fast-fail @submit.prevent="handleSave">
-                  <v-row>
-                    <v-checkbox v-model="form.powerOn" label="开机自动启动（推荐）"></v-checkbox>
-                  </v-row>
-                  <v-row>
-                    <v-checkbox v-model="form.autoUpdate" label="自动升级"></v-checkbox>
-                  </v-row>
-                </form> </v-card-item
-            ></v-card>
+                <v-checkbox v-model="form.powerOn" label="开机自动启动（推荐）"></v-checkbox>
+              </v-card-item>
+              <v-card-item>
+                <v-checkbox
+                  v-model="appStore['launchWelcome']"
+                  label="登录后显示欢迎页"
+                ></v-checkbox>
+              </v-card-item>
+              <v-card-item>
+                <v-checkbox v-model="form.autoUpdate" label="自动升级"></v-checkbox>
+              </v-card-item>
+            </v-card>
           </v-window-item>
           <v-window-item value="option-2" class="w-100 pa-5">
             <v-form>
