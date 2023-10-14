@@ -60,7 +60,11 @@ export const useUserStore = defineStore('userStore', {
       const appStore = useAppStore()
       const fileStore = useFileStore()
 
+      const _welcome = appStore.launchWelcome
       appStore.$reset()
+      fileStore.$reset()
+      appStore.launchWelcome = _welcome
+
       // const _user = { ...user, password: encrypt(user.password) }
       const _userProperties = userProperties
       const { code, data } = await loginByAccount<{ token: string }>(_userProperties)

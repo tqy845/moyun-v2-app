@@ -1,4 +1,3 @@
-import { languages } from './../../../plugins/i18n/helper'
 /**
  * App Helper
  */
@@ -34,6 +33,8 @@ export interface AsideMenuItem {
   icon: string
   active: boolean
   route: string
+  disabled?: boolean
+  show?: boolean
 }
 
 /**
@@ -87,6 +88,10 @@ export interface AppStore {
    * 切换语言
    */
   changedLanguage: boolean
+  /**
+   * 启动欢迎页
+   */
+  launchWelcome: boolean
 }
 
 /**
@@ -131,8 +136,10 @@ export const getAppDefaultSettings = (): AppStore => {
         {
           title: 'welcome.text',
           icon: 'emoticon',
-          active: true,
-          route: '/welcome'
+          active: false,
+          route: '/welcome',
+          disabled: false,
+          show: false
         },
         {
           title: 'personal.text',
@@ -164,6 +171,7 @@ export const getAppDefaultSettings = (): AppStore => {
     searchResult: [],
     searchRecord: [],
     401: false,
-    changedLanguage: false
+    changedLanguage: false,
+    launchWelcome: true
   }
 }

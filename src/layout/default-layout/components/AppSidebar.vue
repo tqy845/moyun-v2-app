@@ -28,18 +28,19 @@ const handleSelectItem = (item: AsideMenuItem) => {
 
   <v-list v-bind="$attrs">
     <!-- 一级菜单 -->
-    <v-list-item
-      v-for="(item, index) in appStore.asideMenu.itemList"
-      :key="index"
-      :title="$t(item.title)"
-      :value="index"
-      :active="item.active"
-      @click="handleSelectItem(item)"
-    >
-      <template v-slot:prepend>
-        <v-icon :icon="`mdi-${item.icon}`"></v-icon>
-      </template>
-    </v-list-item>
+    <div v-for="(item, index) in appStore.asideMenu['itemList']" :key="index">
+      <v-list-item
+        v-if="item.show !== false"
+        :title="$t(item.title)"
+        :value="index"
+        :active="item.active"
+        @click="handleSelectItem(item)"
+      >
+        <template v-slot:prepend>
+          <v-icon :icon="`mdi-${item.icon}`"></v-icon>
+        </template>
+      </v-list-item>
+    </div>
 
     <!-- <v-list-item :title="$t('school.text')" value="school">
       <template v-slot:prepend>

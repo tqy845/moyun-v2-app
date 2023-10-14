@@ -14,7 +14,7 @@ import { useUserStore, useAppStore } from '@/stores'
 import { AppLoginByAccount } from './components'
 import { reactive } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import {UserProperties} from "@/types/models/user.ts";
+import { UserProperties } from '@/types/models/user.ts'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -36,7 +36,12 @@ const toSignUp = useDebounceFn(() => {
  * 前往个人中心
  */
 const toWelcome = () => {
-  router.replace('/welcome')
+  if (appStore['launchWelcome']) {
+    router.replace('/welcome')
+  } else {
+    appStore.asideMenu.itemList[1].active = true
+    router.replace('/personal')
+  }
 }
 
 const codeImage = useDebounceFn(async () => {
@@ -89,7 +94,7 @@ const openLoginByAccount = useDebounceFn(async () => {
 const onLoginByTouchID = async () => {
   console.log('login by touchID')
   // todo: 待实现生物认证授权
-  if (!userStore.user.username) {
+  if (!userStore.user.userName) {
     console.log('您还没有登录过此设备，暂无法使用该功能~')
   }
   console.log(await touchUtils.touchIDRegistered('tanqiyuan', '123456', 'teijeiawjtlaei'))
@@ -181,4 +186,3 @@ const onLoginByTouchID = async () => {
   border-radius: 0;
 }
 </style>
-@/utils/functions/token
