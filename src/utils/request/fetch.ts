@@ -2,7 +2,10 @@ import { useUserStore, useAppStore } from '@/stores'
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { BASE_URL, ResponseType } from './helper'
 
-const controllerMap: { [key: string]: AbortController } = {}
+/**
+ * 网络请求标记
+ */
+const controllerMap = new Map()
 
 /**
  * 发起请求
@@ -24,7 +27,7 @@ const fetchRequest = async <T = any>(
   const requestId = Math.random().toString(36).substring(7)
   // abort信号
   const controller = new AbortController()
-  controllerMap[requestId] = controller
+  controllerMap.set(requestId, controller)
 
   try {
     const appStore = useAppStore()
@@ -125,15 +128,15 @@ const fetchRequest = async <T = any>(
         // userStore.logout(() => {
         //   router.replace('/login')
         // })
-        appStore.notification(result.message, 'error')
         if (result.code === 401) {
-          for (const key of Object.keys(controllerMap)) {
-            // 无权限，故取消所有网络请求
-            controllerMap[key].abort()
-          }
+          appStore['401'] = true
+          // 无权限，故取消所有网络请求
+          controllerMap.forEach((item) => item.abort())
+        } else {
+          appStore.notification(result.message, 'error')
         }
+        throw new Error(result.message)
       }
-
       return result
     }
   } catch (err) {
@@ -144,8 +147,7 @@ const fetchRequest = async <T = any>(
       data: {} as T
     }
   } finally {
-    delete controllerMap[requestId]
-    // console.log('controllerMap = ', controllerMap)
+    controllerMap.delete(requestId)
   }
 }
 

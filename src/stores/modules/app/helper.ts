@@ -78,6 +78,10 @@ export interface AppStore {
    * 全局搜索记录
    */
   searchRecord: Array<string>
+  /**
+   * 401权限认证失败
+   */
+  401: boolean
 }
 
 /**
@@ -153,6 +157,7 @@ export const getAppDefaultSettings = (): AppStore => {
     },
     search: '',
     searchResult: [],
-    searchRecord: []
+    searchRecord: [],
+    401: false
   }
 }

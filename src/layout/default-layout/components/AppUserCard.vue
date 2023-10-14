@@ -35,7 +35,7 @@ const toSettingPage = () => {
         <v-list-item :subtitle="userStore.user?.userName" :title="userStore.user?.email[0]">
           <template #prepend>
             <v-avatar size="x-small" color="surface-variant">{{
-              userStore.user.userName![0]
+              userStore.user.userName?.[0] ?? ''
             }}</v-avatar>
           </template>
         </v-list-item>
@@ -46,7 +46,7 @@ const toSettingPage = () => {
       <v-list>
         <v-list-item :subtitle="userStore.user.email" :title="userStore.user.nickName">
           <template #prepend>
-            <v-avatar color="surface-variant">{{ userStore.user.userName![0] }}</v-avatar>
+            <v-avatar color="surface-variant">{{ userStore.user.userName?.[0] ?? '' }}</v-avatar>
           </template>
         </v-list-item>
       </v-list>

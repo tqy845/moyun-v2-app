@@ -63,7 +63,7 @@ const cs = reactive({
             color="error"
             @click="
               // 用户登出
-              userStore.logout(() => ($router.replace('login'), (cs.hint.show = false)))
+              userStore.logout(() => ($router.replace('/login'), (cs.hint.show = false)))
             "
           ></v-btn>
           <v-btn :text="$t('confirm.text')" @click="isActive.value = false"></v-btn>

@@ -88,8 +88,8 @@ export const useUserStore = defineStore('userStore', {
      * 登出
      */
     async logout(callback?: Function) {
+      // logoutForUser(this.user!)
       this.$reset()
-      logoutForUser(this.user!)
       // 执行回调
       if (callback) {
         callback()
