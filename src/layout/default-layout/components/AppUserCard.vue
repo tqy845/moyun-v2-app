@@ -5,6 +5,7 @@
   @description “用户卡片”组件
 -->
 <script lang="ts" setup>
+import { AppLanguage } from '@/components/common'
 import { useUserStore } from '@/stores'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
@@ -60,6 +61,19 @@ const toSettingPage = () => {
           </template>
           <v-list-item-title> {{ $t('preferences.text') }} </v-list-item-title>
         </v-list-item>
+
+        <AppLanguage location="end">
+          <template #context>
+            <v-list-item value="toggle-language">
+              <template v-slot:prepend>
+                <v-icon icon="mdi-translate"></v-icon>
+              </template>
+              <v-list-item-title>
+                {{ $t('toggle.language') }}
+              </v-list-item-title>
+            </v-list-item>
+          </template>
+        </AppLanguage>
 
         <!-- <v-list-item>
           <v-switch v-model="cs.message" color="purple" label="接收消息" hide-details></v-switch>

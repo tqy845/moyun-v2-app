@@ -1,3 +1,4 @@
+import { languages } from './../../../plugins/i18n/helper'
 /**
  * App Helper
  */
@@ -82,6 +83,10 @@ export interface AppStore {
    * 401权限认证失败
    */
   401: boolean
+  /**
+   * 切换语言
+   */
+  changedLanguage: boolean
 }
 
 /**
@@ -158,6 +163,7 @@ export const getAppDefaultSettings = (): AppStore => {
     search: '',
     searchResult: [],
     searchRecord: [],
-    401: false
+    401: false,
+    changedLanguage: false
   }
 }

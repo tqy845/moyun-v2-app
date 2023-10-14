@@ -10,7 +10,7 @@ import { AppSidebar, AppUserCard } from './components'
 import { AppSystemBar } from '../components'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores'
-import { AppFilePreview, App401 } from '@/components/common'
+import { AppFilePreview, App401, AppLanguageReload } from '@/components/common'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -64,9 +64,13 @@ const handleClickOutside = () => {
       <!-- 头部菜单栏 -->
       <RouterView name="header" />
 
+      <!-- 文件预览 -->
       <AppFilePreview />
 
-      <!-- 401认证失败 -->
+      <!-- 语言切换提示 -->
+      <AppLanguageReload />
+
+      <!-- 401认证失败提示 -->
       <App401 />
 
       <!-- 内容区域 -->

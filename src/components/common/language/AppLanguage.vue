@@ -3,10 +3,11 @@ import { languages, type LanguageItem } from '@/plugins/i18n/helper'
 import { useI18n } from 'vue-i18n'
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { reactive } from 'vue'
-import { useUserStore } from '@/stores'
+import { useAppStore, useUserStore } from '@/stores'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+const appStore = useAppStore()
 const userStore = useUserStore()
 const { locale } = useI18n()
 const cookies = useCookies(['locale'])
@@ -20,7 +21,7 @@ const handleSwitchLanguage = (item: LanguageItem) => {
   cookies.set('locale', item.value)
   // 如果未登录，则不需要提示
   if (!['/login', '/signup'].includes(route.path)) {
-    cs.hint.show = true
+    appStore.changedLanguage = true
   }
 }
 
@@ -32,9 +33,12 @@ const cs = reactive({
 </script>
 
 <template>
-  <v-menu>
+  <v-menu v-bind="$attrs">
     <template v-slot:activator="{ props }">
-      <v-btn :="$attrs" icon v-bind="props">
+      <div v-if="$slots['context']" v-bind="props">
+        <slot name="context"></slot>
+      </div>
+      <v-btn v-else :="$attrs" icon v-bind="props">
         <v-icon>mdi-translate</v-icon>
       </v-btn>
     </template>
@@ -50,27 +54,6 @@ const cs = reactive({
       </v-list-item>
     </v-list>
   </v-menu>
-
-  <v-dialog width="500" v-model="cs.hint.show">
-    <template v-slot:default="{ isActive }">
-      <v-card :title="$t('change.i18n.hint.title')">
-        <v-card-text> {{ $t('change.i18n.hint.content') }} </v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            :text="$t('logout.text')"
-            color="error"
-            @click="
-              // 用户登出
-              userStore.logout(() => ($router.replace('/login'), (cs.hint.show = false)))
-            "
-          ></v-btn>
-          <v-btn :text="$t('confirm.text')" @click="isActive.value = false"></v-btn>
-        </v-card-actions>
-      </v-card>
-    </template>
-  </v-dialog>
 </template>
 
 <style lang="scss" scoped></style>
