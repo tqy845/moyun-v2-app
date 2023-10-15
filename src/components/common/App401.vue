@@ -15,8 +15,8 @@ const userStore = useUserStore()
 <template>
   <v-dialog v-model="appStore['401']" persistent width="auto">
     <v-card>
-      <v-card-title class="text-h5"> 身份认证失败 </v-card-title>
-      <v-card-text>您的身份认证已经过期，想要继续操作必须重新登录。</v-card-text>
+      <v-card-title class="text-h5"> 认证失败 </v-card-title>
+      <v-card-text>您的身份认证已过期，请重新登录。</v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn

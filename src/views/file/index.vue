@@ -5,12 +5,11 @@
   @description “文件展示”首页
 -->
 <script lang="ts" setup>
-import { onUnmounted, onMounted, reactive, ref, nextTick } from 'vue'
-import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
-import { AppIconView, AppListView } from './components'
+import { onUnmounted, onMounted, reactive, ref } from 'vue'
+import { useElementSize, useKeyModifier, useMagicKeys } from '@vueuse/core'
+import { AppIconView, AppListView, AppRightMenu } from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { BasicFile } from '@/types/models'
-import { usePointer } from '@vueuse/core'
 import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
 import { emit, listen } from '@tauri-apps/api/event'
 
@@ -154,6 +153,9 @@ const handleFileRightClick = async (event: MouseEvent, file: BasicFile) => {
     class="w-min fill-height align-start"
     @contextmenu="handleContextRightMenu"
   >
+    <!-- 右键菜单 -->
+    <AppRightMenu :menuItems="fileStore.fileRightMenuItems" />
+
     <!-- 图标视图 -->
     <AppIconView
       v-if="fileStore.view === 'icon'"
