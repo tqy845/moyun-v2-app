@@ -75,7 +75,6 @@ const handleContextRightMenuConfirm = () => {
  */
 const handleRightMenu = (event: MouseEvent, type: 'context' | 'file' = 'context') => {
   event.preventDefault()
-  cs.rightMenu.show = false
   switch (type) {
     case 'context':
       cs.rightMenu.menuItems = fileStore.contextRightMenuItems
@@ -84,34 +83,36 @@ const handleRightMenu = (event: MouseEvent, type: 'context' | 'file' = 'context'
       cs.rightMenu.menuItems = fileStore.fileRightMenuItems
       break
   }
+  setTimeout(() => {
+    cs.rightMenu.show = true
 
-  // 获取鼠标相对于视口的坐标
-  const clientX = event.clientX
-  const clientY = event.clientY
+    // 获取鼠标相对于视口的坐标
+    const clientX = event.clientX
+    const clientY = event.clientY
+    // 计算菜单的 x 和 y 位置，确保不超出 v-card 范围
+    let x = clientX
+    let y = clientY
 
-  // 计算菜单的 x 和 y 位置，确保不超出 v-card 范围
-  let x = clientX
-  let y = clientY
+    // 获取菜单宽度和高度
+    const menuWidth = rightMenuSize.width.value
+    const menuHeight = rightMenuSize.height.value
 
-  // 获取菜单宽度和高度
-  const menuWidth = rightMenuSize.width.value
-  const menuHeight = rightMenuSize.height.value
+    const windowWidth = windowSize.width.value
+    const windowHeight = windowSize.height.value
 
-  const windowWidth = windowSize.width.value
-  const windowHeight = windowSize.height.value
+    if (clientX + menuWidth > windowWidth) {
+      // 菜单宽度超出当前元素右边界
+      x = windowWidth - menuWidth - 18
+    }
 
-  if (clientX + menuWidth > windowWidth) {
-    // 菜单宽度超出当前元素右边界
-    x = windowWidth - menuWidth - 18
-  }
+    if (clientY + menuHeight > windowHeight) {
+      // 菜单高度超出当前元素下边界
+      y = windowHeight - menuHeight - 20
+    }
 
-  if (clientY + menuHeight > windowHeight) {
-    // 菜单高度超出当前元素下边界
-    y = windowHeight - menuHeight - 18
-  }
-
-  cs.rightMenu.location = { x, y }
-  cs.rightMenu.show = true
+    // 重制位置
+    cs.rightMenu.location = { x, y }
+  })
 }
 </script>
 
@@ -194,6 +195,7 @@ const handleRightMenu = (event: MouseEvent, type: 'context' | 'file' = 'context'
   <!-- 上下文右键菜单 -->
   <AppRightMenu
     ref="rightMenuRef"
+    id="right-menu"
     :menuItems="cs.rightMenu.menuItems"
     :location="cs.rightMenu.location"
     :style="{ visibility: cs.rightMenu.show ? 'visible' : 'hidden' }"
