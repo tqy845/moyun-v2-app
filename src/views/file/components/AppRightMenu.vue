@@ -27,7 +27,7 @@ const props = defineProps({
   <v-card
     v-bind="$attrs"
     class="mx-auto elevation-1 rounded-lg"
-    width="256px"
+    width="220px"
     style="border: 1px solid #dcdcdc8a"
     :style="{ left: location['x'] + 'px', top: location['y'] + 'px' }"
     v-click-outside="{
