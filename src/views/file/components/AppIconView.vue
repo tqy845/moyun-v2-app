@@ -6,16 +6,19 @@
 -->
 
 <script lang="ts" setup>
-import { reactive, computed, onMounted, watch, onUpdated } from 'vue'
+import { reactive, computed, onMounted, watch, onUpdated, nextTick, ref } from 'vue'
 import { AppFile } from '@/components/common'
-import { useWindowSize } from '@vueuse/core'
+import { useElementSize, useWindowSize } from '@vueuse/core'
 import { useAppStore, useFileStore } from '@/stores'
 import { fileUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileNullAlert } from '.'
-import { FileType } from '@/types/enums'
-import { BasicFile } from '@/types/models'
+import { AppRightMenu } from '../components'
+import { RightMenuItem } from '@/types/enums/right-menu'
+
+const rightMenuRef = ref()
 
 const windowSize = useWindowSize()
+const rightMenuSize = useElementSize(rightMenuRef)
 
 const appStore = useAppStore()
 const fileStore = useFileStore()
@@ -26,6 +29,14 @@ const props = defineProps<{
   width: number
   multiple: boolean
 }>()
+
+const cs = reactive({
+  rightMenu: {
+    show: false,
+    location: { x: 0, y: 0 },
+    menuItems: [] as Array<RightMenuItem>
+  }
+})
 
 /**
  * 计算分页数
@@ -47,11 +58,66 @@ const handleSelectItem = (index: any) => {
   // console.log('select', fileStore.renderList[index].name)
   fileStore.selected(fileStore.renderList[index].name, props.multiple)
 }
+
+/**
+ * 上下文右键菜单
+ * @param event
+ */
+const handleContextRightMenuConfirm = () => {
+  nextTick(() => {
+    cs.rightMenu.show = false
+  })
+}
+
+/**
+ * 上下文右键菜单
+ * @param event
+ */
+const handleRightMenu = (event: MouseEvent, type: 'context' | 'file' = 'context') => {
+  event.preventDefault()
+  cs.rightMenu.show = false
+  switch (type) {
+    case 'context':
+      cs.rightMenu.menuItems = fileStore.contextRightMenuItems
+      break
+    case 'file':
+      cs.rightMenu.menuItems = fileStore.fileRightMenuItems
+      break
+  }
+
+  // 获取鼠标相对于视口的坐标
+  const clientX = event.clientX
+  const clientY = event.clientY
+
+  // 计算菜单的 x 和 y 位置，确保不超出 v-card 范围
+  let x = clientX
+  let y = clientY
+
+  // 获取菜单宽度和高度
+  const menuWidth = rightMenuSize.width.value
+  const menuHeight = rightMenuSize.height.value
+
+  const windowWidth = windowSize.width.value
+  const windowHeight = windowSize.height.value
+
+  if (clientX + menuWidth > windowWidth) {
+    // 菜单宽度超出当前元素右边界
+    x = windowWidth - menuWidth - 18
+  }
+
+  if (clientY + menuHeight > windowHeight) {
+    // 菜单高度超出当前元素下边界
+    y = windowHeight - menuHeight - 18
+  }
+
+  cs.rightMenu.location = { x, y }
+  cs.rightMenu.show = true
+}
 </script>
 
 <template>
   <!-- 文件图标列表 -->
-  <v-card class="w-100" :height="windowSize.height.value - 130">
+  <v-card class="w-100" :height="windowSize.height.value - 130" @contextmenu="handleRightMenu">
     <v-toolbar border density="compact">
       <template #title>
         <v-row align="center">
@@ -101,7 +167,7 @@ const handleSelectItem = (index: any) => {
               style="background-color: rgba(0, 0, 0, 0)"
               @click="handleSelectItem(index)"
               @dblclick="emits('doubleClick', iterator)"
-              @contextmenu.stop="emits('rightClick', $event, iterator)"
+              @contextmenu.stop="handleRightMenu($event, 'file')"
               v-click-outside="{
                 handler: () => (fileStore.selectedList.length = 0),
                 closeConditional: () => fileStore.selectedList.includes(iterator.name)
@@ -125,8 +191,15 @@ const handleSelectItem = (index: any) => {
     </v-card-action>
   </v-card>
 
-  <!-- 右键菜单 -->
-  <AppFileRightClickMenu />
+  <!-- 上下文右键菜单 -->
+  <AppRightMenu
+    ref="rightMenuRef"
+    :menuItems="cs.rightMenu.menuItems"
+    :location="cs.rightMenu.location"
+    :style="{ visibility: cs.rightMenu.show ? 'visible' : 'hidden' }"
+    @confirm="handleContextRightMenuConfirm"
+    @cancel="cs.rightMenu.show = false"
+  />
 </template>
 
 <style lang="scss" scoped></style>
