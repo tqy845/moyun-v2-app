@@ -132,6 +132,26 @@ const handleRightMenu = (
 </script>
 
 <template>
+  <v-toolbar border density="compact">
+    <template #title>
+      <v-row align="center">
+        <v-col class="">
+          <v-breadcrumbs :items="fileStore.breadcrumbItems">
+            <template v-slot:divider>
+              <v-icon icon="mdi-chevron-right"></v-icon>
+            </template>
+            <template v-slot:prepend>
+              <v-icon size="small" :icon="'mdi-' + 'folder-open'" class="pr-5"></v-icon>
+            </template>
+          </v-breadcrumbs>
+        </v-col>
+        <v-col cols="auto" class="">
+          <v-btn icon="mdi-folder-plus-outline"></v-btn>
+          <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
+        </v-col>
+      </v-row>
+    </template>
+  </v-toolbar>
   <v-data-table
     :loading="fileStore.loading"
     fixed-header
