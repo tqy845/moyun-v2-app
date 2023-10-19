@@ -20,56 +20,43 @@ const controlState = useKeyModifier('Control') // 绑定Control键实现 多选
 const appStore = useAppStore()
 const fileStore = useFileStore()
 
-const data = reactive<{
-  rightMenuInstance?: WebviewWindow
-  rightMenuFocusListen?: Function
-  rightMenuListen?: Function
-}>({})
-
 onMounted(async () => {
-  const basicSettings = appStore.app.settings['basicRightMenu']
-  data.rightMenuInstance = new WebviewWindow('right-menu', {
-    url: '/right-menu',
-    width: 256,
-    ...basicSettings
-  })
-
   // 监听右键菜单聚焦
-  data.rightMenuFocusListen = await data.rightMenuInstance!.onFocusChanged(
-    async ({ payload: focused }) => {
-      if (!focused) {
-        data.rightMenuInstance?.hide()
-      }
-    }
-  )
+  // data.rightMenuFocusListen = await data.rightMenuInstance!.onFocusChanged(
+  //   async ({ payload: focused }) => {
+  //     if (!focused) {
+  //       data.rightMenuInstance?.hide()
+  //     }
+  //   }
+  // )
 
-  data.rightMenuListen = await listen(
-    'click',
-    async (event: {
-      windowLabel: string
-      payload: {
-        labelType: string
-        actionType: number | string
-        actionData: { [key: string]: any }
-      }
-    }) => {
-      const {
-        payload: { actionType, labelType, actionData }
-      } = event
-      // 右键菜单
-      console.log('actionType = ', labelType)
+  // data.rightMenuListen = await listen(
+  //   'click',
+  //   async (event: {
+  //     windowLabel: string
+  //     payload: {
+  //       labelType: string
+  //       actionType: number | string
+  //       actionData: { [key: string]: any }
+  //     }
+  //   }) => {
+  //     const {
+  //       payload: { actionType, labelType, actionData }
+  //     } = event
+  //     // 右键菜单
+  //     console.log('actionType = ', labelType)
 
-      switch (labelType) {
-        case 'fileRightMenu':
-          // fileStore.fileRightMenuCallBack(actionType, actionData)
-          break
-        case 'contextRightFileMenu':
-          // fileStore.contextRightMenuCallBack(actionType, actionData)
-          break
-      }
-      data.rightMenuInstance?.hide()
-    }
-  )
+  //     switch (labelType) {
+  //       case 'fileRightMenu':
+  //         // fileStore.fileRightMenuCallBack(actionType, actionData)
+  //         break
+  //       case 'contextRightFileMenu':
+  //         // fileStore.contextRightMenuCallBack(actionType, actionData)
+  //         break
+  //     }
+  //     data.rightMenuInstance?.hide()
+  //   }
+  // )
 
   if (fileStore.search) return
   // 没有全局搜索才执行
@@ -77,13 +64,6 @@ onMounted(async () => {
     // 查询已经删除的文件
     fileStore.fetch(1)
   }
-})
-
-onUnmounted(async () => {
-  console.log('卸载组件')
-  data.rightMenuInstance!.close()
-  data.rightMenuFocusListen!()
-  data.rightMenuListen!()
 })
 
 /**
