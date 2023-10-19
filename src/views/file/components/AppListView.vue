@@ -132,72 +132,73 @@ const handleRightMenu = (
 </script>
 
 <template>
-  <v-toolbar border density="compact">
-    <template #title>
-      <v-row align="center">
-        <v-col class="">
-          <v-breadcrumbs :items="fileStore.breadcrumbItems">
-            <template v-slot:divider>
-              <v-icon icon="mdi-chevron-right"></v-icon>
-            </template>
-            <template v-slot:prepend>
-              <v-icon size="small" :icon="'mdi-' + 'folder-open'" class="pr-5"></v-icon>
-            </template>
-          </v-breadcrumbs>
-        </v-col>
-        <v-col cols="auto" class="">
-          <v-btn icon="mdi-folder-plus-outline"></v-btn>
-          <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
-        </v-col>
-      </v-row>
-    </template>
-  </v-toolbar>
-  <v-data-table
-    :loading="fileStore.loading"
-    fixed-header
-    :headers="headers"
-    :items="fileStore.renderList"
-    class="elevation-1"
-    :height="windowSize.height.value - 180"
-    item-value="name"
-    :hover="{ background: '#f5f5f5' }"
-    show-select
-    v-model="fileStore.selectedList"
-    @contextmenu="handleRightMenu"
-  >
-    <template v-slot:item="{ item, index }">
-      <tr
-        @click="handleClickTableRow(item)"
-        @contextmenu.stop="handleRightMenu($event, index, 'file')"
-      >
-        <td>
-          <v-checkbox
-            style="position: relative; right: 7px"
-            class="d-flex"
-            :value="item.name"
-            v-model="fileStore.selectedList"
-          ></v-checkbox>
-        </td>
-        <td>
-          <v-chip variant="text" size="x-large" style="position: relative; right: 15px">
-            <div class="text-truncate" style="width: 30vw">
-              <v-icon :icon="`mdi-` + item.icon" size="30" class="mr-2" color="#62B1FA"></v-icon>
-              <span style="position: relative; top: 2px">{{
-                item.name.replace('.' + item.extension, '')
-              }}</span>
-            </div>
-          </v-chip>
-        </td>
-        <td>
-          <v-row justify="start" @contextmenu.stop="emits('rightClick', $event, iterator)">
-            {{ useDateFormat(item.lastModified, 'YYYY/MM/DD H:mm:ss').value }}
-          </v-row>
-        </td>
-        <td>{{ item.extension }}</td>
-        <td>{{ fileUtils.formatSize(item.size) }}</td>
-      </tr>
-    </template>
-    <!-- <template v-slot:item.name="{ item }">
+  <v-card>
+    <v-toolbar border density="compact">
+      <template #title>
+        <v-row align="center">
+          <v-col class="">
+            <v-breadcrumbs :items="fileStore.breadcrumbItems">
+              <template v-slot:divider>
+                <v-icon icon="mdi-chevron-right"></v-icon>
+              </template>
+              <template v-slot:prepend>
+                <v-icon size="small" :icon="'mdi-' + 'folder-open'" class="pr-5"></v-icon>
+              </template>
+            </v-breadcrumbs>
+          </v-col>
+          <v-col cols="auto" class="">
+            <v-btn icon="mdi-folder-plus-outline"></v-btn>
+            <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
+          </v-col>
+        </v-row>
+      </template>
+    </v-toolbar>
+    <v-data-table
+      :loading="fileStore.loading"
+      fixed-header
+      :headers="headers"
+      :items="fileStore.renderList"
+      class="elevation-1"
+      :height="windowSize.height.value - 180 - 48"
+      item-value="name"
+      :hover="{ background: '#f5f5f5' }"
+      show-select
+      v-model="fileStore.selectedList"
+      @contextmenu="handleRightMenu"
+    >
+      <template v-slot:item="{ item, index }">
+        <tr
+          @click="handleClickTableRow(item)"
+          @contextmenu.stop="handleRightMenu($event, index, 'file')"
+        >
+          <td>
+            <v-checkbox
+              style="position: relative; right: 7px"
+              class="d-flex"
+              :value="item.name"
+              v-model="fileStore.selectedList"
+            ></v-checkbox>
+          </td>
+          <td>
+            <v-chip variant="text" size="x-large" style="position: relative; right: 15px">
+              <div class="text-truncate" style="width: 30vw">
+                <v-icon :icon="`mdi-` + item.icon" size="30" class="mr-2" color="#62B1FA"></v-icon>
+                <span style="position: relative; top: 2px">{{
+                  item.name.replace('.' + item.extension, '')
+                }}</span>
+              </div>
+            </v-chip>
+          </td>
+          <td>
+            <v-row justify="start" @contextmenu.stop="emits('rightClick', $event, iterator)">
+              {{ useDateFormat(item.lastModified, 'YYYY/MM/DD H:mm:ss').value }}
+            </v-row>
+          </td>
+          <td>{{ item.extension }}</td>
+          <td>{{ fileUtils.formatSize(item.size) }}</td>
+        </tr>
+      </template>
+      <!-- <template v-slot:item.name="{ item }">
       <v-row
         @contextmenu.stop="emits('rightClick', $event, iterator)"
         class="d-inline-block text-truncate bg-red"
@@ -209,7 +210,7 @@ const handleRightMenu = (
         {{ item.name.replace('.' + item.extension, '') }}
       </v-row>
     </template> -->
-    <!-- <template v-slot:item.lastModified="{ item }">
+      <!-- <template v-slot:item.lastModified="{ item }">
       <v-row justify="start" @contextmenu.stop="emits('rightClick', $event, iterator)">
         {{ useDateFormat(item.lastModified, 'YYYY/MM/DD H:mm:ss').value }}
       </v-row>
@@ -220,10 +221,10 @@ const handleRightMenu = (
         {{ fileUtils.formatSize(item.size) }}
       </v-row>
     </template> -->
-  </v-data-table>
-  <!-- 必须有一个元素在后面不然不会响应缩小的高度 -->
-  <!-- <br /> -->
-
+    </v-data-table>
+    <!-- 必须有一个元素在后面不然不会响应缩小的高度 -->
+    <!-- <br /> -->
+  </v-card>
   <!-- 右键菜单 -->
   <AppRightMenu
     ref="rightMenuRef"
