@@ -7,18 +7,31 @@
 
 <script lang="ts" setup>
 // @ts-nocheck
-import { onMounted, ref } from 'vue'
-import { useDateFormat, useWindowSize } from '@vueuse/core'
-import { fileUtils } from '@/utils/functions'
+import { onMounted, reactive, ref, nextTick } from 'vue'
+import { useDateFormat, useWindowSize, useElementSize } from '@vueuse/core'
+import { fileUtils, rightMenuUtils } from '@/utils/functions'
 import { useFileStore } from '@/stores'
+import { AppRightMenu } from '../components'
+
+const rightMenuRef = ref()
 
 const windowSize = useWindowSize()
+const rightMenuSize = useElementSize(rightMenuRef)
+
 const fileStore = useFileStore()
 
 const emits = defineEmits(['rightClick', 'doubleClick'])
 const props = defineProps<{
   multiple: boolean
 }>()
+
+const cs = reactive({
+  rightMenu: {
+    show: false,
+    location: { x: 0, y: 0 },
+    menuItems: [] as Array<RightMenuItem>
+  }
+})
 
 const headers = [
   { title: '名称', align: 'start', key: 'name' },
@@ -39,6 +52,83 @@ window.addEventListener('wheel', fileUtils.listViewMouseWheel)
 const handleClickTableRow = (item: any) => {
   fileStore.selected(item.name, props.multiple)
 }
+
+const handleSelectItem = (index: any) => {
+  // console.log('select', fileStore.renderList[index].name)
+  fileStore.selected(fileStore.renderList[index].name, props.multiple)
+}
+
+/**
+ * 右键菜单点击
+ * @param event
+ */
+const handleContextRightMenuConfirm = (item: {
+  actionType: string | number
+  actionData: RightMenuItem
+}) => {
+  // console.log(item, fileStore.fileRightMenuItems)
+  if (fileStore.contextRightMenuItems.map((item) => item.type).includes(item.actionType)) {
+    rightMenuUtils.contextRightMenuEvent(item.actionData)
+  } else {
+    rightMenuUtils.fileRightMenuEvent(item.actionData)
+  }
+  nextTick(() => {
+    cs.rightMenu.show = false
+  })
+}
+
+/**
+ * 右键菜单
+ * @param event
+ */
+const handleRightMenu = (
+  event: MouseEvent,
+  index: number,
+  type: 'context' | 'file' = 'context'
+) => {
+  event.preventDefault()
+
+  cs.rightMenu.show = false
+  switch (type) {
+    case 'context':
+      cs.rightMenu.menuItems = fileStore.contextRightMenuItems
+      break
+    case 'file':
+      cs.rightMenu.menuItems = fileStore.fileRightMenuItems
+      handleSelectItem(index)
+      break
+  }
+  setTimeout(() => {
+    cs.rightMenu.show = true
+
+    // 获取鼠标相对于视口的坐标
+    const clientX = event.clientX
+    const clientY = event.clientY
+    // 计算菜单的 x 和 y 位置，确保不超出 v-card 范围
+    let x = clientX
+    let y = clientY
+
+    // 获取菜单宽度和高度
+    const menuWidth = rightMenuSize.width.value
+    const menuHeight = rightMenuSize.height.value
+
+    const windowWidth = windowSize.width.value
+    const windowHeight = windowSize.height.value
+
+    if (clientX + menuWidth > windowWidth) {
+      // 菜单宽度超出当前元素右边界
+      x = windowWidth - menuWidth - 18
+    }
+
+    if (clientY + menuHeight > windowHeight) {
+      // 菜单高度超出当前元素下边界
+      y = windowHeight - menuHeight - 20
+    }
+
+    // 重制位置
+    cs.rightMenu.location = { x, y }
+  })
+}
 </script>
 
 <template>
@@ -53,9 +143,13 @@ const handleClickTableRow = (item: any) => {
     :hover="{ background: '#f5f5f5' }"
     show-select
     v-model="fileStore.selectedList"
+    @contextmenu="handleRightMenu"
   >
-    <template v-slot:item="{ item }">
-      <tr @click="handleClickTableRow(item)" @contextmenu.stop="emits('rightClick', $event, item)">
+    <template v-slot:item="{ item, index }">
+      <tr
+        @click="handleClickTableRow(item)"
+        @contextmenu.stop="handleRightMenu($event, index, 'file')"
+      >
         <td>
           <v-checkbox
             style="position: relative; right: 7px"
@@ -109,6 +203,17 @@ const handleClickTableRow = (item: any) => {
   </v-data-table>
   <!-- 必须有一个元素在后面不然不会响应缩小的高度 -->
   <!-- <br /> -->
+
+  <!-- 右键菜单 -->
+  <AppRightMenu
+    ref="rightMenuRef"
+    id="right-menu"
+    :menuItems="cs.rightMenu.menuItems"
+    :location="cs.rightMenu.location"
+    :style="{ visibility: cs.rightMenu.show ? 'visible' : 'hidden' }"
+    @confirm="handleContextRightMenuConfirm"
+    @cancel="cs.rightMenu.show = false"
+  />
 </template>
 
 <style lang="scss" scoped></style>

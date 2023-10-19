@@ -89,8 +89,6 @@ const handleRightMenu = (
 ) => {
   event.preventDefault()
 
-  handleSelectItem(index)
-
   cs.rightMenu.show = false
   switch (type) {
     case 'context':
@@ -98,6 +96,7 @@ const handleRightMenu = (
       break
     case 'file':
       cs.rightMenu.menuItems = fileStore.fileRightMenuItems
+      handleSelectItem(index)
       break
   }
   setTimeout(() => {

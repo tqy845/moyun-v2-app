@@ -4,7 +4,6 @@ import { ACTION_TYPE } from '@/types/enums'
 import { RightMenuItem } from '@/types/enums/right-menu'
 import { useFileDialog } from '@vueuse/core'
 import { fileUtils } from '..'
-import { BasicFile } from '@/types/models'
 
 /**
  * 上下文右键菜单事件
