@@ -10,7 +10,7 @@ import { reactive, computed, onMounted, watch, onUpdated, nextTick, ref } from '
 import { AppFile } from '@/components/common'
 import { useElementSize, useWindowSize } from '@vueuse/core'
 import { useAppStore, useFileStore } from '@/stores'
-import { fileUtils } from '@/utils/functions'
+import { fileUtils, rightMenuUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileNullAlert } from '.'
 import { AppRightMenu } from '../components'
 import { RightMenuItem } from '@/types/enums/right-menu'
@@ -63,7 +63,11 @@ const handleSelectItem = (index: any) => {
  * 上下文右键菜单
  * @param event
  */
-const handleContextRightMenuConfirm = () => {
+const handleContextRightMenuConfirm = (item: {
+  actionType: string | number
+  actionData: RightMenuItem
+}) => {
+  rightMenuUtils.contextRightMenuEvent(item.actionData)
   nextTick(() => {
     cs.rightMenu.show = false
   })
@@ -75,6 +79,7 @@ const handleContextRightMenuConfirm = () => {
  */
 const handleRightMenu = (event: MouseEvent, type: 'context' | 'file' = 'context') => {
   event.preventDefault()
+  cs.rightMenu.show = false
   switch (type) {
     case 'context':
       cs.rightMenu.menuItems = fileStore.contextRightMenuItems

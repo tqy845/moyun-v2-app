@@ -147,3 +147,15 @@ export const fileDropAll = <T = any>() => {
     method: 'DELETE'
   })
 }
+
+/**
+ * 创建文件夹<single>
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const folderCreate = <T = any>(params = {}) => {
+  return fetchRequest<T>({
+    url: `/system/user/file/create/folder`,
+    method: 'POST',
+    data: params
+  })
+}

@@ -40,7 +40,7 @@ const props = defineProps({
         <v-list-item
           v-else
           rounded="xl"
-          @click="emits('confirm', { labelType: item.text, actionType: item.type })"
+          @click="emits('confirm', { actionType: item.type, actionData: item })"
         >
           <v-list-item-title>
             <v-row align="center">

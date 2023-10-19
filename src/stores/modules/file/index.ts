@@ -8,7 +8,8 @@ import {
   fileDropAll,
   fileListFetch,
   fileDeleteByNameList,
-  fileRestoreAll
+  fileRestoreAll,
+  folderCreate
 } from '@/api'
 import { ACTION_TYPE, FileType } from '@/types/enums'
 import { BasicFile, FileProperties } from '@/types/models'
@@ -307,6 +308,13 @@ export const useFileStore = defineStore('fileStore', {
       if (code === 200) {
         this.renderList.length = 0
       }
+      return code === 200
+    },
+    /**
+     * 新建文件夹
+     */
+    async createFolder() {
+      const { code } = await folderCreate()
       return code === 200
     }
   },
