@@ -61,10 +61,10 @@ onMounted(async () => {
 
       switch (labelType) {
         case 'fileRightMenu':
-          fileStore.fileRightMenuCallBack(actionType, actionData)
+          // fileStore.fileRightMenuCallBack(actionType, actionData)
           break
         case 'contextRightFileMenu':
-          fileStore.contextRightMenuCallBack(actionType, actionData)
+          // fileStore.contextRightMenuCallBack(actionType, actionData)
           break
       }
       data.rightMenuInstance?.hide()

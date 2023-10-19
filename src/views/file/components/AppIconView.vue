@@ -60,25 +60,37 @@ const handleSelectItem = (index: any) => {
 }
 
 /**
- * 上下文右键菜单
+ * 右键菜单点击
  * @param event
  */
 const handleContextRightMenuConfirm = (item: {
   actionType: string | number
   actionData: RightMenuItem
 }) => {
-  rightMenuUtils.contextRightMenuEvent(item.actionData)
+  // console.log(item, fileStore.fileRightMenuItems)
+  if (fileStore.contextRightMenuItems.map((item) => item.type).includes(item.actionType)) {
+    rightMenuUtils.contextRightMenuEvent(item.actionData)
+  } else {
+    rightMenuUtils.fileRightMenuEvent(item.actionData)
+  }
   nextTick(() => {
     cs.rightMenu.show = false
   })
 }
 
 /**
- * 上下文右键菜单
+ * 右键菜单
  * @param event
  */
-const handleRightMenu = (event: MouseEvent, type: 'context' | 'file' = 'context') => {
+const handleRightMenu = (
+  event: MouseEvent,
+  index: number,
+  type: 'context' | 'file' = 'context'
+) => {
   event.preventDefault()
+
+  handleSelectItem(index)
+
   cs.rightMenu.show = false
   switch (type) {
     case 'context':
@@ -173,7 +185,7 @@ const handleRightMenu = (event: MouseEvent, type: 'context' | 'file' = 'context'
               style="background-color: rgba(0, 0, 0, 0)"
               @click="handleSelectItem(index)"
               @dblclick="emits('doubleClick', iterator)"
-              @contextmenu.stop="handleRightMenu($event, 'file')"
+              @contextmenu.stop="handleRightMenu($event, index, 'file')"
               v-click-outside="{
                 handler: () => (fileStore.selectedList.length = 0),
                 closeConditional: () => fileStore.selectedList.includes(iterator.name)

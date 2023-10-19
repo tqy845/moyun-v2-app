@@ -1,3 +1,4 @@
+import { ActionType } from './../../../types/enums/basic'
 import { useFileStore } from '@/stores'
 import { ACTION_TYPE } from '@/types/enums'
 import { RightMenuItem } from '@/types/enums/right-menu'
@@ -8,12 +9,11 @@ import { BasicFile } from '@/types/models'
 /**
  * 上下文右键菜单事件
  */
-const contextRightMenuEvent = (item: RightMenuItem) => {
-  console.log(item)
+const contextRightMenuEvent = (menuItem: RightMenuItem) => {
   const { REFRESH, UPLOAD, NEW_FOLDER } = ACTION_TYPE
   const fileStore = useFileStore()
 
-  switch (item.type) {
+  switch (menuItem.type) {
     case REFRESH:
       fileStore.fetch()
       break
@@ -40,7 +40,27 @@ const contextRightMenuEvent = (item: RightMenuItem) => {
 /**
  * 文件右键菜单事件
  */
-const fileRightMenuEvent = (item: RightMenuItem) => {}
+const fileRightMenuEvent = (menuItem: RightMenuItem) => {
+  const fileStore = useFileStore()
+  const isBatch: boolean = fileStore.selectedList.length > 1
+  const { OPEN, DELETE, DOWNLOAD } = ACTION_TYPE
+
+  switch (menuItem.type) {
+    case OPEN:
+      fileStore.preview = true
+      break
+    case DELETE:
+      isBatch
+        ? fileStore.removeByNameList(fileStore.selectedList)
+        : fileStore.renderList.find((item) => item.name === fileStore.selectedList[0])?.delete()
+      break
+    case DOWNLOAD:
+      isBatch
+        ? fileStore.downloadByNameList(fileStore.selectedList)
+        : fileStore.renderList.find((item) => item.name === fileStore.selectedList[0])?.download()
+      break
+  }
+}
 
 const rightMenuUtils = {
   contextRightMenuEvent,

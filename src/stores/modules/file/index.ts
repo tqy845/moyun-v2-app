@@ -239,58 +239,6 @@ export const useFileStore = defineStore('fileStore', {
       return await fileDownloadByNameList({ fileNames: names })
     },
     /**
-     * 文件右键菜单回调事件
-     * @param actionType 事件类型
-     * @param actionData 传递数据
-     */
-    async fileRightMenuCallBack(actionType: number | string, actionData: any) {
-      const isBatch: boolean = this.selectedList.length > 1
-      switch (actionType) {
-        case ACTION_TYPE.OPEN:
-          this.preview = true
-          break
-        case ACTION_TYPE.DELETE:
-          isBatch
-            ? this.removeByNameList(this.selectedList)
-            : this.renderList.find((item) => item.name === this.selectedList[0])?.delete()
-          break
-        case ACTION_TYPE.DOWNLOAD:
-          // console.log('下载', this.selectedList)
-          isBatch
-            ? this.downloadByNameList(this.selectedList)
-            : this.renderList.find((item) => item.name === this.selectedList[0])?.download()
-          break
-      }
-    },
-    /**
-     * 上下文右键菜单回调事件
-     * @param actionType 事件类型
-     * @param actionData 传递数据
-     */
-    async contextRightMenuCallBack(actionType: number | string, actionData: any) {
-      switch (actionType) {
-        case ACTION_TYPE.REFRESH:
-          this.fetch()
-          break
-        case ACTION_TYPE.UPLOAD:
-          // eslint-disable-next-line no-case-declarations
-          const { open, onChange } = useFileDialog({
-            accept: '*' // Set to accept only image files
-          })
-          // 选择文件
-          open()
-          // 开始上传
-          onChange((files) => {
-            if (files != null) {
-              fileUtils.upload(Object.values(files))
-            }
-          })
-          break
-        case ACTION_TYPE.NEW_FOLDER:
-          break
-      }
-    },
-    /**
      * 恢复垃圾篓（回收站）全部文件
      */
     async restoreAll() {
@@ -314,7 +262,23 @@ export const useFileStore = defineStore('fileStore', {
      * 新建文件夹
      */
     async createFolder() {
-      const { code } = await folderCreate()
+      const {
+        code,
+        data: { folderName }
+      } = await folderCreate<{ folderName: string }>()
+      if (code === 200) {
+        this.renderList.push(
+          new BasicFile({
+            fileName: folderName,
+            path: '/',
+            isDirectory: true,
+            size: 0,
+            lastModified: new Date(),
+            type: 'folder',
+            isEmpty: true
+          })
+        )
+      }
       return code === 200
     }
   },
