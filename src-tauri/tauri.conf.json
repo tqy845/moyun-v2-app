@@ -82,6 +82,15 @@
         "label": "customization",
         "fileDropEnabled": false
       }
-    ]
+    ],
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "endpoints": [],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQ2NzdGOThCMzIwMDRGMDEKUldRQlR3QXlpL2wzMXR5dU1uU0FQdTFqSkUzeUNreUJHNXloRjg3eW5taUtjSEdweSthZGlSQ2kK",
+      "windows": {
+        "installMode": "passive"
+      }
+    }
   }
 }
