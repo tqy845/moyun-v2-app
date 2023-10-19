@@ -33,7 +33,7 @@ const toSettingPage = () => {
   <v-menu v-model="cs.menu" :close-on-content-click="false" location="end">
     <template v-slot:activator="{ props }">
       <v-list v-bind="props">
-        <v-list-item :subtitle="userStore.user?.userName" :title="userStore.user?.email[0]">
+        <v-list-item :subtitle="userStore.user?.userName" :title="userStore.user.email?.[0]">
           <template #prepend>
             <v-avatar size="x-small" color="surface-variant">{{
               userStore.user.userName?.[0] ?? ''
