@@ -37,7 +37,7 @@ export const useFileStore = defineStore('fileStore', {
       const appStore = useAppStore()
       const path = this.breadcrumbItems.map((item) => item.path).join('')
       const { data } = await fileListFetch<{
-        fileList: Array<FileProperties>
+        fileList: Array<FileProperties & { modifyDate: string }>
       }>({ path, delFlag })
 
       const { fileList } = data
@@ -52,6 +52,8 @@ export const useFileStore = defineStore('fileStore', {
           icon: fileUtils.getIcon(item),
           ...item
         })
+        _basicFile['lastModified'] = item.modifyDate
+
         this.list.push(_basicFile)
         for (const key of keys) {
           if (fileUtils.isType(item.type, key)) {
@@ -273,7 +275,7 @@ export const useFileStore = defineStore('fileStore', {
             path: '/',
             isDirectory: true,
             size: 0,
-            lastModified: new Date(),
+            lastModified: '',
             type: 'folder',
             isEmpty: true
           })

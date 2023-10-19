@@ -27,7 +27,7 @@ export interface FileProperties {
   path: string
   isDirectory: boolean
   size: number
-  lastModified: Date
+  lastModified: string
   type: string
   icon?: string
   isEmpty: boolean
@@ -290,7 +290,7 @@ export class BasicFile {
   /**
    * 更新时间
    */
-  lastModified: Date
+  lastModified: string
 
   /**
    * 拼音
