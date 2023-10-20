@@ -132,7 +132,7 @@ const handleRightMenu = (
 </script>
 
 <template>
-  <v-card>
+  <v-card class="w-100">
     <v-toolbar border density="compact">
       <template #title>
         <v-row align="center">
