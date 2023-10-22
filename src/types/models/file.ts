@@ -14,7 +14,7 @@ const THREAD_COUNT = navigator.hardwareConcurrency || 4
 /**
  * 文件属性
  */
-export interface MoYunFileProperties {
+export interface MoYunFileDto {
   fileName: string
   path: string
   isDirectory: boolean
@@ -28,7 +28,7 @@ export interface MoYunFileProperties {
 /**
  * 分片上传对象
  */
-export class MoYunUploadChunk {
+export class MoYunUploadDto {
   /**
    * 索引
    */
@@ -303,7 +303,7 @@ export class MoYunFile {
    * 创建一个新的 File 实例
    * @param params 文件属性，包括名称、图标和类型。
    */
-  constructor(params: MoYunFileProperties) {
+  constructor(params: MoYunFileDto) {
     this.name = params.fileName
     this.extension = params.type
     this.path = params.path

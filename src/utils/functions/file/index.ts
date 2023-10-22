@@ -2,7 +2,7 @@
  * 文件工具库
  */
 
-import { MoYunFile, MoYunFileProperties, MoYunUploadChunk } from '@/types/models'
+import { MoYunFile, MoYunFileDto, MoYunUploadDto } from '@/types/models'
 import { FileType } from '@/types/enums'
 import { useAppStore, useFileStore } from '@/stores'
 
@@ -20,7 +20,7 @@ const upload = async (fileList: Array<File>) => {
     for (const file of fileList) {
       if (!fileNameList.includes(file.name)) {
         // 新任务
-        const task = new MoYunUploadChunk(file, fileStore.uploadQueue.all.length + 1)
+        const task = new MoYunUploadDto(file, fileStore.uploadQueue.all.length + 1)
         fileStore.uploadQueue.add(task, 'upload')
         appStore.requestQueue[file.name] = []
       }

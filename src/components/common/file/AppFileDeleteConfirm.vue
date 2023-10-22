@@ -8,10 +8,10 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { ACTION_TYPE, ActionType } from '@/types/enums'
-import { MoYunUploadChunk } from '@/types/models'
+import { MoYunUploadDto } from '@/types/models'
 
 const props = defineProps<{
-  item: MoYunUploadChunk
+  item: MoYunUploadDto
 }>()
 
 const emits = defineEmits(['select'])

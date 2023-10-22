@@ -12,7 +12,7 @@ import {
   folderCreate
 } from '@/api'
 import { ACTION_TYPE, FileType } from '@/types/enums'
-import { MoYunFile, MoYunFileProperties } from '@/types/models'
+import { MoYunFile, MoYunFileDto } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
 import { defineStore } from 'pinia'
 import { useAppStore } from '..'
@@ -36,7 +36,7 @@ export const useFileStore = defineStore('fileStore', {
       const appStore = useAppStore()
       const path = this.breadcrumbItems.map((item) => item.path).join('')
       const { data } = await fileListFetch<{
-        fileList: Array<MoYunFileProperties & { modifyDate: string }>
+        fileList: Array<MoYunFileDto & { modifyDate: string }>
       }>({ path, delFlag })
 
       const { fileList } = data
@@ -262,7 +262,7 @@ export const useFileStore = defineStore('fileStore', {
       const {
         code,
         data: { folder }
-      } = await folderCreate<{ folder: MoYunFileProperties & { modifyDate: string } }>()
+      } = await folderCreate<{ folder: MoYunFileDto & { modifyDate: string } }>()
       if (code === 200) {
         this.renderList.push(new MoYunFile(folder))
       }
