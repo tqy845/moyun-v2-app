@@ -1,4 +1,4 @@
-import { BasicFile } from '@/types/models'
+import { MoYunFile } from '@/types/models'
 import { useAppStore } from '..'
 import { Concurrent } from '@/utils/functions/queue'
 import { ACTION_TYPE } from '@/types/enums'
@@ -23,21 +23,21 @@ export interface FileStore {
 
   /**
    * 文件分类信息列表
-   * @type {Array<BasicFile>}
+   * @type {Array<MoYunFile>}
    */
-  class: { [key: string]: Array<BasicFile> }
+  class: { [key: string]: Array<MoYunFile> }
 
   /**
    * 文件列表
-   * @type {Array<BasicFile>}
+   * @type {Array<MoYunFile>}
    */
-  list: Array<BasicFile>
+  list: Array<MoYunFile>
 
   /**
    * 渲染列表
-   * @type {Array<BasicFile>}
+   * @type {Array<MoYunFile>}
    */
-  renderList: Array<BasicFile>
+  renderList: Array<MoYunFile>
 
   /**
    * 上传队列
@@ -111,7 +111,7 @@ export interface FileStore {
   /**
    * 垃圾篓（回收站）
    */
-  trashBasket: Array<BasicFile>
+  trashBasket: Array<MoYunFile>
 }
 
 /**

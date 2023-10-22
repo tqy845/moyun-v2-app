@@ -13,7 +13,7 @@ import { useAppStore, useFileStore } from '@/stores'
 import { fileUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileNullAlert } from '.'
 import { FileType } from '@/types/enums'
-import { BasicFile } from '@/types/models'
+import { MoYunFile } from '@/types/models'
 
 const windowSize = useWindowSize()
 

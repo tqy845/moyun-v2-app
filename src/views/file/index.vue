@@ -9,7 +9,7 @@ import { onUnmounted, onMounted, reactive, ref, nextTick } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys } from '@vueuse/core'
 import { AppIconView, AppListView } from './components'
 import { useAppStore, useFileStore } from '@/stores'
-import { BasicFile } from '@/types/models'
+import { MoYunFile } from '@/types/models'
 import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
 import { emit, listen } from '@tauri-apps/api/event'
 
@@ -106,7 +106,7 @@ useMagicKeys({
   }
 })
 
-const handleDoubleClick = (item: BasicFile) => {
+const handleDoubleClick = (item: MoYunFile) => {
   console.log('双击..', item)
   if (item.extension === 'file') {
     console.log('不受打开支持的文件...')
@@ -122,7 +122,7 @@ const handleDoubleClick = (item: BasicFile) => {
  * @param event 菜单原生事件
  * @param file 文件
  */
-const handleFileRightClick = async (event: MouseEvent, file: BasicFile) => {
+const handleFileRightClick = async (event: MouseEvent, file: MoYunFile) => {
   // console.log('右键文件菜单')
   event.preventDefault()
   // 更新菜单项

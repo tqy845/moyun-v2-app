@@ -1,4 +1,4 @@
-import { FileChunk } from '@/types/models'
+import { MoYunFileChunk } from '@/types/models'
 import SparkMD5 from 'spark-md5'
 
 /**
@@ -6,7 +6,7 @@ import SparkMD5 from 'spark-md5'
  * @description 这个方法会被worker线程调用
  */
 export const createChunk = (file: File, index: number, chunkSize: number) => {
-  return new Promise<FileChunk>((resolve) => {
+  return new Promise<MoYunFileChunk>((resolve) => {
     const start = index * chunkSize
     const end = start + chunkSize
     const spark = new SparkMD5.ArrayBuffer()

@@ -12,9 +12,8 @@ import {
   folderCreate
 } from '@/api'
 import { ACTION_TYPE, FileType } from '@/types/enums'
-import { BasicFile, FileProperties } from '@/types/models'
+import { MoYunFile, MoYunFileProperties } from '@/types/models'
 import { fileUtils } from '@/utils/functions'
-import { useFileDialog } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { useAppStore } from '..'
 import { FileStore, getFileDefaultSettings } from './helper'
@@ -37,7 +36,7 @@ export const useFileStore = defineStore('fileStore', {
       const appStore = useAppStore()
       const path = this.breadcrumbItems.map((item) => item.path).join('')
       const { data } = await fileListFetch<{
-        fileList: Array<FileProperties & { modifyDate: string }>
+        fileList: Array<MoYunFileProperties & { modifyDate: string }>
       }>({ path, delFlag })
 
       const { fileList } = data
@@ -46,18 +45,14 @@ export const useFileStore = defineStore('fileStore', {
       keys.forEach((key) => {
         this.class[key] = []
       })
-      // 添加到分类
       fileList.forEach((item) => {
-        const _basicFile = new BasicFile({
-          icon: fileUtils.getIcon(item),
-          ...item
-        })
-        _basicFile['lastModified'] = item.modifyDate
-
-        this.list.push(_basicFile)
+        // 转换为MoYun文件
+        const _file = new MoYunFile(item)
+        this.list.push(_file)
+        // 添加到分类
         for (const key of keys) {
           if (fileUtils.isType(item.type, key)) {
-            this.class[key].push(_basicFile)
+            this.class[key].push(_file)
           }
         }
       })
@@ -267,14 +262,9 @@ export const useFileStore = defineStore('fileStore', {
       const {
         code,
         data: { folder }
-      } = await folderCreate<{ folder: FileProperties & { modifyDate: string } }>()
+      } = await folderCreate<{ folder: MoYunFileProperties & { modifyDate: string } }>()
       if (code === 200) {
-        const _basicFile = new BasicFile({
-          icon: fileUtils.getIcon(folder),
-          ...folder
-        })
-        _basicFile['lastModified'] = folder.modifyDate
-        this.renderList.push(_basicFile)
+        this.renderList.push(new MoYunFile(folder))
       }
       return code === 200
     }

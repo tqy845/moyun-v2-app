@@ -3,16 +3,8 @@ import { pinyin } from 'pinyin-pro'
 import { useFileStore, useUserStore } from '@/stores'
 import { calculateFileSliceSize, mergeUint8Arrays } from '@/utils/functions/file/helper'
 import { ACTION_TYPE } from '../enums'
-import {
-  BaseDirectory,
-  BinaryFileContents,
-  createDir,
-  exists,
-  readBinaryFile,
-  removeDir,
-  writeBinaryFile
-} from '@tauri-apps/api/fs'
-import { invoke } from '@tauri-apps/api'
+import { BaseDirectory, readBinaryFile, removeDir, writeBinaryFile } from '@tauri-apps/api/fs'
+import { fileUtils } from '@/utils/functions'
 
 /**
  * 线程数量
@@ -22,12 +14,12 @@ const THREAD_COUNT = navigator.hardwareConcurrency || 4
 /**
  * 文件属性
  */
-export interface FileProperties {
+export interface MoYunFileProperties {
   fileName: string
   path: string
   isDirectory: boolean
   size: number
-  lastModified: string
+  modifyDate: string
   type: string
   icon?: string
   isEmpty: boolean
@@ -36,7 +28,7 @@ export interface FileProperties {
 /**
  * 分片上传对象
  */
-export class UploadChunk {
+export class MoYunUploadChunk {
   /**
    * 索引
    */
@@ -256,7 +248,7 @@ export class UploadChunk {
 /**
  * 文件类
  */
-export class BasicFile {
+export class MoYunFile {
   /**
    * 文件名
    */
@@ -303,18 +295,29 @@ export class BasicFile {
   power?: string | number
 
   /**
+   * 是否为空
+   */
+  isEmpty: boolean
+
+  /**
    * 创建一个新的 File 实例
    * @param params 文件属性，包括名称、图标和类型。
    */
-  constructor(params: FileProperties) {
+  constructor(params: MoYunFileProperties) {
     this.name = params.fileName
-    this.icon = params.icon ?? ''
     this.extension = params.type
     this.path = params.path
     this.isDirectory = params.isDirectory
     this.size = params.size
-    this.lastModified = params.lastModified
+    this.isEmpty = params.isEmpty
     this.pinyin = pinyin(params.fileName, { toneType: 'none' }) // 'han yu pin yin'
+
+    this.lastModified = params.modifyDate
+    this.icon = params.icon ?? this.generateIcon
+  }
+
+  get generateIcon() {
+    return fileUtils.generateIcon(this)
   }
 
   /**
@@ -422,7 +425,7 @@ export class BasicFile {
 /**
  * 文件块
  */
-export interface FileChunk {
+export interface MoYunFileChunk {
   start: number
   end: number
   index: number

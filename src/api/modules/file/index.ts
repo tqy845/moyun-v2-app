@@ -1,4 +1,4 @@
-import { BasicFile } from '@/types/models'
+import { MoYunFile } from '@/types/models'
 import { fetchRequest, tauriRequest } from '@/utils/request'
 
 /**

@@ -2,7 +2,7 @@
  * 文件工具库
  */
 
-import { FileProperties, UploadChunk } from '@/types/models'
+import { MoYunFile, MoYunFileProperties, MoYunUploadChunk } from '@/types/models'
 import { FileType } from '@/types/enums'
 import { useAppStore, useFileStore } from '@/stores'
 
@@ -20,7 +20,7 @@ const upload = async (fileList: Array<File>) => {
     for (const file of fileList) {
       if (!fileNameList.includes(file.name)) {
         // 新任务
-        const task = new UploadChunk(file, fileStore.uploadQueue.all.length + 1)
+        const task = new MoYunUploadChunk(file, fileStore.uploadQueue.all.length + 1)
         fileStore.uploadQueue.add(task, 'upload')
         appStore.requestQueue[file.name] = []
       }
@@ -48,14 +48,14 @@ const upload = async (fileList: Array<File>) => {
 const download = () => {}
 
 /**
- * 获取文件Icon
- * @param fileProperties 文件属性
+ * 生成文件Icon
+ * @param file 文件
  */
-const getIcon = (fileProperties: FileProperties) => {
-  const { type, isDirectory, isEmpty } = fileProperties
-  let _extension = type
+const generateIcon = (file: MoYunFile) => {
+  const { extension, isDirectory, size } = file
+  let _extension = extension
   if (isDirectory) {
-    _extension = isEmpty ? 'folder' : 'folder-file'
+    _extension = size ? 'folder' : 'folder-file'
   }
   switch (_extension.toLowerCase()) {
     // 视频类
@@ -316,7 +316,7 @@ const isType = (extension: string, fileType: string) => {
 const fileUtils = {
   upload,
   download,
-  getIcon,
+  generateIcon,
   formatSize,
   iconViewMouseWheel,
   listViewMouseWheel,

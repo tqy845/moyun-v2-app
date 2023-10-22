@@ -7,14 +7,14 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { usePrecision } from '@vueuse/math'
-import { BasicFile } from '@/types/models'
+import { MoYunFile } from '@/types/models'
 import { useFileStore } from '@/stores'
 
 const fileStore = useFileStore()
 
 defineProps({
   fileItem: {
-    type: BasicFile,
+    type: MoYunFile,
     required: true
   }
 })
