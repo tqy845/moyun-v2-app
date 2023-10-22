@@ -266,20 +266,15 @@ export const useFileStore = defineStore('fileStore', {
     async createFolder() {
       const {
         code,
-        data: { folderName }
-      } = await folderCreate<{ folderName: string }>()
+        data: { folder }
+      } = await folderCreate<{ folder: FileProperties & { modifyDate: string } }>()
       if (code === 200) {
-        this.renderList.push(
-          new BasicFile({
-            fileName: folderName,
-            path: '/',
-            isDirectory: true,
-            size: 0,
-            lastModified: '',
-            type: 'folder',
-            isEmpty: true
-          })
-        )
+        const _basicFile = new BasicFile({
+          icon: fileUtils.getIcon(folder),
+          ...folder
+        })
+        _basicFile['lastModified'] = folder.modifyDate
+        this.renderList.push(_basicFile)
       }
       return code === 200
     }

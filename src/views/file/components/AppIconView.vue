@@ -149,7 +149,7 @@ const handleRightMenu = (
             </v-breadcrumbs>
           </v-col>
           <v-col cols="auto" class="">
-            <v-btn icon="mdi-folder-plus-outline"></v-btn>
+            <v-btn icon="mdi-folder-plus-outline" @click="fileStore.createFolder()"></v-btn>
             <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
           </v-col>
         </v-row>
