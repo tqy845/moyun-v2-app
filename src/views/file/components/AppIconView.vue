@@ -54,8 +54,11 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
 
 onMounted(() => {})
 
+/**
+ * 选中文件
+ * @param index 文件索引
+ */
 const handleSelectItem = (index: any) => {
-  // console.log('select', fileStore.renderList[index].name)
   fileStore.selected(fileStore.renderList[index].name, props.multiple)
 }
 
@@ -96,7 +99,9 @@ const handleRightMenu = (
       break
     case 'file':
       cs.rightMenu.menuItems = fileStore.fileRightMenuItems
-      handleSelectItem(index)
+      if (!fileStore.selectedList.includes(fileStore.renderList[index].name)) {
+        handleSelectItem(index)
+      }
       break
   }
   setTimeout(() => {
@@ -185,16 +190,18 @@ const handleRightMenu = (
               @click="handleSelectItem(index)"
               @dblclick="emits('doubleClick', iterator)"
               @contextmenu.stop="handleRightMenu($event, index, 'file')"
-              v-click-outside="{
-                handler: () => (fileStore.selectedList.length = 0),
-                closeConditional: () => fileStore.selectedList.includes(iterator.name)
-              }"
             />
           </v-col>
         </v-row>
       </v-btn-toggle>
       <!-- 无内容 -->
-      <AppFileNullAlert />
+      <AppFileNullAlert
+        :title="`【${$t(
+          fileStore.classMenuItems.filter(
+            (it) => it.key === appStore['app']['menuIndex']['currentFileClassifyTab']
+          )[0]['label']
+        )}】${$t('file.view.null.text')}`"
+      />
     </div>
     <v-card-action>
       <v-pagination

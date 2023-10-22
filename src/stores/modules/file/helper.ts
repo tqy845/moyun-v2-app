@@ -1,7 +1,7 @@
 import { MoYunFile } from '@/types/models'
 import { useAppStore } from '..'
 import { Concurrent } from '@/utils/functions/queue'
-import { ACTION_TYPE } from '@/types/enums'
+import { ACTION_TYPE, FileType } from '@/types/enums'
 import { RightMenuItem } from '@/types/enums/right-menu'
 import { BreadcrumbItem } from '@/types/models/breadcrumb-item.ts'
 
@@ -112,6 +112,11 @@ export interface FileStore {
    * 垃圾篓（回收站）
    */
   trashBasket: Array<MoYunFile>
+
+  /**
+   * 菜单分类项
+   */
+  classMenuItems: Array<{ label: string; icon: string; key: string }>
 }
 
 /**
@@ -228,6 +233,43 @@ export const getFileDefaultSettings = (): FileStore => {
       }
     ],
     preview: false,
-    trashBasket: []
+    trashBasket: [],
+    classMenuItems: [
+      {
+        label: 'file.view.iconLabel.secondaryMenu.all.text',
+        icon: 'file',
+        key: FileType.All
+      },
+      {
+        label: 'file.view.iconLabel.secondaryMenu.document.text',
+        icon: 'briefcase',
+        key: FileType.Document
+      },
+      {
+        label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
+        icon: 'multimedia',
+        key: FileType.Media
+      },
+      {
+        label: 'file.view.iconLabel.secondaryMenu.application.text',
+        icon: 'application',
+        key: FileType.Application
+      },
+      {
+        label: 'file.view.iconLabel.secondaryMenu.gho.text',
+        icon: 'ghost',
+        key: FileType.Ghost
+      },
+      {
+        label: 'file.view.iconLabel.secondaryMenu.folder.text',
+        icon: 'folder',
+        key: FileType.Folder
+      },
+      {
+        label: 'file.view.iconLabel.secondaryMenu.package.text',
+        icon: 'folder-zip',
+        key: FileType.Zip
+      }
+    ]
   }
 }

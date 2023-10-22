@@ -1,7 +1,7 @@
 import { fileDownloadByName, fileDeleteByName } from '@/api'
 import { pinyin } from 'pinyin-pro'
 import { useFileStore, useUserStore } from '@/stores'
-import { calculateFileSliceSize, mergeUint8Arrays } from '@/utils/functions/file/helper'
+import { calculateFileSliceSize } from '@/utils/functions/file/helper'
 import { ACTION_TYPE } from '../enums'
 import { BaseDirectory, readBinaryFile, removeDir, writeBinaryFile } from '@tauri-apps/api/fs'
 import { fileUtils } from '@/utils/functions'

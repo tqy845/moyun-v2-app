@@ -17,45 +17,8 @@ const data = reactive<{
   tabItems: Array<{ label: string; icon: string; key: string }>
   tabMoreItems: Array<{ label: string; icon: string; key: string }>
 }>({
-  tabItems: [
-    {
-      label: 'file.view.iconLabel.secondaryMenu.all.text',
-      icon: 'file',
-      key: FileType.All
-    },
-    {
-      label: 'file.view.iconLabel.secondaryMenu.document.text',
-      icon: 'briefcase',
-      key: FileType.Document
-    },
-    {
-      label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
-      icon: 'multimedia',
-      key: FileType.Media
-    }
-  ],
-  tabMoreItems: [
-    {
-      label: 'file.view.iconLabel.secondaryMenu.application.text',
-      icon: 'application',
-      key: FileType.Application
-    },
-    {
-      label: 'file.view.iconLabel.secondaryMenu.gho.text',
-      icon: 'ghost',
-      key: FileType.Ghost
-    },
-    {
-      label: 'file.view.iconLabel.secondaryMenu.folder.text',
-      icon: 'folder',
-      key: FileType.Folder
-    },
-    {
-      label: 'file.view.iconLabel.secondaryMenu.package.text',
-      icon: 'folder-zip',
-      key: FileType.Zip
-    }
-  ]
+  tabItems: fileStore.classMenuItems.slice(0, 3),
+  tabMoreItems: fileStore.classMenuItems.slice(3, fileStore.classMenuItems.length)
 })
 
 /**
