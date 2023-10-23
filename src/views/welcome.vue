@@ -61,7 +61,7 @@ const appStore = useAppStore()
             <v-checkbox
               style="display: inline-block"
               label="登录后显示欢迎页"
-              v-model="appStore['launchWelcome']"
+              v-model="appStore['settings']['basic']['launchWelcome']"
             ></v-checkbox>
           </template>
         </v-list-item>

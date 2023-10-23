@@ -36,7 +36,7 @@ const toSignUp = useDebounceFn(() => {
  * 前往个人中心
  */
 const toWelcome = () => {
-  if (appStore['launchWelcome']) {
+  if (appStore['settings']['basic']['launchWelcome']) {
     router.replace('/welcome')
   } else {
     appStore.asideMenu.itemList[1].active = true

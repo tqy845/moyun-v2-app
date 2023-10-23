@@ -60,10 +60,10 @@ export const useUserStore = defineStore('userStore', {
       const appStore = useAppStore()
       const fileStore = useFileStore()
 
-      const _welcome = appStore.launchWelcome
+      const _oldSettings = appStore['settings']
       appStore.$reset()
       fileStore.$reset()
-      appStore.launchWelcome = _welcome
+      appStore['settings'] = _oldSettings
 
       // const _user = { ...user, password: encrypt(user.password) }
       const _userProperties = userProperties

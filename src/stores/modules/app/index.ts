@@ -80,7 +80,7 @@ export const useAppStore = defineStore(`appStore`, {
   persist: [
     {
       storage: localStorage,
-      paths: ['asideMenu', 'app', 'searchRecord', 'launchWelcome']
+      paths: ['asideMenu', 'app', 'searchRecord', 'settings']
     }
   ]
 })

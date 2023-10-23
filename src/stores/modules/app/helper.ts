@@ -89,10 +89,6 @@ export interface AppStore {
    * 切换语言
    */
   changedLanguage: boolean
-  /**
-   * 启动欢迎页
-   */
-  launchWelcome: boolean
 }
 
 /**
@@ -130,7 +126,14 @@ export const getAppDefaultSettings = (): AppStore => {
         visible: false // 立即可见
       },
       // 基本
-      basic: {},
+      basic: {
+        // 显示欢迎页
+        launchWelcome: true,
+        // 开机自启
+        powerOn: false,
+        // 自动升级
+        autoUpdate: false
+      },
       // 传输
       transfer: {},
       // 快捷键
@@ -180,7 +183,6 @@ export const getAppDefaultSettings = (): AppStore => {
     searchResult: [],
     searchRecord: [],
     401: false,
-    changedLanguage: false,
-    launchWelcome: true
+    changedLanguage: false
   }
 }

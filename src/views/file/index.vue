@@ -5,13 +5,11 @@
   @description “文件展示”首页
 -->
 <script lang="ts" setup>
-import { onUnmounted, onMounted, reactive, ref, nextTick } from 'vue'
+import { onMounted, reactive, ref, nextTick } from 'vue'
 import { useElementSize, useKeyModifier, useMagicKeys } from '@vueuse/core'
 import { AppIconView, AppListView } from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { MoYunFile } from '@/types/models'
-import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
-import { emit, listen } from '@tauri-apps/api/event'
 
 const containerRef = ref(null)
 const { width } = useElementSize(containerRef)
@@ -20,64 +18,6 @@ const controlState = useKeyModifier('Control') // 绑定Control键实现 多选
 const appStore = useAppStore()
 const fileStore = useFileStore()
 
-const data = reactive<{
-  rightMenuInstance?: WebviewWindow
-  rightMenuFocusListen?: Function
-  rightMenuListen?: Function
-}>({})
-
-// onMounted(async () => {
-//   const basicSettings = appStore['settings']['basicRightMenu']
-//   data.rightMenuInstance = new WebviewWindow('right-menu', {
-//     url: '/right-menu',
-//     width: 256,
-//     ...basicSettings
-//   })
-
-//   // 监听右键菜单聚焦
-//   data.rightMenuFocusListen = await data.rightMenuInstance!.onFocusChanged(
-//     async ({ payload: focused }) => {
-//       if (!focused) {
-//         data.rightMenuInstance?.hide()
-//       }
-//     }
-//   )
-
-//   data.rightMenuListen = await listen(
-//     'click',
-//     async (event: {
-//       windowLabel: string
-//       payload: {
-//         labelType: string
-//         actionType: number | string
-//         actionData: { [key: string]: any }
-//       }
-//     }) => {
-//       const {
-//         payload: { actionType, labelType, actionData }
-//       } = event
-//       // 右键菜单
-//       console.log('actionType = ', labelType)
-
-//       switch (labelType) {
-//         case 'fileRightMenu':
-//           fileStore.fileRightMenuCallBack(actionType, actionData)
-//           break
-//         case 'contextRightFileMenu':
-//           fileStore.contextRightMenuCallBack(actionType, actionData)
-//           break
-//       }
-//       data.rightMenuInstance?.hide()
-//     }
-//   )
-
-//   if (fileStore.search) return
-//   // 没有全局搜索才执行
-//   if (!appStore.search) {
-//     fileStore.fetch()
-//   }
-// })
-
 onMounted(() => {
   if (fileStore.search) return
   // 没有全局搜索才执行
@@ -85,13 +25,6 @@ onMounted(() => {
     fileStore.fetch()
   }
 })
-
-// onUnmounted(async () => {
-//   console.log('卸载组件')
-//   data.rightMenuInstance!.close()
-//   data.rightMenuFocusListen!()
-//   data.rightMenuListen!()
-// })
 
 /**
  * 全选
@@ -125,16 +58,10 @@ const handleDoubleClick = (item: MoYunFile) => {
 const handleFileRightClick = async (event: MouseEvent, file: MoYunFile) => {
   // console.log('右键文件菜单')
   event.preventDefault()
-  // 更新菜单项
-  emit('action', { actionType: 'fileRightMenu', actionData: fileStore.fileRightMenuItems })
   // 是否多选
   if (fileStore.selectedList.length <= 1) {
     fileStore.selected(file.name)
   }
-  // 获取屏幕绝对的鼠标坐标
-  const { screenX, screenY } = event
-  // 重设位置
-  // data.rightMenuInstance!.setPosition(new LogicalPosition(screenX, screenY))
 }
 </script>
 
