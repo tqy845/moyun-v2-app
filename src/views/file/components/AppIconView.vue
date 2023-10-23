@@ -160,7 +160,7 @@ const handleRightMenu = (
         </v-row>
       </template>
     </v-toolbar>
-    <div :style="{ height: `${windowSize.height.value - 240}px` }" style="overflow: auto">
+    <v-container fluid>
       <!-- 读取中 -->
       <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
       <!-- 渲染 -->
@@ -168,25 +168,25 @@ const handleRightMenu = (
         v-else-if="fileStore.renderList.length"
         v-show="!fileStore.show"
         :density="null"
-        class="pa-5 w-100"
+        class="w-100"
         :model-value="
           fileStore.selectedList.map((it_name) =>
             fileStore.renderList.findIndex((it) => it.name === it_name)
           )
         "
       >
-        <v-row v-if="width" :style="{ 'padding-left': `${(width % 158) / 2 + 15}px` }">
+        <v-row v-if="width">
           <v-col
             v-for="(iterator, index) in fileStore.renderList"
             :key="index"
-            class="px-1"
             cols="auto"
+            class="ma-1 pa-0"
           >
             <!-- 渲染文件-->
             <AppFile
+              class="bg-transparent"
               :file-item="iterator"
               elevation="0"
-              style="background-color: rgba(0, 0, 0, 0)"
               @click="handleSelectItem(index)"
               @dblclick="emits('doubleClick', iterator)"
               @contextmenu.stop="handleRightMenu($event, index, 'file')"
@@ -202,7 +202,7 @@ const handleRightMenu = (
           )[0]['label']
         )}】${$t('file.view.null.text')}`"
       />
-    </div>
+    </v-container>
     <v-card-action>
       <v-pagination
         :model-value="

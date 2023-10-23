@@ -50,4 +50,8 @@ html {
 .w-min {
   min-width: 100% !important;
 }
+
+.bg-transparent {
+  background-color: transparent !important;
+}
 </style>

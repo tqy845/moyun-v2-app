@@ -45,7 +45,7 @@ const handleSave = () => {
             同步盘
           </v-tab>
         </v-tabs>
-        <v-window v-model="cs.tab" class="w-100 pa-5">
+        <v-window v-model="cs.tab" class="w-100">
           <v-window-item value="option-1">
             <!-- 基础配置 -->
             <AppBasic />

@@ -5,7 +5,6 @@
   @description “文件”组件
 -->
 <script lang="ts" setup>
-import { reactive } from 'vue'
 import { usePrecision } from '@vueuse/math'
 import { MoYunFile } from '@/types/models'
 import { useFileStore } from '@/stores'
@@ -18,10 +17,6 @@ defineProps({
     required: true
   }
 })
-
-const cs = reactive({
-  showActionsMenu: false
-})
 </script>
 
 <template>
@@ -30,16 +25,16 @@ const cs = reactive({
     :width="fileStore.itemSize"
     stacked
     v-bind="$attrs"
-    class="pa-5"
+    class="pa-0 ma-0"
   >
     <template #prepend>
       <v-row class="flex-column">
-        <v-col>
+        <v-col class="pt-5">
           <!-- 文件图标 -->
           <v-icon
             :icon="`mdi-${fileItem.icon}`"
             color="#62B1FA"
-            :size="fileStore.itemSize - 30"
+            :size="fileStore.itemSize - 54"
           ></v-icon>
         </v-col>
         <v-col class="progress-linear">
@@ -61,7 +56,7 @@ const cs = reactive({
       </v-row>
     </template>
     <!-- 文件名 -->
-    <p class="text-none file-name" style="width: cs.size">
+    <p class="text-none file-name" :style="{ width: `${fileStore.itemSize - 35}px` }">
       {{ fileItem.name }}
     </p>
   </v-btn>
@@ -69,15 +64,15 @@ const cs = reactive({
 
 <style lang="scss">
 .file-name {
-  height: 40px;
+  height: 60px;
   word-break: break-all;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* 这里是超出几行省略 */
+  -webkit-line-clamp: 3; /* 这里是超出几行省略 */
   overflow: hidden;
   position: relative;
-  bottom: 8px;
+  bottom: 6px;
 }
 
 .progress-linear {
