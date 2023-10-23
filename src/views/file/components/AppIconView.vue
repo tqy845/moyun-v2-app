@@ -15,7 +15,8 @@ import { AppFileLoading, AppFileNullAlert } from '.'
 import { AppRightMenu } from '../components'
 import { RightMenuItem } from '@/types/enums/right-menu'
 
-const rightMenuRef = ref()
+const rightMenuRef = ref<HTMLElement | null>(null)
+const cardRef = ref()
 
 const windowSize = useWindowSize()
 const rightMenuSize = useElementSize(rightMenuRef)
@@ -91,7 +92,6 @@ const handleRightMenu = (
   type: 'context' | 'file' = 'context'
 ) => {
   event.preventDefault()
-
   cs.rightMenu.show = false
   switch (type) {
     case 'context':
@@ -153,19 +153,23 @@ const handleRightMenu = (
           </v-breadcrumbs>
         </v-col>
         <v-col cols="auto" class="">
-          <v-btn icon="mdi-folder-plus-outline" @click="fileStore.createFolder()"></v-btn>
+          <v-btn
+            icon="mdi-folder-plus-outline"
+            @click="
+              fileStore.createFolder(() => (cardRef.$el.scrollTop = cardRef.$el.scrollHeight))
+            "
+          ></v-btn>
           <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
         </v-col>
       </v-row>
     </template>
   </v-toolbar>
-
   <!-- 文件图标列表 -->
   <v-card
-    class="w-100"
+    ref="cardRef"
+    class="w-100 overflow-auto"
     :height="windowSize.height.value - 180"
     @contextmenu="handleRightMenu"
-    style="overflow: auto"
   >
     <v-container fluid class="">
       <!-- 读取中 -->

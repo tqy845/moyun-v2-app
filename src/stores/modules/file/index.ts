@@ -258,13 +258,14 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 新建文件夹
      */
-    async createFolder() {
+    async createFolder(callBack?: Function) {
       const {
         code,
         data: { folder }
       } = await folderCreate<{ folder: MoYunFileDto & { modifyDate: string } }>()
       if (code === 200) {
         this.renderList.push(new MoYunFile(folder))
+        setTimeout(() => callBack?.())
       }
       return code === 200
     }
