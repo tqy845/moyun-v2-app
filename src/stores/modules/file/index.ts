@@ -60,7 +60,7 @@ export const useFileStore = defineStore('fileStore', {
       // 分类
       this.renderList = this.classify(key)
       // 分页
-      this.paging(this.classifyTabCurrentPage[key] ?? 1)
+      // this.paging(this.classifyTabCurrentPage[key] ?? 1)
       this.loading = false
       return this.list
     },
@@ -83,7 +83,7 @@ export const useFileStore = defineStore('fileStore', {
         // 分类
         this.renderList = this.classify(key)
         // 分页
-        this.paging(this.classifyTabCurrentPage[key] ?? 1)
+        // this.paging(this.classifyTabCurrentPage[key] ?? 1)
       }
       this.loading = false
       return this.renderList
@@ -211,7 +211,7 @@ export const useFileStore = defineStore('fileStore', {
         const appStore = useAppStore()
         const key = appStore.app.menuIndex['currentFileClassifyTab']
         this.renderList = this.classify(key)
-        this.paging(this.classifyTabCurrentPage[key] ?? 1)
+        // this.paging(this.classifyTabCurrentPage[key] ?? 1)
       }
     },
     /**
@@ -227,7 +227,7 @@ export const useFileStore = defineStore('fileStore', {
       // 分类
       this.renderList = this.classify(key)
       // 分页
-      this.paging(this.classifyTabCurrentPage[key] ?? 1)
+      // this.paging(this.classifyTabCurrentPage[key] ?? 1)
     },
     /**
      * 批量下载

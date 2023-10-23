@@ -205,9 +205,10 @@ const iconViewMouseWheel = (event: WheelEvent) => {
     // 根据滚动方向执行相应操作
     if (delta > 0) {
       // 向下滚动
-      if (fileStore.itemSize > 80) {
+      if (fileStore.itemSize > 130) {
         fileStore.itemSize -= 3
       } else {
+        fileStore.itemSize = 127
         fileStore.view = 'list'
       }
       // 在这里执行你的操作

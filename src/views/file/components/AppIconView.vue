@@ -138,29 +138,36 @@ const handleRightMenu = (
 </script>
 
 <template>
+  <!-- 导航条 -->
+  <v-toolbar border density="compact">
+    <template #title>
+      <v-row align="center">
+        <v-col class="">
+          <v-breadcrumbs :items="fileStore.breadcrumbItems">
+            <template v-slot:divider>
+              <v-icon icon="mdi-chevron-right"></v-icon>
+            </template>
+            <template v-slot:prepend>
+              <v-icon size="small" :icon="'mdi-' + 'folder-open'" class="pr-5"></v-icon>
+            </template>
+          </v-breadcrumbs>
+        </v-col>
+        <v-col cols="auto" class="">
+          <v-btn icon="mdi-folder-plus-outline" @click="fileStore.createFolder()"></v-btn>
+          <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
+        </v-col>
+      </v-row>
+    </template>
+  </v-toolbar>
+
   <!-- 文件图标列表 -->
-  <v-card class="w-100" :height="windowSize.height.value - 130" @contextmenu="handleRightMenu">
-    <v-toolbar border density="compact">
-      <template #title>
-        <v-row align="center">
-          <v-col class="">
-            <v-breadcrumbs :items="fileStore.breadcrumbItems">
-              <template v-slot:divider>
-                <v-icon icon="mdi-chevron-right"></v-icon>
-              </template>
-              <template v-slot:prepend>
-                <v-icon size="small" :icon="'mdi-' + 'folder-open'" class="pr-5"></v-icon>
-              </template>
-            </v-breadcrumbs>
-          </v-col>
-          <v-col cols="auto" class="">
-            <v-btn icon="mdi-folder-plus-outline" @click="fileStore.createFolder()"></v-btn>
-            <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
-          </v-col>
-        </v-row>
-      </template>
-    </v-toolbar>
-    <v-container fluid>
+  <v-card
+    class="w-100"
+    :height="windowSize.height.value - 180"
+    @contextmenu="handleRightMenu"
+    style="overflow: auto"
+  >
+    <v-container fluid class="">
       <!-- 读取中 -->
       <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
       <!-- 渲染 -->
@@ -180,7 +187,7 @@ const handleRightMenu = (
             v-for="(iterator, index) in fileStore.renderList"
             :key="index"
             cols="auto"
-            class="ma-1 pa-0"
+            class="ma-0 pa-1"
           >
             <!-- 渲染文件-->
             <AppFile
@@ -203,7 +210,7 @@ const handleRightMenu = (
         )}】${$t('file.view.null.text')}`"
       />
     </v-container>
-    <v-card-action>
+    <!-- <v-card-action>
       <v-pagination
         :model-value="
           fileStore.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab']]
@@ -212,7 +219,7 @@ const handleRightMenu = (
         total-visible="6"
         @update:modelValue="fileStore.changePage"
       ></v-pagination>
-    </v-card-action>
+    </v-card-action> -->
   </v-card>
 
   <!-- 上下文右键菜单 -->

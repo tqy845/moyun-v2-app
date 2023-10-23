@@ -20,13 +20,7 @@ defineProps({
 </script>
 
 <template>
-  <v-btn
-    :size="fileStore.itemSize + 15"
-    :width="fileStore.itemSize"
-    stacked
-    v-bind="$attrs"
-    class="pa-0 ma-0"
-  >
+  <v-btn :size="fileStore.itemSize" stacked v-bind="$attrs" class="pa-0 ma-0">
     <template #prepend>
       <v-row class="flex-column">
         <v-col class="pt-5">
@@ -34,7 +28,7 @@ defineProps({
           <v-icon
             :icon="`mdi-${fileItem.icon}`"
             color="#62B1FA"
-            :size="fileStore.itemSize - 54"
+            :size="fileStore.itemSize - 70"
           ></v-icon>
         </v-col>
         <v-col class="progress-linear">
@@ -56,7 +50,7 @@ defineProps({
       </v-row>
     </template>
     <!-- 文件名 -->
-    <p class="text-none file-name" :style="{ width: `${fileStore.itemSize - 35}px` }">
+    <p class="text-none file-name bg-" :style="{ width: `${fileStore.itemSize - 35}px` }">
       {{ fileItem.name }}
     </p>
   </v-btn>
@@ -64,7 +58,7 @@ defineProps({
 
 <style lang="scss">
 .file-name {
-  height: 60px;
+  max-height: 60px;
   word-break: break-all;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -72,7 +66,7 @@ defineProps({
   -webkit-line-clamp: 3; /* 这里是超出几行省略 */
   overflow: hidden;
   position: relative;
-  bottom: 6px;
+  bottom: 8px;
 }
 
 .progress-linear {
