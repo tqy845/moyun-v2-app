@@ -126,8 +126,8 @@ export interface FileStore {
  */
 export const getFileDefaultSettings = (): FileStore => {
   const appStore = useAppStore()
-  const maxUploadCount = appStore.app.settings['maxUploadCount']
-  const maxDownLoadCount = appStore.app.settings['maxDownLoadCount']
+  const maxUploadCount = appStore['settings']['maxUploadCount']
+  const maxDownLoadCount = appStore['settings']['maxDownLoadCount']
 
   return {
     show: false,

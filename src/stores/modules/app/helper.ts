@@ -18,10 +18,6 @@ export interface App {
    * 菜单索引
    */
   menuIndex: { [key: string]: any }
-  /**
-   * 偏好设置
-   */
-  settings: { [key: string]: any }
 }
 
 /**
@@ -47,6 +43,11 @@ export interface AppStore {
    * @type {App}
    */
   app: App
+
+  /**
+   * 偏好设置
+   */
+  settings: { [key: string]: any }
 
   /**
    * 消息队列
@@ -110,24 +111,32 @@ export const getAppDefaultSettings = (): AppStore => {
         currentFileClassifyTab: FileType.All,
         // 文件上传，打开的Tab项
         currentFileUploadOpenTab: ['upload-area']
-      },
-      settings: {
-        maxUploadCount: 3, // 最大上传并发
-        maxDownLoadCount: 3, // 最大下载并发
-        uploadDialogFullscreen: false, // 上传弹窗全屏
-        uploadAutoHideUploadArea: true, // 上传时自动隐藏上传区域
-        uploadDialogAutoClose: false, // 上传完毕后自动关闭对话框
-        // 右键菜单基本配置
-        basicRightMenu: {
-          resizable: false, // 可拉伸大小
-          decorations: false, // 边框
-          contentProtected: false, // 内容隐私不可见（截图的时候不可见）
-          skipTaskbar: true, // 任务栏显示该子窗体
-          fileDropEnabled: false, // 启用文件拖拽监听
-          transparent: true, // 背景透明
-          visible: false // 立即可见
-        }
       }
+    },
+    settings: {
+      maxUploadCount: 3, // 最大上传并发
+      maxDownLoadCount: 3, // 最大下载并发
+      uploadDialogFullscreen: false, // 上传弹窗全屏
+      uploadAutoHideUploadArea: true, // 上传时自动隐藏上传区域
+      uploadDialogAutoClose: false, // 上传完毕后自动关闭对话框
+      // 右键菜单基本配置
+      basicRightMenu: {
+        resizable: false, // 可拉伸大小
+        decorations: false, // 边框
+        contentProtected: false, // 内容隐私不可见（截图的时候不可见）
+        skipTaskbar: true, // 任务栏显示该子窗体
+        fileDropEnabled: false, // 启用文件拖拽监听
+        transparent: true, // 背景透明
+        visible: false // 立即可见
+      },
+      // 基本
+      basic: {},
+      // 传输
+      transfer: {},
+      // 快捷键
+      shortcutKey: {},
+      // 同步盘
+      synchroDisk: {}
     },
     messageQueue: [],
     requestQueue: {},

@@ -105,11 +105,11 @@ const handleFileSelect = (event: any) => {
  * @param fileList 文件列表
  */
 const handleUpload = async (fileList: Array<File>, reupload: boolean = false) => {
-  if (appStore.app.settings['uploadAutoHideUploadArea']) {
+  if (appStore['settings']['uploadAutoHideUploadArea']) {
     appStore.app.menuIndex['currentFileUploadOpenTab'] = []
     handleExpansion(null, reupload)
   }
-  if ((await fileUtils.upload(fileList)) && appStore.app.settings['uploadDialogAutoClose']) {
+  if ((await fileUtils.upload(fileList)) && appStore['settings']['uploadDialogAutoClose']) {
     const allUploadCompleted = fileStore.uploadQueue.all.every(
       (item) => item.status === 'success' || item.status === 'error'
     )
@@ -132,7 +132,7 @@ const handleClickArea = () => {
   <v-dialog
     v-show="fileStore.show"
     v-model="fileStore.show"
-    :fullscreen="appStore.app.settings['uploadDialogFullscreen']"
+    :fullscreen="appStore['settings']['uploadDialogFullscreen']"
     :scrim="false"
     persistent
     :transition="fileStore.show ? 'dialog-bottom-transition' : 'dialog-top-transition'"
@@ -144,7 +144,7 @@ const handleClickArea = () => {
         <v-row style="width: max-content" justify="end">
           <v-col cols="auto">
             <v-switch
-              v-model="appStore.app.settings['uploadAutoHideUploadArea']"
+              v-model="appStore['settings']['uploadAutoHideUploadArea']"
               color="success"
               :value="true"
               hide-details
@@ -155,7 +155,7 @@ const handleClickArea = () => {
           </v-col>
           <v-col cols="auto">
             <v-switch
-              v-model="appStore.app.settings['uploadDialogAutoClose']"
+              v-model="appStore['settings']['uploadDialogAutoClose']"
               color="success"
               :value="true"
               hide-details
@@ -217,7 +217,7 @@ const handleClickArea = () => {
                   ])
                 }}</v-col>
                 <v-col cols="auto">{{
-                  $t('file.upload.maxUploadCount.text', [appStore.app.settings['maxUploadCount']])
+                  $t('file.upload.maxUploadCount.text', [appStore['settings']['maxUploadCount']])
                 }}</v-col>
                 <v-col cols="auto">{{
                   $t('file.upload.currentWorkerCount.text', [

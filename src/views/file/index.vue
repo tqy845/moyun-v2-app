@@ -27,7 +27,7 @@ const data = reactive<{
 }>({})
 
 // onMounted(async () => {
-//   const basicSettings = appStore.app.settings['basicRightMenu']
+//   const basicSettings = appStore['settings']['basicRightMenu']
 //   data.rightMenuInstance = new WebviewWindow('right-menu', {
 //     url: '/right-menu',
 //     width: 256,
