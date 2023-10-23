@@ -99,7 +99,7 @@ const handleSelectItem = (index: any) => {
           >
             <!-- 渲染文件-->
             <AppFile
-              :file-item="iterator"
+              :moYunFile="iterator"
               elevation="0"
               style="background-color: rgba(0, 0, 0, 0)"
               @click="handleSelectItem(index)"

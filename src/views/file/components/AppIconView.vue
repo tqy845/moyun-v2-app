@@ -167,11 +167,11 @@ const handleRightMenu = (
   <!-- 文件图标列表 -->
   <v-card
     ref="cardRef"
-    class="w-100 overflow-auto"
+    class="w-100 overflow-auto ma-0 pa-0"
     :height="windowSize.height.value - 180"
     @contextmenu="handleRightMenu"
   >
-    <v-container fluid class="">
+    <v-container fluid class="ma-0 pa-0">
       <!-- 读取中 -->
       <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
       <!-- 渲染 -->
@@ -179,14 +179,13 @@ const handleRightMenu = (
         v-else-if="fileStore.renderList.length"
         v-show="!fileStore.show"
         :density="null"
-        class="w-100"
         :model-value="
           fileStore.selectedList.map((it_name) =>
             fileStore.renderList.findIndex((it) => it.name === it_name)
           )
         "
       >
-        <v-row v-if="width">
+        <v-row v-if="width" class="ma-0 pa-0">
           <v-col
             v-for="(iterator, index) in fileStore.renderList"
             :key="index"
@@ -196,7 +195,7 @@ const handleRightMenu = (
             <!-- 渲染文件-->
             <AppFile
               class="bg-transparent"
-              :file-item="iterator"
+              :moYunFile="iterator"
               elevation="0"
               @click="handleSelectItem(index)"
               @dblclick="emits('doubleClick', iterator)"
