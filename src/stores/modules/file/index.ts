@@ -46,7 +46,7 @@ export const useFileStore = defineStore('fileStore', {
         this.class[key] = []
       })
       fileList.forEach((item) => {
-        // 转换为MoYun文件
+        // 构造MoYunFile实例
         const _file = new MoYunFile(item)
         this.list.push(_file)
         // 添加到分类

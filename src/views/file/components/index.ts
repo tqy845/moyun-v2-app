@@ -7,6 +7,7 @@ import AppFileNullAlert from './AppFileNullAlert.vue'
 import AppFileLoading from './AppFileLoading.vue'
 import AppTrashCanIconView from './AppTrashCanIconView.vue'
 import AppRightMenu from './AppRightMenu.vue'
+import AppPathBar from './AppPathBar.vue'
 
 export {
   AppBottomBar,
@@ -17,5 +18,6 @@ export {
   AppFileNullAlert,
   AppFileLoading,
   AppTrashCanIconView,
-  AppRightMenu
+  AppRightMenu,
+  AppPathBar
 }

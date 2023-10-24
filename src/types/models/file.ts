@@ -423,13 +423,6 @@ export class MoYunFile {
       console.error('Error merging files:', error)
     }
   }
-
-  /**
-   * 双击事件
-   */
-  async doubleClick() {
-    fileUtils.doubleClick(this)
-  }
 }
 
 /**

@@ -11,7 +11,7 @@ import { AppFile } from '@/components/common'
 import { useElementSize, useWindowSize } from '@vueuse/core'
 import { useAppStore, useFileStore } from '@/stores'
 import { fileUtils, rightMenuUtils } from '@/utils/functions'
-import { AppFileLoading, AppFileNullAlert } from '.'
+import { AppFileLoading, AppFileNullAlert, AppPathBar } from '.'
 import { AppRightMenu } from '../components'
 import { RightMenuItem } from '@/types/enums/right-menu'
 
@@ -143,14 +143,20 @@ const handleRightMenu = (
     <template #title>
       <v-row align="center">
         <v-col class="">
-          <v-breadcrumbs :items="fileStore.breadcrumbItems">
+          <!-- <v-breadcrumbs :items="fileStore.breadcrumbItems" style="height: 10px" class="bg-red">
             <template v-slot:divider>
               <v-icon icon="mdi-chevron-right"></v-icon>
             </template>
             <template v-slot:prepend>
               <v-icon size="small" :icon="'mdi-' + 'folder-open'" class="pr-5"></v-icon>
             </template>
-          </v-breadcrumbs>
+            <template v-slot:title="{ item }">
+              <v-btn block variant="text" class="pa-1 ma-0 text-h6">{{ item.title }}</v-btn>
+            </template>
+          </v-breadcrumbs> -->
+          <div style="display: grid">
+            <AppPathBar />
+          </div>
         </v-col>
         <v-col cols="auto" class="">
           <v-btn
@@ -199,7 +205,7 @@ const handleRightMenu = (
               :moYunFile="moYunFile"
               elevation="0"
               @click="handleSelectItem(index)"
-              @dblclick="moYunFile.doubleClick()"
+              @dblclick="fileUtils.doubleClick(moYunFile)"
               @contextmenu.stop="handleRightMenu($event, index, 'file')"
             />
           </v-col>

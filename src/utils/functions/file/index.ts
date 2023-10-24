@@ -3,7 +3,7 @@
  */
 
 import { MoYunFile, MoYunFileDto, MoYunUploadDto } from '@/types/models'
-import { FileType } from '@/types/enums'
+import { FileExtension, FileType } from '@/types/enums'
 import { useAppStore, useFileStore } from '@/stores'
 
 /**
@@ -248,69 +248,11 @@ const listViewMouseWheel = (event: WheelEvent) => {
 
 /**
  * 定义函数判断文件类型
- * @param extension
- * @param fileType
- * const extension = 'pdf'
- * const fileType = FileType.Document
- *
- * if (isType(extension, fileType)) {
- *   console.log(`The file with extension ${extension} is a ${fileType} type.`)
- * } else {
- *   console.log(`The file with extension ${extension} is not a ${fileType} type.`)
- * }
+ * @param extension 文件扩展名
+ * @param fileType 文件类型
  */
 const isType = (extension: string, fileType: string) => {
-  const extensions: { [key: string]: Array<string> } = {
-    Media: [
-      'jpg',
-      'jpeg',
-      'png',
-      'gif',
-      'bmp',
-      'svg',
-      'webp',
-      'tiff',
-      'mp3',
-      'wav',
-      'ogg',
-      'mp4',
-      'avi',
-      'mkv',
-      'mov',
-      'wmv'
-    ],
-    Document: ['doc', 'docx', 'pdf', 'odt', 'txt', 'rtf', 'xls', 'xlsx', 'csv', 'ppt', 'pptx'],
-    Code: [
-      'json',
-      'sql',
-      'xml',
-      'js',
-      'ts',
-      'css',
-      'html',
-      'php',
-      'java',
-      'go',
-      'f90',
-      'c',
-      'kt',
-      'md',
-      'cpp',
-      'c#',
-      'lua',
-      'xaml',
-      'py',
-      'r',
-      'rb',
-      'rs',
-      'swift'
-    ],
-    Application: ['exe', 'sh', 'bat'],
-    Folder: ['folder'],
-    Ghost: ['iso', 'img', 'dmg'],
-    Zip: ['zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'xz', 'lz']
-  }
-  return extensions[fileType]?.includes(extension.toLowerCase())
+  return FileExtension[fileType]?.includes(extension.toLowerCase())
 }
 
 /**
@@ -318,12 +260,32 @@ const isType = (extension: string, fileType: string) => {
  * @param moYunFile 文件对象
  */
 const doubleClick = (moYunFile: MoYunFile) => {
-  switch (moYunFile.extension) {
-    case FileType.Folder:
-      
-      break
+  // console.log(moYunFile)
+  const fileStore = useFileStore()
+
+  if (isType(moYunFile.extension, FileType.Folder)) {
+    // 文件夹
+    const _breadcrumbItems = fileStore.breadcrumbItems
+    const _breadcrumbItem = _breadcrumbItems[_breadcrumbItems.length - 1]
+    _breadcrumbItem['disabled'] = false
+
+    const _item = {
+      title: moYunFile.name,
+      path: (_breadcrumbItem.path === '/' ? '' : '/') + moYunFile.name,
+      disabled: true
+    }
+
+    _breadcrumbItems.push(_item)
+    fileStore.fetch()
+    console.log(fileStore.breadcrumbItems)
   }
 }
+
+/**
+ * 跳转文件夹
+ * @param path 路径
+ */
+const toFolder = (path: string) => {}
 
 /**
  * 文件Utils
@@ -336,7 +298,8 @@ const fileUtils = {
   iconViewMouseWheel,
   listViewMouseWheel,
   isType,
-  doubleClick
+  doubleClick,
+  toFolder
 }
 
 export default fileUtils

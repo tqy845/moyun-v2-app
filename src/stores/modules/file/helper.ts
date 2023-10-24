@@ -227,7 +227,7 @@ export const getFileDefaultSettings = (): FileStore => {
     downloadQueue: new Concurrent(maxDownLoadCount),
     breadcrumbItems: [
       {
-        title: '/',
+        title: '文件',
         path: '/',
         disabled: true
       }
