@@ -170,9 +170,8 @@ const handleRightMenu = (
     class="w-100 ma-0 pa-0"
     :height="windowSize.height.value - 180"
     @contextmenu="handleRightMenu"
-    style="overflow-y: scroll"
   >
-    <v-container class="ma-0 pa-0" style="height: 100dvh">
+    <v-container class="ma-0 pa-0 h-100 w-100">
       <!-- 读取中 -->
       <AppFileLoading class="mt-16" v-if="fileStore.loading" />
       <!-- 渲染 -->
@@ -187,7 +186,7 @@ const handleRightMenu = (
         "
         class="h-100"
       >
-        <v-row v-if="width" class="ma-0 pa-0">
+        <v-row v-if="width" class="ma-0 pa-0 align-content-start overflow-auto">
           <v-col
             v-for="(moYunFile, index) in fileStore.renderList"
             :key="index"
