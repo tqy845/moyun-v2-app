@@ -17,6 +17,7 @@ import { RightMenuItem } from '@/types/enums/right-menu'
 
 const rightMenuRef = ref<HTMLElement | null>(null)
 const cardRef = ref()
+const rowRef = ref()
 
 const windowSize = useWindowSize()
 const rightMenuSize = useElementSize(rightMenuRef)
@@ -171,7 +172,7 @@ const handleRightMenu = (
     :height="windowSize.height.value - 180"
     @contextmenu="handleRightMenu"
   >
-    <v-container class="ma-0 pa-0 h-100 w-100">
+    <div class="w-100 h-100">
       <!-- 读取中 -->
       <AppFileLoading class="mt-16" v-if="fileStore.loading" />
       <!-- 渲染 -->
@@ -184,15 +185,19 @@ const handleRightMenu = (
             fileStore.renderList.findIndex((it) => it.name === it_name)
           )
         "
-        class="h-100"
+        class="h-100 w-100"
       >
-        <v-row v-if="width" class="ma-0 pa-0 align-content-start overflow-auto">
+        <v-row v-if="width" class="ma-0 pa-0 align-content-start overflow-auto w-100">
           <v-col
             v-for="(moYunFile, index) in fileStore.renderList"
             :key="index"
             cols="auto"
             class="mo-yun-file ma-0 pa-1"
-            :style="{ height: fileStore.itemSize + 'px' }"
+            :style="{
+              height: fileStore.itemSize + 'px',
+              width: (width - 8.5) / Math.floor(width / (fileStore.itemSize - 70)) + 'px'
+            }"
+            ref="rowRef"
           >
             <!-- 渲染文件-->
             <AppFile
@@ -216,7 +221,7 @@ const handleRightMenu = (
           )[0]['label']
         )}】${$t('file.view.null.text')}`"
       />
-    </v-container>
+    </div>
     <!-- <v-card-action>
       <v-pagination
         :model-value="

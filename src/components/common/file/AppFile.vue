@@ -25,7 +25,6 @@ defineProps({
 
 <template>
   <v-btn
-    :width="fileStore.itemSize - 70"
     :height="fileStore.itemSize + height - 50"
     stacked
     v-bind="$attrs"
@@ -36,7 +35,7 @@ defineProps({
         <v-icon
           color="info"
           :icon="`mdi-${moYunFile.icon}`"
-          :size="fileStore.itemSize - 70"
+          :size="fileStore.itemSize - 80"
         ></v-icon>
       </div>
       <div
