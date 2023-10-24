@@ -136,7 +136,7 @@ export const getFileDefaultSettings = (): FileStore => {
     list: [],
     renderList: [],
     view: 'icon',
-    itemSize: 174,
+    itemSize: 172,
     iconViewPageItemNumber: 50,
     classifyTabCurrentPage: {},
     uploadChunkQueue: [],
