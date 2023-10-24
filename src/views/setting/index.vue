@@ -11,7 +11,6 @@ import { reactive } from 'vue'
 import { AppBasic } from './components'
 
 const appStore = useAppStore()
-
 const cs = reactive({
   tab: 'option-1'
 })
@@ -27,7 +26,11 @@ const handleSave = () => {
       <v-text-field class="py-2" label="搜索设置" variant="outlined"></v-text-field>
 
       <div class="d-flex flex-row">
-        <v-tabs v-model="cs.tab" direction="vertical" color="primary">
+        <v-tabs
+          v-model="appStore['app']['menuIndex']['currentSettingOpenTab']['basic']['index']"
+          direction="vertical"
+          color="primary"
+        >
           <v-tab value="option-1">
             <v-icon start> mdi-cog </v-icon>
             应用程序
@@ -45,7 +48,10 @@ const handleSave = () => {
             同步盘
           </v-tab>
         </v-tabs>
-        <v-window v-model="cs.tab" class="w-100">
+        <v-window
+          v-model="appStore['app']['menuIndex']['currentSettingOpenTab']['basic']['index']"
+          class="w-100"
+        >
           <v-window-item value="option-1">
             <!-- 基础配置 -->
             <AppBasic />

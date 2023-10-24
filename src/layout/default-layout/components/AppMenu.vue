@@ -19,7 +19,7 @@ const handleChangeSecondMenuItem = (item: any) => {
   <v-list :lines="false" nav @click:select="handleChangeSecondMenuItem">
     <!-- 二级菜单 -->
     <v-list-item
-      v-for="(item, index) in fileStore.menuItems"
+      v-for="(item, index) in fileStore.showMenuItems"
       :key="index"
       :value="item"
       color="primary"
@@ -29,7 +29,7 @@ const handleChangeSecondMenuItem = (item: any) => {
         <v-icon :icon="`mdi-` + item.icon"></v-icon>
       </template>
       <!-- 菜单项标题 -->
-      <v-list-item-title>{{ $t(item.text) }}</v-list-item-title>
+      <v-list-item-title>{{ item.text }}</v-list-item-title>
     </v-list-item>
   </v-list>
 </template>

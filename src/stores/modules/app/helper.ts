@@ -106,7 +106,14 @@ export const getAppDefaultSettings = (): AppStore => {
         // 文件分类默认选中分类
         currentFileClassifyTab: FileType.All,
         // 文件上传，打开的Tab项
-        currentFileUploadOpenTab: ['upload-area']
+        currentFileUploadOpenTab: ['upload-area'],
+        // 偏好设置
+        currentSettingOpenTab: {
+          basic: {
+            index: 'option-1',
+            tab: 1
+          }
+        }
       }
     },
     settings: {

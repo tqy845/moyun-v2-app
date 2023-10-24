@@ -6,26 +6,22 @@
 -->
 <script lang="ts" setup>
 import { useAppStore, useFileStore } from '@/stores'
-import { reactive } from 'vue'
 
 const appStore = useAppStore()
 const fileStore = useFileStore()
-
-const data = reactive({
-  tab: null,
-  select: ['Vuetify', 'Programming'],
-  items: ['Programming', 'Design', 'Vue', 'Vuetify']
-})
 </script>
 
 <template>
   <v-card class="">
-    <v-tabs v-model="data.tab" align-tabs="end">
+    <v-tabs
+      v-model="appStore['app']['menuIndex']['currentSettingOpenTab']['basic']['tab']"
+      align-tabs="end"
+    >
       <v-tab :value="1">基本</v-tab>
       <v-tab :value="2">菜单</v-tab>
       <v-tab :value="3">主题</v-tab>
     </v-tabs>
-    <v-window v-model="data.tab">
+    <v-window v-model="appStore['app']['menuIndex']['currentSettingOpenTab']['basic']['tab']">
       <v-window-item :value="1">
         <v-container fluid>
           <v-card flat>
@@ -56,11 +52,23 @@ const data = reactive({
           <v-card flat>
             <v-card-item>
               <v-combobox
-                v-model="data.select"
-                :items="data.items"
+                v-model="fileStore.showMenuItems"
+                :items="fileStore.menuItems"
+                item-title="text"
+                item-value="key"
                 label="二级菜单"
                 multiple
-              ></v-combobox>
+                return-object
+              >
+                <template #selection="data">
+                  <v-chip size="small">
+                    <template v-slot:prepend>
+                      <v-icon :icon="`mdi-${data.item.raw.icon}`" class="pr-1"></v-icon>
+                    </template>
+                    {{ data.item.title }}
+                  </v-chip>
+                </template>
+              </v-combobox>
             </v-card-item>
             <v-card-item>
               <v-combobox
@@ -69,14 +77,12 @@ const data = reactive({
                 item-title="label"
                 item-value="key"
                 label="文件分类"
-                item-props=""
                 multiple
                 return-object
               >
                 <template #selection="data">
                   <v-chip size="small">
                     <template v-slot:prepend>
-                      <!-- {{ data.item }} -->
                       <v-icon :icon="`mdi-${data.item.raw.icon}`" class="pr-1"></v-icon>
                     </template>
                     {{ data.item.title }}

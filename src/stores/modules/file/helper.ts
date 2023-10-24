@@ -91,7 +91,11 @@ export interface FileStore {
   /**
    * 文件菜单选项
    */
-  menuItems: Array<{ text: string; icon: string; path: string }>
+  menuItems: Array<{ text: string; icon: string; path: string; disabled?: boolean }>
+  /**
+   * 展示的文件菜单选项
+   */
+  showMenuItems: Array<{ text: string; icon: string; path: string; disabled?: boolean }>
 
   /**
    * 文件右键菜单项
@@ -149,14 +153,22 @@ export const getFileDefaultSettings = (): FileStore => {
     search: '',
     selectedList: [],
     menuItems: [
-      { text: 'menu.file.text', icon: 'folder', path: '/personal/file' },
-      // {
-      //   text: 'menu.synchro.disk.text',
-      //   icon: 'harddisk',
-      //   path: '/personal/synchro-disk'
-      // },
+      { text: t('menu.file.text'), icon: 'folder', path: '/personal/file', disabled: true },
       {
-        text: 'menu.trashcan.text',
+        text: t('menu.synchro.disk.text'),
+        icon: 'harddisk',
+        path: '/personal/synchro-disk'
+      },
+      {
+        text: t('menu.trashcan.text'),
+        icon: 'trash-can',
+        path: '/personal/trash-can'
+      }
+    ],
+    showMenuItems: [
+      { text: t('menu.file.text'), icon: 'folder', path: '/personal/file', disabled: true },
+      {
+        text: t('menu.trashcan.text'),
         icon: 'trash-can',
         path: '/personal/trash-can'
       }
