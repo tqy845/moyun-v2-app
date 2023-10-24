@@ -190,7 +190,8 @@ const handleRightMenu = (
             v-for="(iterator, index) in fileStore.renderList"
             :key="index"
             cols="auto"
-            class="ma-0 pa-1"
+            class="mo-yun-file ma-0 pa-1"
+            style="height: 180px"
           >
             <!-- 渲染文件-->
             <AppFile

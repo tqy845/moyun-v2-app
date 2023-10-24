@@ -6,7 +6,6 @@
 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { usePrecision } from '@vueuse/math'
 import { MoYunFile } from '@/types/models'
 import { useFileStore } from '@/stores'
 import { useElementSize } from '@vueuse/core'
