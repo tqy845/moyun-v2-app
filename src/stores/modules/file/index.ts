@@ -278,7 +278,7 @@ export const useFileStore = defineStore('fileStore', {
   persist: [
     {
       storage: localStorage,
-      paths: ['view', 'itemSize']
+      paths: ['view', 'itemSize', 'showClassMenuItems']
     }
   ]
 })

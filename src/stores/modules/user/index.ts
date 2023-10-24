@@ -57,25 +57,25 @@ export const useUserStore = defineStore('userStore', {
      * @param {UserProperties} userProperties - 包含邮箱和密码的用户属性
      */
     async userLoginByAccount(userProperties: UserProperties) {
-      const appStore = useAppStore()
-      const fileStore = useFileStore()
-
-      const _oldSettings = appStore['settings']
-      appStore.$reset()
-      fileStore.$reset()
-      appStore['settings'] = _oldSettings
-
       // const _user = { ...user, password: encrypt(user.password) }
       const _userProperties = userProperties
       const { code, data } = await loginByAccount<{ token: string }>(_userProperties)
 
       if (code === 200) {
+        const appStore = useAppStore()
+        // const fileStore = useFileStore()
+
+        const _oldSettings = appStore['settings']
+        appStore.$reset()
+        // fileStore.$reset()
+        appStore['settings'] = _oldSettings
         // 设置token
         this.token = data['token']
         this.user.email = _userProperties.email
+
         // 获取个人信息
         // 加载文件列表
-        await Promise.all([this.info(), fileStore.fetch()])
+        await Promise.all([this.info()])
         return true
       }
     },

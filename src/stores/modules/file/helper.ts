@@ -121,7 +121,7 @@ export interface FileStore {
   /**
    * 展示的分类项（不展示的分类会自动收纳到更多）
    */
-  showClassMenuItems: Array<{ label: string; icon: string; key: string }>
+  showClassMenuItems: Array<{ label: string; icon: string; key: string; disabled?: boolean }>
 }
 
 /**
@@ -281,7 +281,8 @@ export const getFileDefaultSettings = (): FileStore => {
       {
         label: t('file.view.iconLabel.secondaryMenu.all.text'),
         icon: 'file',
-        key: FileType.All
+        key: FileType.All,
+        disabled: true
       },
       {
         label: t('file.view.iconLabel.secondaryMenu.document.text'),
