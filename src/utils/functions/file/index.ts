@@ -209,7 +209,7 @@ const iconViewMouseWheel = (event: WheelEvent) => {
       if (fileStore.itemSize > 148) {
         fileStore.itemSize -= 2
       } else {
-        fileStore.itemSize = 128
+        fileStore.itemSize -= 2
         fileStore.view = 'list'
       }
 
