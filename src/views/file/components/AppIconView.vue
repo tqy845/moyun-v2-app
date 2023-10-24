@@ -167,13 +167,14 @@ const handleRightMenu = (
   <!-- 文件图标列表 -->
   <v-card
     ref="cardRef"
-    class="w-100 overflow-auto ma-0 pa-0"
+    class="w-100 ma-0 pa-0"
     :height="windowSize.height.value - 180"
     @contextmenu="handleRightMenu"
+    style="overflow-y: scroll"
   >
-    <v-container fluid class="ma-0 pa-0">
+    <v-container class="ma-0 pa-0" style="height: 100dvh">
       <!-- 读取中 -->
-      <AppFileLoading class="mt-16 w-100" v-if="fileStore.loading" />
+      <AppFileLoading class="mt-16" v-if="fileStore.loading" />
       <!-- 渲染 -->
       <v-btn-toggle
         v-else-if="fileStore.renderList.length"
@@ -184,6 +185,7 @@ const handleRightMenu = (
             fileStore.renderList.findIndex((it) => it.name === it_name)
           )
         "
+        class="h-100"
       >
         <v-row v-if="width" class="ma-0 pa-0">
           <v-col

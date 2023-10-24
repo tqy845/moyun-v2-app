@@ -32,7 +32,7 @@ defineProps({
     class="pa-0 ma-0 d-flex align-start flex-column"
     style="justify-content: flex-start"
   >
-    <div class="text-center fill-height w-100 py-2 mb-11">
+    <div class="text-center w-100 py-2">
       <div class="mb-1 d-flex justify-center align-center">
         <v-icon
           color="info"
@@ -44,7 +44,6 @@ defineProps({
         ref="fileNameRef"
         class="text-none w-100"
         :class="fileStore.selectedList.includes(moYunFile.name) ? null : ['file-name']"
-        :style="{ height: `auto` }"
         style="position: absolute; z-index: 1; word-break: break-all"
       >
         {{ moYunFile.name }}
@@ -60,8 +59,8 @@ defineProps({
   -webkit-box-orient: vertical !important;
   -webkit-line-clamp: 3 !important; /* 这里是超出几行省略 */
   overflow: hidden !important;
-  position: absolute;
   z-index: 99999 !important;
+  position: absolute !important;
 }
 
 .progress-linear {
