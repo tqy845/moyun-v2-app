@@ -216,7 +216,7 @@ const iconViewMouseWheel = (event: WheelEvent) => {
       // 在这里执行你的操作
     } else if (delta < 0) {
       // 向上滚动
-      if (fileStore.itemSize < 300) {
+      if (fileStore.itemSize < 320) {
         fileStore.itemSize += 2
       }
     }
