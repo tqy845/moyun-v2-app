@@ -316,6 +316,9 @@ export class MoYunFile {
     this.icon = params.icon ?? this.generateIcon
   }
 
+  /**
+   * 生成ICON
+   */
   get generateIcon() {
     return fileUtils.generateIcon(this)
   }
@@ -390,7 +393,7 @@ export class MoYunFile {
    * 分片合并
    * @param chunkNames 分片名列表
    */
-  mergedChunks = async (chunkNames: Array<string>, path: string) => {
+  async mergedChunks(chunkNames: Array<string>, path: string) {
     try {
       console.log('合并')
 
@@ -419,6 +422,13 @@ export class MoYunFile {
     } catch (error) {
       console.error('Error merging files:', error)
     }
+  }
+
+  /**
+   * 双击事件
+   */
+  async doubleClick() {
+    fileUtils.doubleClick(this)
   }
 }
 

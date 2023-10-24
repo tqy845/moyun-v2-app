@@ -111,6 +111,9 @@
   "right.menu.viewMode.text": "查看方式",
   "right.menu.sortMode.text": "排序方式",
 
+  "trash.can.clear.all": "清空垃圾篓",
+  "trash.can.restore.all": "还原所有内容",
+
   "$vuetify.noDataText": "没有数据",
   "$vuetify.fileInput.counterSize": "共{0}个文件，共{1}",
   "$vuetify.dataFooter.itemsPerPageAll": "全部",

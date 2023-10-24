@@ -314,6 +314,18 @@ const isType = (extension: string, fileType: string) => {
 }
 
 /**
+ * 双击事件
+ * @param moYunFile 文件对象
+ */
+const doubleClick = (moYunFile: MoYunFile) => {
+  switch (moYunFile.extension) {
+    case FileType.Folder:
+      
+      break
+  }
+}
+
+/**
  * 文件Utils
  */
 const fileUtils = {
@@ -323,7 +335,8 @@ const fileUtils = {
   formatSize,
   iconViewMouseWheel,
   listViewMouseWheel,
-  isType
+  isType,
+  doubleClick
 }
 
 export default fileUtils

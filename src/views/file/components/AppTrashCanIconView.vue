@@ -47,7 +47,7 @@ const handleSelectItem = (index: any) => {
       <template #title>
         <v-row align="center">
           <v-col class="">
-            <v-breadcrumbs :items="['垃圾篓']">
+            <v-breadcrumbs :items="[$t('menu.trashcan.text')]">
               <template v-slot:divider>
                 <v-icon icon="mdi-chevron-right"></v-icon>
               </template>
@@ -62,14 +62,14 @@ const handleSelectItem = (index: any) => {
               size="large"
               :disabled="!fileStore.renderList.length"
               @click="fileStore.clearAll()"
-              >清空垃圾篓</v-btn
+              >{{ $t('trash.can.clear.all') }}</v-btn
             >
             <v-btn
               prepend-icon="mdi-delete-restore"
               size="large"
               :disabled="!fileStore.renderList.length"
               @click="fileStore.restoreAll()"
-              >还原所有内容</v-btn
+              >{{ $t('trash.can.restore.all') }}</v-btn
             >
           </v-col>
         </v-row>

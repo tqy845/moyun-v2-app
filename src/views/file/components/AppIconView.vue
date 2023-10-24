@@ -24,7 +24,7 @@ const rightMenuSize = useElementSize(rightMenuRef)
 const appStore = useAppStore()
 const fileStore = useFileStore()
 
-const emits = defineEmits(['doubleClick', 'rightClick'])
+const emits = defineEmits(['rightClick'])
 
 const props = defineProps<{
   width: number
@@ -187,7 +187,7 @@ const handleRightMenu = (
       >
         <v-row v-if="width" class="ma-0 pa-0">
           <v-col
-            v-for="(iterator, index) in fileStore.renderList"
+            v-for="(moYunFile, index) in fileStore.renderList"
             :key="index"
             cols="auto"
             class="mo-yun-file ma-0 pa-1"
@@ -196,10 +196,10 @@ const handleRightMenu = (
             <!-- 渲染文件-->
             <AppFile
               class="bg-transparent"
-              :moYunFile="iterator"
+              :moYunFile="moYunFile"
               elevation="0"
               @click="handleSelectItem(index)"
-              @dblclick="emits('doubleClick', iterator)"
+              @dblclick="moYunFile.doubleClick()"
               @contextmenu.stop="handleRightMenu($event, index, 'file')"
             />
           </v-col>

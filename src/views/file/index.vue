@@ -10,6 +10,7 @@ import { useElementSize, useKeyModifier, useMagicKeys } from '@vueuse/core'
 import { AppIconView, AppListView } from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { MoYunFile } from '@/types/models'
+import { fileUtils } from '@/utils/functions'
 
 const containerRef = ref(null)
 const { width } = useElementSize(containerRef)
@@ -41,13 +42,7 @@ useMagicKeys({
 
 const handleDoubleClick = (item: MoYunFile) => {
   console.log('双击..', item)
-  if (item.extension === 'file') {
-    console.log('不受打开支持的文件...')
-  } else if (item.extension === 'folder') {
-    console.log('文件夹')
-  } else if (item.extension === 'mp3') {
-    console.log('音乐')
-  }
+  fileUtils.doubleClick(item)
 }
 
 /**
@@ -72,7 +67,6 @@ const handleFileRightClick = async (event: MouseEvent, file: MoYunFile) => {
       v-if="fileStore.view === 'icon'"
       :width="width"
       :multiple="!!controlState"
-      @doubleClick="handleDoubleClick"
       @rightClick="handleFileRightClick"
     />
 
@@ -80,7 +74,6 @@ const handleFileRightClick = async (event: MouseEvent, file: MoYunFile) => {
     <AppListView
       v-else-if="fileStore.view === 'list'"
       :multiple="!!controlState"
-      @doubleClick="handleDoubleClick"
       @rightClick="handleFileRightClick"
     />
   </v-container>
