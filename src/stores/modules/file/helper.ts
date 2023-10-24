@@ -4,6 +4,7 @@ import { Concurrent } from '@/utils/functions/queue'
 import { ACTION_TYPE, FileType } from '@/types/enums'
 import { RightMenuItem } from '@/types/enums/right-menu'
 import { BreadcrumbItem } from '@/types/models/breadcrumb-item.ts'
+import { useI18n } from 'vue-i18n'
 
 /**
  * 文件存储对象接口
@@ -117,6 +118,10 @@ export interface FileStore {
    * 菜单分类项
    */
   classMenuItems: Array<{ label: string; icon: string; key: string }>
+  /**
+   * 展示的分类项（不展示的分类会自动收纳到更多）
+   */
+  showClassMenuItems: Array<{ label: string; icon: string; key: string }>
 }
 
 /**
@@ -128,6 +133,7 @@ export const getFileDefaultSettings = (): FileStore => {
   const appStore = useAppStore()
   const maxUploadCount = appStore['settings']['maxUploadCount']
   const maxDownLoadCount = appStore['settings']['maxDownLoadCount']
+  const { t } = useI18n()
 
   return {
     show: false,
@@ -236,39 +242,56 @@ export const getFileDefaultSettings = (): FileStore => {
     trashBasket: [],
     classMenuItems: [
       {
-        label: 'file.view.iconLabel.secondaryMenu.all.text',
+        label: t('file.view.iconLabel.secondaryMenu.all.text'),
         icon: 'file',
         key: FileType.All
       },
       {
-        label: 'file.view.iconLabel.secondaryMenu.document.text',
+        label: t('file.view.iconLabel.secondaryMenu.document.text'),
         icon: 'briefcase',
         key: FileType.Document
       },
       {
-        label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
+        label: t('file.view.iconLabel.secondaryMenu.multimedia.text'),
         icon: 'multimedia',
         key: FileType.Media
       },
       {
-        label: 'file.view.iconLabel.secondaryMenu.application.text',
+        label: t('file.view.iconLabel.secondaryMenu.application.text'),
         icon: 'application',
         key: FileType.Application
       },
       {
-        label: 'file.view.iconLabel.secondaryMenu.gho.text',
+        label: t('file.view.iconLabel.secondaryMenu.gho.text'),
         icon: 'ghost',
         key: FileType.Ghost
       },
       {
-        label: 'file.view.iconLabel.secondaryMenu.folder.text',
+        label: t('file.view.iconLabel.secondaryMenu.folder.text'),
         icon: 'folder',
         key: FileType.Folder
       },
       {
-        label: 'file.view.iconLabel.secondaryMenu.package.text',
+        label: t('file.view.iconLabel.secondaryMenu.package.text'),
         icon: 'folder-zip',
         key: FileType.Zip
+      }
+    ],
+    showClassMenuItems: [
+      {
+        label: t('file.view.iconLabel.secondaryMenu.all.text'),
+        icon: 'file',
+        key: FileType.All
+      },
+      {
+        label: t('file.view.iconLabel.secondaryMenu.document.text'),
+        icon: 'briefcase',
+        key: FileType.Document
+      },
+      {
+        label: t('file.view.iconLabel.secondaryMenu.multimedia.text'),
+        icon: 'multimedia',
+        key: FileType.Media
       }
     ]
   }

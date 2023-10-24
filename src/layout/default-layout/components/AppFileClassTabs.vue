@@ -17,8 +17,10 @@ const data = reactive<{
   tabItems: Array<{ label: string; icon: string; key: string }>
   tabMoreItems: Array<{ label: string; icon: string; key: string }>
 }>({
-  tabItems: fileStore.classMenuItems.slice(0, 3),
-  tabMoreItems: fileStore.classMenuItems.slice(3, fileStore.classMenuItems.length)
+  tabItems: fileStore.showClassMenuItems,
+  tabMoreItems: fileStore.classMenuItems.filter(
+    (item) => !fileStore.showClassMenuItems.map((item) => item.key).includes(item.key)
+  )
 })
 
 /**
@@ -57,7 +59,7 @@ const handleChangeTab = (item: unknown) => {
       :key="index"
       :value="item.key"
     >
-      <v-icon size="24">mdi-{{ item.icon }}</v-icon> {{ $t(item.label) }}
+      <v-icon size="24">mdi-{{ item.icon }}</v-icon> {{ item.label }}
     </v-tab>
 
     <!-- 更多分类  -->
@@ -98,7 +100,7 @@ const handleChangeTab = (item: unknown) => {
           <template v-slot:prepend>
             <v-icon>mdi-{{ item.icon }}</v-icon>
           </template>
-          {{ $t(item.label) }}
+          {{ item.label }}
         </v-list-item>
       </v-list>
     </v-menu>

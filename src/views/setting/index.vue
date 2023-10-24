@@ -30,7 +30,7 @@ const handleSave = () => {
         <v-tabs v-model="cs.tab" direction="vertical" color="primary">
           <v-tab value="option-1">
             <v-icon start> mdi-cog </v-icon>
-            基本
+            应用程序
           </v-tab>
           <v-tab value="option-2">
             <v-icon start> mdi-send </v-icon>

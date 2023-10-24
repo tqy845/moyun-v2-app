@@ -33,16 +33,16 @@ defineProps({
     <div class="text-center w-100 py-2">
       <div class="mb-1 d-flex justify-center align-center">
         <v-icon
-          color="info"
           :icon="`mdi-${moYunFile.icon}`"
           :size="fileStore.itemSize - 80"
+          color="#62B1FA"
         ></v-icon>
       </div>
       <div
         ref="fileNameRef"
-        class="text-none w-100"
+        class="text-none w-100 position-absolute"
         :class="fileStore.selectedList.includes(moYunFile.name) ? null : ['file-name']"
-        style="position: absolute; z-index: 1; word-break: break-all"
+        style="z-index: 1; word-break: break-all"
       >
         {{ moYunFile.name }}
       </div>
