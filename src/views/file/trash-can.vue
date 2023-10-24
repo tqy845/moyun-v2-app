@@ -97,15 +97,6 @@ const handleContextRightMenu = (event: MouseEvent) => {
   // console.log('内容区右键菜单')
   event.preventDefault()
   return
-  // 更新菜单项
-  emit('action', {
-    actionType: 'contextRightFileMenu',
-    actionData: fileStore.contextRightMenuItems
-  })
-  // 获取屏幕绝对的鼠标坐标
-  const { screenX, screenY } = event
-  // 重设位置
-  data.rightMenuInstance!.setPosition(new LogicalPosition(screenX, screenY))
 }
 
 /**
@@ -117,16 +108,6 @@ const handleFileRightClick = async (event: MouseEvent, file: MoYunFile) => {
   // console.log('右键文件菜单')
   event.preventDefault()
   return
-  // 更新菜单项
-  emit('action', { actionType: 'fileRightMenu', actionData: fileStore.fileRightMenuItems })
-  // 是否多选
-  if (fileStore.selectedList.length <= 1) {
-    fileStore.selected(file.name)
-  }
-  // 获取屏幕绝对的鼠标坐标
-  const { screenX, screenY } = event
-  // 重设位置
-  data.rightMenuInstance!.setPosition(new LogicalPosition(screenX, screenY))
 }
 </script>
 
