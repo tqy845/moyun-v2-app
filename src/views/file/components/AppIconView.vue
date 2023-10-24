@@ -140,10 +140,9 @@ const handleRightMenu = (
 <template>
   <!-- 导航条 -->
   <v-toolbar border density="compact">
-    <template #title>
-      <v-row align="center">
-        <v-col class="">
-          <!-- <v-breadcrumbs :items="fileStore.breadcrumbItems" style="height: 10px" class="bg-red">
+    <v-row align="center">
+      <v-col>
+        <!-- <v-breadcrumbs :items="fileStore.breadcrumbItems" style="height: 10px" class="bg-red">
             <template v-slot:divider>
               <v-icon icon="mdi-chevron-right"></v-icon>
             </template>
@@ -154,21 +153,16 @@ const handleRightMenu = (
               <v-btn block variant="text" class="pa-1 ma-0 text-h6">{{ item.title }}</v-btn>
             </template>
           </v-breadcrumbs> -->
-          <div style="display: grid">
-            <AppPathBar />
-          </div>
-        </v-col>
-        <v-col cols="auto" class="">
-          <v-btn
-            icon="mdi-folder-plus-outline"
-            @click="
-              fileStore.createFolder(() => (cardRef.$el.scrollTop = cardRef.$el.scrollHeight))
-            "
-          ></v-btn>
-          <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
-        </v-col>
-      </v-row>
-    </template>
+        <AppPathBar />
+      </v-col>
+      <v-col cols="auto" class="">
+        <v-btn
+          icon="mdi-folder-plus-outline"
+          @click="fileStore.createFolder(() => (cardRef.$el.scrollTop = cardRef.$el.scrollHeight))"
+        ></v-btn>
+        <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
+      </v-col>
+    </v-row>
   </v-toolbar>
   <!-- 文件图标列表 -->
   <v-card
@@ -213,7 +207,9 @@ const handleRightMenu = (
       </v-btn-toggle>
       <!-- 无内容 -->
       <AppFileNullAlert
-        :title="`【${$t(
+        :title="`${
+          fileStore.breadcrumbItems.length !== 1 ? $t('file.view.folder.null.text') : ''
+        }【${$t(
           fileStore.classMenuItems.filter(
             (it) => it.key === appStore['app']['menuIndex']['currentFileClassifyTab']
           )[0]['label']

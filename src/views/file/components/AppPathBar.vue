@@ -8,7 +8,6 @@
 <script lang="ts" setup>
 import { useFileStore } from '@/stores'
 import { BreadcrumbItem } from '@/types/models/breadcrumb-item'
-import { reactive, watch } from 'vue'
 
 const fileStore = useFileStore()
 
@@ -23,21 +22,23 @@ const handleChange = (value: unknown) => {
 </script>
 
 <template>
-  <v-tabs
-    show-arrows
-    v-model="fileStore.breadcrumbItems[fileStore.breadcrumbItems.length - 1]"
-    @update:modelValue="handleChange"
-  >
-    <v-tab
-      v-for="(item, index) in fileStore.breadcrumbItems"
-      :key="index"
-      :value="item"
-      :disabled="item.disabled"
-      variant="text"
+  <v-row class="pa-0 ma-0" align="center">
+    <v-icon size="large" :icon="'mdi-folder-open'" class="mx-4"></v-icon>
+    <v-tabs
+      show-arrows
+      v-model="fileStore.breadcrumbItems[fileStore.breadcrumbItems.length - 1]"
+      @update:modelValue="handleChange"
     >
-      <span class="text-h6">{{ item.title }}</span>
-    </v-tab>
-  </v-tabs>
+      <v-tab
+        v-for="(item, index) in fileStore.breadcrumbItems"
+        :key="index"
+        :value="item"
+        variant="text"
+      >
+        <span class="text-h6">{{ item.title }}</span>
+      </v-tab>
+    </v-tabs>
+  </v-row>
 </template>
 
 <style lang="scss" scoped></style>
