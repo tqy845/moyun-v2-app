@@ -192,7 +192,7 @@ const handleRightMenu = (
             :key="index"
             cols="auto"
             class="mo-yun-file ma-0 pa-1"
-            style="height: 180px"
+            :style="{ height: fileStore.itemSize + 'px' }"
           >
             <!-- 渲染文件-->
             <AppFile

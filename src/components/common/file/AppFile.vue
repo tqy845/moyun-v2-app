@@ -29,8 +29,7 @@ defineProps({
     :height="fileStore.itemSize + height - 50"
     stacked
     v-bind="$attrs"
-    class="pa-0 ma-0 d-flex align-start flex-column"
-    style="justify-content: flex-start"
+    class="pa-0 ma-0 d-flex align-start flex-column justify-start"
   >
     <div class="text-center w-100 py-2">
       <div class="mb-1 d-flex justify-center align-center">
