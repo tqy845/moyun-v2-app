@@ -25,24 +25,24 @@ defineProps({
 
 <template>
   <v-btn
-    :height="fileStore.itemSize + height - 50"
+    :height="fileStore.itemSize + height - 90"
     stacked
     v-bind="$attrs"
-    class="pa-0 ma-0 d-flex align-start flex-column justify-start"
+    class="pa-0 ma-0 d-flex align-start flex-column justify-start w-100 align-center text-center"
   >
-    <div class="text-center w-100 py-2">
-      <div class="mb-1 d-flex justify-center align-center">
+    <div class="text-center w-100 py-1">
+      <div class="mb-0 w-100 justify-center align-center">
         <v-icon
           :icon="`mdi-${moYunFile.icon}`"
-          :size="fileStore.itemSize - 80"
+          :size="fileStore.itemSize - 120"
           color="#62B1FA"
         ></v-icon>
       </div>
       <div
         ref="fileNameRef"
-        class="text-none w-100 position-absolute"
+        class="text-none text-center w-100 position-absolute"
         :class="fileStore.selectedList.includes(moYunFile.name) ? null : ['file-name']"
-        style="z-index: 1; word-break: break-all"
+        style="word-break: break-all; left: 0; z-index: 1"
       >
         {{ moYunFile.name }}
       </div>
