@@ -143,7 +143,7 @@ const handleRightMenu = (
   <v-toolbar border density="compact">
     <v-row align="center">
       <v-col cols="10">
-        <AppPathBar :breadcrumbItems="['1', '2', '3']" :currentPath="'1'" />
+        <AppPathBar />
       </v-col>
       <v-col cols="2" class="">
         <v-btn
@@ -181,7 +181,7 @@ const handleRightMenu = (
             v-for="(moYunFile, index) in fileStore.renderList"
             :key="index"
             cols="auto"
-            class="mo-yun-file ma-0 pa-1"
+            class="mo-yun-file ma-0"
             :style="{
               height: fileStore.itemSize + 'px',
               width: (width - 8.5) / Math.floor(width / (fileStore.itemSize - 70)) + 'px'

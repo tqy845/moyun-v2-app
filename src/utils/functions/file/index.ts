@@ -264,6 +264,8 @@ const doubleClick = (moYunFile: MoYunFile) => {
   const fileStore = useFileStore()
 
   if (isType(moYunFile.extension, FileType.Folder)) {
+    // 清空选中
+    fileStore.selectedList.length = 0
     // 文件夹
     const _breadcrumbItems = fileStore.breadcrumbItems
     const _breadcrumbItem = _breadcrumbItems[_breadcrumbItems.length - 1]
