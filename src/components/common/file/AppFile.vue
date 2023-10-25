@@ -35,7 +35,7 @@ defineProps({
         <v-icon
           :icon="`mdi-${moYunFile.icon}`"
           :size="fileStore.itemSize - 120"
-          color="#62B1FA"
+          :color="moYunFile.iconColor"
         ></v-icon>
       </div>
       <div

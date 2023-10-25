@@ -22,6 +22,7 @@ export interface MoYunFileDto {
   modifyDate: string
   type: string
   icon?: string
+  iconColor?: string
   isEmpty: boolean
 }
 
@@ -259,6 +260,10 @@ export class MoYunFile {
    * 文件图标
    */
   icon: string
+  /**
+   * 图标颜色
+   */
+  iconColor: string
 
   /**
    * 扩展名
@@ -314,7 +319,10 @@ export class MoYunFile {
     this.pinyin = pinyin(params.fileName, { toneType: 'none' }) // 'han yu pin yin'
 
     this.lastModified = params.modifyDate
-    this.icon = params.icon ?? this.generateIcon
+
+    const { icon, iconColor } = this.generateIcon
+    this.icon = params.icon ?? icon
+    this.iconColor = params.iconColor ?? iconColor
   }
 
   /**

@@ -286,7 +286,7 @@ export const getFileDefaultSettings = (): FileStore => {
       },
       {
         label: t('file.view.iconLabel.secondaryMenu.package.text'),
-        icon: 'folder-zip',
+        icon: 'zip-box',
         key: FileType.Zip
       }
     ],

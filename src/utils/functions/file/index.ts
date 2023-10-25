@@ -54,25 +54,52 @@ const download = () => {}
 const generateIcon = (file: MoYunFile) => {
   const { extension, isDirectory, size } = file
   let _extension = extension
+
   if (isDirectory) {
     _extension = size ? 'folder' : 'folder-file'
   }
+
+  // 默认类型
+  const defaultColor = '#230B64'
+  const fileIconColor: { [key: string]: string } = {
+    'file-video': '#2746AE',
+    'file-music': '#0F86CD',
+    'file-image': '#63B3ED',
+    'file-excel': '#4CAF50',
+    'file-document': '#295595',
+    'file-word': '#295595',
+    'file-pdf-box': '#CF4646',
+    'file-powerpoint': '#D04423',
+    'file-link': '#230B64',
+    'zip-box': '#FFB347',
+    folder: '#FFD700',
+    'folder-file': '#FFD700',
+    'language-javascript': '#424242',
+    'code-json': '#FBC02D',
+    xml: '#55915A',
+    database: '#B589EC',
+    powershell: '#376EC6',
+    disc: '#D4DCDC'
+  }
+
+  let icon = 'file-cloud'
+  let iconColor = defaultColor
+
   switch (_extension.toLowerCase()) {
-    // 视频类
     case 'mp4':
     case 'mkv':
     case 'avi':
     case 'flv':
     case 'mov':
     case 'wmv':
-      return 'file-video'
-    // 音频类
+      icon = 'file-video'
+      break
     case 'mp3':
     case 'wav':
     case 'ogg':
     case 'm4a':
-      return 'file-music'
-    // 图片类
+      icon = 'file-music'
+      break
     case 'svg':
     case 'png':
     case 'jpg':
@@ -81,30 +108,33 @@ const generateIcon = (file: MoYunFile) => {
     case 'bmp':
     case 'webp':
     case 'tiff':
-      return 'file-image'
-    // 表格类
+      icon = 'file-image'
+      break
     case 'xls':
     case 'xlsx':
     case 'csv':
-      return 'file-excel'
-    // 文档类
+      icon = 'file-excel'
+      break
     case 'txt':
     case 'odt':
     case 'rtf':
-      return 'file-document'
+      icon = 'file-document'
+      break
     case 'doc':
     case 'docx':
-      return 'file-word'
+      icon = 'file-word'
+      break
     case 'pdf':
-      return 'file-powerpoint'
-    // 幻灯片类
+      icon = 'file-pdf-box'
+      break
     case 'ppt':
     case 'pptx':
-      return 'file-eye'
-    // 链接类
+      icon = 'file-powerpoint'
+      break
     case 'url':
-      return 'file-link'
-    // 压缩文件类
+    case 'Ink':
+      icon = 'file-link'
+      break
     case 'zip':
     case 'rar':
     case '7z':
@@ -113,13 +143,14 @@ const generateIcon = (file: MoYunFile) => {
     case 'bz2':
     case 'xz':
     case 'lz':
-      return 'folder-zip'
-    // 文件夹类
+      icon = 'zip-box'
+      break
     case 'folder':
-      return 'folder'
+      icon = 'folder'
+      break
     case 'folder-file':
-      return 'folder-file'
-    // 代码类
+      icon = 'folder-file'
+      break
     case 'js':
     case 'ts':
     case 'css':
@@ -140,28 +171,35 @@ const generateIcon = (file: MoYunFile) => {
     case 'rb':
     case 'rs':
     case 'swift':
-      return 'language-javascript'
-    // 数据类
+      icon = 'language-javascript'
+      break
     case 'json':
-      return 'code-json'
+      icon = 'code-json'
+      break
     case 'xml':
-      return 'xml'
+      icon = 'xml'
+      break
     case 'sql':
-      return 'database'
-    // 程序类
+      icon = 'database'
+      break
     case 'msi':
     case 'bat':
     case 'sh':
     case 'exe':
-      return 'powershell'
-    // 光盘类
+      icon = 'powershell'
+      break
     case 'iso':
     case 'img':
     case 'dmg':
-      return 'disc'
-    default:
-      return 'file-cloud' // 默认类型
+      icon = 'disc'
+      break
   }
+
+  if (fileIconColor[icon]) {
+    iconColor = fileIconColor[icon]
+  }
+
+  return { icon, iconColor }
 }
 
 /**
