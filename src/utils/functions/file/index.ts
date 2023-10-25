@@ -279,7 +279,7 @@ const doubleClick = (moYunFile: MoYunFile) => {
 
     _breadcrumbItems.push(_item)
     fileStore.fetch()
-    console.log(fileStore.breadcrumbItems)
+    // console.log(fileStore.breadcrumbItems)
   }
 }
 

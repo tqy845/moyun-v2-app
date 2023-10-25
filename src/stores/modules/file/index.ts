@@ -289,7 +289,7 @@ export const useFileStore = defineStore('fileStore', {
   persist: [
     {
       storage: localStorage,
-      paths: ['view', 'itemSize', 'showClassMenuItems', 'showMenuItems']
+      paths: ['view', 'itemSize', 'showClassMenuItems', 'showMenuItems', 'breadcrumbItems']
     }
   ]
 })

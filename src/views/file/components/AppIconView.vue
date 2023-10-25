@@ -207,7 +207,7 @@ const handleRightMenu = (
         }【${$t(
           fileStore.classMenuItems.filter(
             (it) => it.key === appStore['app']['menuIndex']['currentFileClassifyTab']
-          )[0]['label']
+          )?.[0]?.['label']
         )}】${$t('file.view.null.text')}`"
       />
     </div>
