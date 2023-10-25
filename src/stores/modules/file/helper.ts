@@ -247,7 +247,7 @@ export const getFileDefaultSettings = (): FileStore => {
       {
         title: '文件',
         path: '/',
-        disabled: true
+        disabled: false
       }
     ],
     preview: false,

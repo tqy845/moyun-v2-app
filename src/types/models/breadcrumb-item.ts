@@ -3,6 +3,6 @@
  */
 export interface BreadcrumbItem {
   title: string
-  disabled: boolean
   path: string
+  disabled?: boolean
 }
