@@ -183,7 +183,7 @@ const handleRightMenu = (
             cols="auto"
             class="mo-yun-file ma-0"
             :style="{
-              height: fileStore.itemSize - 50 + 'px',
+              height: fileStore.itemSize - 25 + 'px',
               width: (width - 8.5) / Math.floor(width / (fileStore.itemSize - 70)) + 'px'
             }"
             ref="rowRef"

@@ -41,7 +41,11 @@ defineProps({
       <div
         ref="fileNameRef"
         class="text-none text-center w-100 position-absolute"
-        :class="fileStore.selectedList.includes(moYunFile.name) ? null : ['file-name']"
+        :class="
+          fileStore.selectedList.includes(moYunFile.name) && fileStore.selectedList.length <= 1
+            ? null
+            : ['file-name']
+        "
         style="word-break: break-all; left: 0; z-index: 1"
       >
         {{ moYunFile.name }}
