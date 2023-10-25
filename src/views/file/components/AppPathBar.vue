@@ -1,44 +1,64 @@
-<!--
-  AppPathBar
-  @author 谭期元
-  @date  2023/10/24
-  @description “文件地址栏”组件
--->
-
-<script lang="ts" setup>
-import { useFileStore } from '@/stores'
-import { BreadcrumbItem } from '@/types/models/breadcrumb-item'
-
-const fileStore = useFileStore()
-
-const handleChange = (value: unknown) => {
-  console.log('change = ', value)
-  const endIndex = fileStore.breadcrumbItems.findIndex(
-    (item) => item.path === (value as BreadcrumbItem).path
-  )
-  fileStore.breadcrumbItems = fileStore.breadcrumbItems.slice(0, endIndex + 1)
-  fileStore.fetch()
-}
-</script>
-
 <template>
-  <v-row class="pa-0 ma-0" align="center">
-    <v-icon size="large" :icon="'mdi-folder-open'" class="mx-4"></v-icon>
-    <v-tabs
-      show-arrows
-      v-model="fileStore.breadcrumbItems[fileStore.breadcrumbItems.length - 1]"
-      @update:modelValue="handleChange"
-    >
-      <v-tab
-        v-for="(item, index) in fileStore.breadcrumbItems"
+  <div class="breadcrumb" ref="breadcrumbContainer">
+    <div class="breadcrumb-items" :style="{ width: breadcrumbWidth + 'px' }">
+      <div
+        v-for="(item, index) in breadcrumbItems"
         :key="index"
-        :value="item"
-        variant="text"
+        class="breadcrumb-item"
+        @click="goTo(item.path)"
       >
-        <span class="text-h6">{{ item.title }}</span>
-      </v-tab>
-    </v-tabs>
-  </v-row>
+        {{ item.name }}
+        <span class="breadcrumb-separator"></span>
+      </div>
+    </div>
+    <div class="dropdown" v-if="hasDropdown">
+      <button class="btn btn-secondary dropdown-toggle" @click="toggleDropdown">
+        {{ currentPath }} <span class="caret"></span>
+      </button>
+      <div class="dropdown-menu" v-if="isDropdownOpen">
+        <div class="dropdown-item" v-for="(item, index) in breadcrumbItems" :key="index">
+          <a :href="item.path">{{ item.name }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<script lang="ts">
+import { ref, onMounted } from 'vue'
+
+export default {
+  name: 'Breadcrumb',
+  props: {
+    breadcrumbItems: {
+      type: Array,
+      required: true
+    },
+    currentPath: {
+      type: String,
+      required: true
+    }
+  },
+  setup(props) {
+    const breadcrumbWidth = ref(0)
+    const hasDropdown = ref(false)
+    const isDropdownOpen = ref(false)
+    const toggleDropdown = () => {
+      isDropdownOpen.value = !isDropdownOpen.value
+    }
+    const goTo = (path: string) => {
+      props.currentPath = path
+      isDropdownOpen.value = false
+    }
+    onMounted(() => {
+      const container = document.querySelector('.breadcrumb')
+      if (container && container.scrollWidth > container.offsetWidth) {
+        hasDropdown.value = true
+      } else {
+        hasDropdown.value = false
+      }
+    })
+    return { breadcrumbWidth, hasDropdown, isDropdownOpen, toggleDropdown, goTo }
+  }
+}
+</script>

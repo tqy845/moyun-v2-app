@@ -142,21 +142,10 @@ const handleRightMenu = (
   <!-- 导航条 -->
   <v-toolbar border density="compact">
     <v-row align="center">
-      <v-col>
-        <!-- <v-breadcrumbs :items="fileStore.breadcrumbItems" style="height: 10px" class="bg-red">
-            <template v-slot:divider>
-              <v-icon icon="mdi-chevron-right"></v-icon>
-            </template>
-            <template v-slot:prepend>
-              <v-icon size="small" :icon="'mdi-' + 'folder-open'" class="pr-5"></v-icon>
-            </template>
-            <template v-slot:title="{ item }">
-              <v-btn block variant="text" class="pa-1 ma-0 text-h6">{{ item.title }}</v-btn>
-            </template>
-          </v-breadcrumbs> -->
-        <AppPathBar />
+      <v-col cols="10">
+        <AppPathBar :breadcrumbItems="['1', '2', '3']" :currentPath="'1'" />
       </v-col>
-      <v-col cols="auto" class="">
+      <v-col cols="2" class="">
         <v-btn
           icon="mdi-folder-plus-outline"
           @click="fileStore.createFolder(() => (cardRef.$el.scrollTop = cardRef.$el.scrollHeight))"
