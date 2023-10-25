@@ -26,8 +26,18 @@ self.onmessage = async (event) => {
   /**
    * 发起网络请求
    */
-  const { startIndex, endIndex, chunkSize, index, requestId, url, token, file, totalChunkCount } =
-    event.data
+  const {
+    startIndex,
+    endIndex,
+    chunkSize,
+    index,
+    requestId,
+    url,
+    token,
+    file,
+    totalChunkCount,
+    path
+  } = event.data
 
   for (let i = startIndex; i < endIndex; i++) {
     // 切片
@@ -42,6 +52,8 @@ self.onmessage = async (event) => {
     form.append('file', chunk, `chunk_${index}`)
     form.append('chunkSize', String(chunkSize))
     form.append('totalChunkCount', String(totalChunkCount))
+    form.append('path', String(path))
+
     for (const key in args) {
       if (Object.hasOwn(args, key)) {
         const element = args[key]

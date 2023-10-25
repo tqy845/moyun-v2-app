@@ -34,10 +34,8 @@ export const useFileStore = defineStore('fileStore', {
     async fetch(delFlag: 1 | 0 = 0) {
       this.loading = true
       const appStore = useAppStore()
-      const path = this.breadcrumbItems
-        .filter((item) => item.path !== '/')
-        .map((item) => item.path)
-        .join('')
+      const path = this.getCurrentRealPath()
+
       const { data } = await fileListFetch<{
         fileList: Array<MoYunFileDto & { modifyDate: string }>
       }>({ path, delFlag })
@@ -262,10 +260,7 @@ export const useFileStore = defineStore('fileStore', {
      * 新建文件夹
      */
     async createFolder(callBack?: Function) {
-      const path = this.breadcrumbItems
-        .filter((item) => item.path !== '/')
-        .map((item) => item.path)
-        .join('')
+      const path = this.getCurrentRealPath()
       const {
         code,
         data: { folder }
@@ -275,6 +270,15 @@ export const useFileStore = defineStore('fileStore', {
         setTimeout(() => callBack?.())
       }
       return code === 200
+    },
+    /**
+     * 获得当前真实路径
+     */
+    getCurrentRealPath() {
+      return this.breadcrumbItems
+        .filter((item) => item.path !== '/')
+        .map((item) => item.path)
+        .join('')
     }
   },
 

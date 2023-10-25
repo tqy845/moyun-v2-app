@@ -197,7 +197,8 @@ export class MoYunUploadDto {
           token: userStore.token,
           requestId,
           url: fileStore.uploadAddress,
-          totalChunkCount: this.totalChunkCount
+          totalChunkCount: this.totalChunkCount,
+          path: fileStore.getCurrentRealPath()
         })
 
         // 接收worker线程返回
