@@ -27,7 +27,7 @@ defineProps({
 
 <template>
   <v-btn
-    :height="fileStore.itemSize + height - 90"
+    :height="fileStore.itemSize + height - 105"
     stacked
     v-bind="$attrs"
     class="pa-0 ma-0 d-flex align-start flex-column justify-start w-100 align-center text-center"
