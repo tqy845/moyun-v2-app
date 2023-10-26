@@ -46,7 +46,7 @@ defineProps({
       </div>
       <div
         ref="fileNameRef"
-        class="text-none text-center w-100 position-absolute"
+        class="text-none text-center w-100 position-absolute px-2"
         :class="
           fileStore.selectedList.includes(moYunFile.name) && fileStore.selectedList.length <= 1
             ? null
