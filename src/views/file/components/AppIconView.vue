@@ -146,16 +146,19 @@ const handleRightMenu = (
 <template>
   <!-- 导航条 -->
   <v-toolbar border density="compact">
-    <v-row align="center">
-      <v-col cols="10">
+    <v-row align="center" justify="start">
+      <v-col cols="auto" class="">
         <AppPathBar />
       </v-col>
-      <v-col cols="2" class="">
+      <!-- 右侧分栏 -->
+      <v-spacer></v-spacer>
+      <v-col cols="auto" style="width: 180px !important" class="justify-center text-center">
+        <v-btn icon="mdi-arrow-left-bottom" @click="fileStore.fetch()" class=""></v-btn>
         <v-btn
           icon="mdi-folder-plus-outline"
           @click="fileStore.createFolder(() => (cardRef.$el.scrollTop = cardRef.$el.scrollHeight))"
         ></v-btn>
-        <v-btn icon="mdi-refresh" @click="fileStore.fetch()"></v-btn>
+        <v-btn icon="mdi-refresh" @click="fileStore.fetch()" class=""></v-btn>
       </v-col>
     </v-row>
   </v-toolbar>
