@@ -6,12 +6,14 @@
 -->
 <script lang="ts" setup>
 import { AppLanguage, AppTheme } from '@/components/common'
-import { useUserStore } from '@/stores'
+import { useAppStore, useUserStore } from '@/stores'
+import { computed } from 'vue'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const userStore = useUserStore()
+const appStore = useAppStore()
 
 const cs = reactive({
   fav: true,
@@ -25,8 +27,12 @@ const cs = reactive({
  */
 const toSettingPage = () => {
   router.push('/setting')
+  appStore.initKeySelectedMenuItem()
+  appStore.app.menuIndex['currentUserCenterMenuTab'] = 'setting'
   cs.menu = false
 }
+
+const selectedMenuItem = computed(() => [appStore.app.menuIndex['currentUserCenterMenuTab']])
 </script>
 
 <template>
@@ -56,7 +62,7 @@ const toSettingPage = () => {
 
       <v-divider></v-divider>
 
-      <v-list>
+      <v-list v-model:selected="selectedMenuItem">
         <v-list-item value="setting" @click="toSettingPage">
           <template v-slot:prepend>
             <v-icon icon="mdi-cog"></v-icon>

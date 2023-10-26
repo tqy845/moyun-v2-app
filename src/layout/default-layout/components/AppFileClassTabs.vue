@@ -11,8 +11,6 @@ import { FileType } from '@/types/enums'
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
-
 const fileStore = useFileStore()
 const appStore = useAppStore()
 
@@ -46,7 +44,7 @@ const handleChangeTab = (item: unknown) => {
   <!-- 文件分类 -->
   <v-tabs
     v-show="
-      !fileStore.search && !appStore.search && appStore.app.menuIndex['currentSecondMenuTab']['id']
+      !fileStore.search && !appStore.search && appStore.app.menuIndex['currentSecondMenuTab'].length
     "
     :model-value="appStore.app.menuIndex['currentFileClassifyTab']"
     centered

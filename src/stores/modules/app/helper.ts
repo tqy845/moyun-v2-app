@@ -101,8 +101,10 @@ export const getAppDefaultSettings = (): AppStore => {
     app: {
       delay: import.meta.env.VITE_APP_BASE_DELAY,
       menuIndex: {
+        // 用户菜单选中项
+        currentUserCenterMenuTab: [],
         // 二级菜单选中项
-        currentSecondMenuTab: {},
+        currentSecondMenuTab: [],
         // 文件分类默认选中分类
         currentFileClassifyTab: FileType.All,
         // 文件上传，打开的Tab项

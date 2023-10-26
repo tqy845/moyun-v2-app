@@ -99,6 +99,13 @@ export const useAppStore = defineStore(`appStore`, {
      */
     isColoursIcon() {
       return this.settings['basic']['iconColorTheme'] === '1'
+    },
+    /**
+     * 初始化关键选中的菜单项
+     */
+    initKeySelectedMenuItem() {
+      this.app.menuIndex['currentUserCenterMenuTab'] = []
+      this.app.menuIndex['currentSecondMenuTab'] = []
     }
   },
   /**
