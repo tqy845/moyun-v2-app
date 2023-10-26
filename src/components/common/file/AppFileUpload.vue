@@ -309,16 +309,21 @@ const handleClickArea = () => {
                 height="12"
                 :indeterminate="item.status === 'init' && item.power <= 0"
                 rounded
+                :color="appStore.customThemeColor()['uploadProgressBg']"
               >
-                <strong class="text-white text-overline">{{
-                  item.status === 'cancel'
-                    ? $t('cancel.text')
-                    : item.status === 'error'
-                    ? $t('error.text')
-                    : item.status === 'success'
-                    ? $t('success.text')
-                    : Math.ceil(item.power) + '%'
-                }}</strong></v-progress-linear
+                <strong
+                  class="text-overline"
+                  :class="appStore.customThemeColor()['uploadProgress']"
+                  >{{
+                    item.status === 'cancel'
+                      ? $t('cancel.text')
+                      : item.status === 'error'
+                      ? $t('error.text')
+                      : item.status === 'success'
+                      ? $t('success.text')
+                      : Math.ceil(item.power) + '%'
+                  }}</strong
+                ></v-progress-linear
               >
             </template>
             <template v-slot:item.action="{ item }">

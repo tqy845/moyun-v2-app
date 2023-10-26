@@ -80,13 +80,17 @@ export const useAppStore = defineStore(`appStore`, {
         uploadHeaderBar: '#212121',
         uploadArea: '#2A2A2A',
         fileMenu: '#1B1B1B',
-        fileAppBar: 'teal-lighten-4'
+        fileAppBar: 'teal-lighten-4',
+        uploadProgress: 'text-black',
+        uploadProgressBg: '#A3A3A3'
       }
       const lightTheme = {
         uploadHeaderBar: '#212121',
         uploadArea: '#F1F1F1',
         fileMenu: 'grey-lighten-5',
-        fileAppBar: 'teal-darken-4'
+        fileAppBar: 'teal-darken-4',
+        uploadProgress: 'text-white',
+        uploadProgressBg: ''
       }
       return this.settings['basic']['colorTheme'] === 'dark' ? darkTheme : lightTheme
     },
