@@ -140,6 +140,8 @@ export const getAppDefaultSettings = (): AppStore => {
         powerOn: false,
         // 自动升级
         autoUpdate: false,
+        // 主题 light：浅色 dark：深色
+        colorTheme: 'light',
         // 文件图标颜色主题 1:彩色 2:纯色
         iconColorTheme: '1'
       },

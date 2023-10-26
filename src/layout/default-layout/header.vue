@@ -5,12 +5,19 @@
   @description “上边菜单栏”组件
 -->
 <script lang="ts" setup>
-import { AppLanguage, AppFileView, AppFileSearch } from '@/components/common'
+import { AppFileView, AppFileSearch } from '@/components/common'
 import { AppFileClassTabs, AppFileMiniUploadProgress } from './components'
+import { useAppStore } from '@/stores'
+
+const appStore = useAppStore()
 </script>
 
 <template>
-  <v-app-bar color="teal-darken-4">
+  <v-app-bar
+    :color="
+      appStore['settings']['basic']['colorTheme'] === 'dark' ? `teal-lighten-4` : `teal-darken-4`
+    "
+  >
     <template v-slot:image>
       <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
     </template>
@@ -29,9 +36,6 @@ import { AppFileClassTabs, AppFileMiniUploadProgress } from './components'
 
     <!-- 视图切换 -->
     <AppFileView />
-
-    <!-- I18n 语言切换 -->
-    <!-- <AppLanguage /> -->
   </v-app-bar>
 </template>
 

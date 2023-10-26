@@ -11,18 +11,19 @@ import { useI18n } from 'vue-i18n'
 import type { App } from 'vue'
 import { VDataTable, VDataTableVirtual } from 'vuetify/labs/VDataTable'
 import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
-// @ts-ignore
-import colors from 'vuetify/lib/util/colors'
 
 // 创建 Vuetify 组件实例
 const vuetify = createVuetify({
   theme: {
     themes: {
       light: {
-        dark: false,
         colors: {
-          primary: '#212121',
-          secondary: colors.red.lighten4 // #FFCDD2
+          primary: '#212121'
+        }
+      },
+      dark: {
+        colors: {
+          primary: '#E0E0E0'
         }
       }
     }
@@ -53,4 +54,11 @@ const vuetify = createVuetify({
  */
 export const setupVuetify = (app: App) => {
   app.use(vuetify)
+}
+
+/**
+ * 切换主题
+ */
+export const switchTheme = (newTheme: 'dark' | 'light') => {
+  vuetify.theme.global.name.value = newTheme
 }

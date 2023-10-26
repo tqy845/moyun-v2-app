@@ -8,6 +8,9 @@
 <script lang="ts" setup>
 import { onMounted, reactive } from 'vue'
 import { appWindow } from '@tauri-apps/api/window'
+import { useAppStore } from '@/stores'
+
+const appStore = useAppStore()
 
 const cs = reactive({
   /**
@@ -52,7 +55,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-system-bar window data-tauri-drag-region color="primary">
+  <v-system-bar window data-tauri-drag-region :color="`#212121`">
     <!-- <v-icon icon="mdi-message" class="me-2"></v-icon> -->
     <!-- <span>10条未读</span> -->
     <v-spacer></v-spacer>

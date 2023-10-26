@@ -6,11 +6,21 @@
 -->
 <script lang="ts" setup>
 import { useAppStore, useFileStore } from '@/stores'
-import { MoYunFile } from '@/types/models'
+import { useTheme } from 'vuetify'
 import { fileUtils } from '@/utils/functions'
+import { reactive } from 'vue'
+import { switchTheme } from '@/plugins'
+
+const theme = useTheme()
 
 const appStore = useAppStore()
 const fileStore = useFileStore()
+
+const cs = reactive({
+  themeDialog: {
+    show: false
+  }
+})
 </script>
 
 <template>
@@ -99,67 +109,81 @@ const fileStore = useFileStore()
       <v-window-item :value="3">
         <v-container fluid>
           <v-list density="compact">
-            <v-list-item-title>文件</v-list-item-title>
+            <v-list-item-title class="text-h6">外观</v-list-item-title>
             <v-divider class="my-1"></v-divider>
-            <v-list-item class="">
+            <v-list-item class="my-1">
+              <p class="text-subtitle-1 text-grey-darken-1">主题：</p>
+              <v-radio-group
+                inline
+                v-model="appStore['settings']['basic']['colorTheme']"
+                @update:model-value="switchTheme(appStore['settings']['basic']['colorTheme'])"
+              >
+                <v-radio label="日间（浅色）" value="light"></v-radio>
+                <v-radio label="夜间（深色）" value="dark"></v-radio>
+              </v-radio-group>
+            </v-list-item>
+          </v-list>
+
+          <v-list density="compact">
+            <v-list-item-title class="text-h6">文件</v-list-item-title>
+            <v-divider class="my-1"></v-divider>
+            <v-list-item class="my-1">
+              <p class="text-subtitle-1 text-grey-darken-1">
+                图标主题：
+                <v-icon
+                  :icon="`mdi-file-excel`"
+                  :size="20"
+                  :color="
+                    fileUtils.iconColors[
+                      appStore['settings']['basic']['iconColorTheme'] === '1'
+                        ? 'file-excel'
+                        : 'pure'
+                    ]
+                  "
+                ></v-icon>
+                <v-icon
+                  :icon="`mdi-file-word`"
+                  :size="20"
+                  :color="
+                    fileUtils.iconColors[
+                      appStore['settings']['basic']['iconColorTheme'] === '1' ? 'file-word' : 'pure'
+                    ]
+                  "
+                ></v-icon>
+                <v-icon
+                  :icon="`mdi-file-powerpoint`"
+                  :size="20"
+                  :color="
+                    fileUtils.iconColors[
+                      appStore['settings']['basic']['iconColorTheme'] === '1'
+                        ? 'file-powerpoint'
+                        : 'pure'
+                    ]
+                  "
+                ></v-icon>
+                <v-icon
+                  :icon="`mdi-file-document`"
+                  :size="20"
+                  :color="
+                    fileUtils.iconColors[
+                      appStore['settings']['basic']['iconColorTheme'] === '1'
+                        ? 'file-document'
+                        : 'pure'
+                    ]
+                  "
+                ></v-icon>
+                <v-icon
+                  :icon="`mdi-file-cloud`"
+                  :size="20"
+                  :color="
+                    fileUtils.iconColors[
+                      appStore['settings']['basic']['iconColorTheme'] === '1' ? 'default' : 'pure'
+                    ]
+                  "
+                ></v-icon>
+                ...
+              </p>
               <v-radio-group inline v-model="appStore['settings']['basic']['iconColorTheme']">
-                <template v-slot:label>
-                  图标主题：
-                  <!-- {{ fileUtils.iconColors }} -->
-                  <v-icon
-                    :icon="`mdi-file-excel`"
-                    :size="20"
-                    :color="
-                      fileUtils.iconColors[
-                        appStore['settings']['basic']['iconColorTheme'] === '1'
-                          ? 'file-excel'
-                          : 'pure'
-                      ]
-                    "
-                  ></v-icon>
-                  <v-icon
-                    :icon="`mdi-file-word`"
-                    :size="20"
-                    :color="
-                      fileUtils.iconColors[
-                        appStore['settings']['basic']['iconColorTheme'] === '1'
-                          ? 'file-word'
-                          : 'pure'
-                      ]
-                    "
-                  ></v-icon>
-                  <v-icon
-                    :icon="`mdi-file-powerpoint`"
-                    :size="20"
-                    :color="
-                      fileUtils.iconColors[
-                        appStore['settings']['basic']['iconColorTheme'] === '1'
-                          ? 'file-powerpoint'
-                          : 'pure'
-                      ]
-                    "
-                  ></v-icon>
-                  <v-icon
-                    :icon="`mdi-file-document`"
-                    :size="20"
-                    :color="
-                      fileUtils.iconColors[
-                        appStore['settings']['basic']['iconColorTheme'] === '1'
-                          ? 'file-document'
-                          : 'pure'
-                      ]
-                    "
-                  ></v-icon>
-                  <v-icon
-                    :icon="`mdi-file-cloud`"
-                    :size="20"
-                    :color="
-                      fileUtils.iconColors[
-                        appStore['settings']['basic']['iconColorTheme'] === '1' ? 'default' : 'pure'
-                      ]
-                    "
-                  ></v-icon>
-                </template>
                 <v-radio label="彩色" value="1"></v-radio>
                 <v-radio label="纯色" value="2"></v-radio>
               </v-radio-group>
