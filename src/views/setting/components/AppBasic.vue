@@ -6,6 +6,8 @@
 -->
 <script lang="ts" setup>
 import { useAppStore, useFileStore } from '@/stores'
+import { MoYunFile } from '@/types/models'
+import { fileUtils } from '@/utils/functions'
 
 const appStore = useAppStore()
 const fileStore = useFileStore()
@@ -96,7 +98,73 @@ const fileStore = useFileStore()
 
       <v-window-item :value="3">
         <v-container fluid>
-          <v-card flat> </v-card>
+          <v-list density="compact">
+            <v-list-item-title>文件</v-list-item-title>
+            <v-divider class="my-1"></v-divider>
+            <v-list-item class="">
+              <v-radio-group inline v-model="appStore['settings']['basic']['iconColorTheme']">
+                <template v-slot:label>
+                  图标主题：
+                  <!-- {{ fileUtils.iconColors }} -->
+                  <v-icon
+                    :icon="`mdi-file-excel`"
+                    :size="20"
+                    :color="
+                      fileUtils.iconColors[
+                        appStore['settings']['basic']['iconColorTheme'] === '1'
+                          ? 'file-excel'
+                          : 'pure'
+                      ]
+                    "
+                  ></v-icon>
+                  <v-icon
+                    :icon="`mdi-file-word`"
+                    :size="20"
+                    :color="
+                      fileUtils.iconColors[
+                        appStore['settings']['basic']['iconColorTheme'] === '1'
+                          ? 'file-word'
+                          : 'pure'
+                      ]
+                    "
+                  ></v-icon>
+                  <v-icon
+                    :icon="`mdi-file-powerpoint`"
+                    :size="20"
+                    :color="
+                      fileUtils.iconColors[
+                        appStore['settings']['basic']['iconColorTheme'] === '1'
+                          ? 'file-powerpoint'
+                          : 'pure'
+                      ]
+                    "
+                  ></v-icon>
+                  <v-icon
+                    :icon="`mdi-file-document`"
+                    :size="20"
+                    :color="
+                      fileUtils.iconColors[
+                        appStore['settings']['basic']['iconColorTheme'] === '1'
+                          ? 'file-document'
+                          : 'pure'
+                      ]
+                    "
+                  ></v-icon>
+                  <v-icon
+                    :icon="`mdi-file-cloud`"
+                    :size="20"
+                    :color="
+                      fileUtils.iconColors[
+                        appStore['settings']['basic']['iconColorTheme'] === '1' ? 'default' : 'pure'
+                      ]
+                    "
+                  ></v-icon>
+                </template>
+                <v-radio label="彩色" value="1"></v-radio>
+                <v-radio label="纯色" value="2"></v-radio>
+              </v-radio-group>
+            </v-list-item>
+          </v-list>
         </v-container>
       </v-window-item>
     </v-window>

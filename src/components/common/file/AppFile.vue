@@ -7,13 +7,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { MoYunFile } from '@/types/models'
-import { useFileStore } from '@/stores'
+import { useAppStore, useFileStore } from '@/stores'
 import { useElementSize } from '@vueuse/core'
+import { fileUtils } from '@/utils/functions'
 
 const fileNameRef = ref()
 
 const { height } = useElementSize(fileNameRef)
 const fileStore = useFileStore()
+const appStore = useAppStore()
 
 defineProps({
   moYunFile: {
@@ -35,7 +37,11 @@ defineProps({
         <v-icon
           :icon="`mdi-${moYunFile.icon}`"
           :size="fileStore.itemSize - 120"
-          :color="moYunFile.iconColor"
+          :color="
+            appStore['settings']['basic']['iconColorTheme'] === '1'
+              ? moYunFile.iconColor
+              : fileUtils.iconColors['pure']
+          "
         ></v-icon>
       </div>
       <div

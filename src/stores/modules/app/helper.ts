@@ -139,7 +139,9 @@ export const getAppDefaultSettings = (): AppStore => {
         // 开机自启
         powerOn: false,
         // 自动升级
-        autoUpdate: false
+        autoUpdate: false,
+        // 文件图标颜色主题 1:彩色 2:纯色
+        iconColorTheme: '1'
       },
       // 传输
       transfer: {},

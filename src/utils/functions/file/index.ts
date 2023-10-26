@@ -48,6 +48,34 @@ const upload = async (fileList: Array<File>) => {
 const download = () => {}
 
 /**
+ * ICON主题色
+ */
+const iconColors: { [key: string]: string } = {
+  // 纯色
+  pure: '#62B1FA',
+  // 彩色
+  'file-video': '#2746AE',
+  'file-music': '#0F86CD',
+  'file-image': '#63B3ED',
+  'file-excel': '#4CAF50',
+  'file-document': '#295595',
+  'file-word': '#295595',
+  'file-pdf-box': '#CF4646',
+  'file-powerpoint': '#D04423',
+  'file-link': '#230B64',
+  'zip-box': '#FFB347',
+  folder: '#FFD700',
+  'folder-file': '#FFD700',
+  'language-javascript': '#424242',
+  'code-json': '#FBC02D',
+  xml: '#55915A',
+  database: '#B589EC',
+  powershell: '#376EC6',
+  disc: '#D4DCDC',
+  default: '#230B64'
+}
+
+/**
  * 生成文件Icon
  * @param file 文件
  */
@@ -60,30 +88,8 @@ const generateIcon = (file: MoYunFile) => {
   }
 
   // 默认类型
-  const defaultColor = '#230B64'
-  const fileIconColor: { [key: string]: string } = {
-    'file-video': '#2746AE',
-    'file-music': '#0F86CD',
-    'file-image': '#63B3ED',
-    'file-excel': '#4CAF50',
-    'file-document': '#295595',
-    'file-word': '#295595',
-    'file-pdf-box': '#CF4646',
-    'file-powerpoint': '#D04423',
-    'file-link': '#230B64',
-    'zip-box': '#FFB347',
-    folder: '#FFD700',
-    'folder-file': '#FFD700',
-    'language-javascript': '#424242',
-    'code-json': '#FBC02D',
-    xml: '#55915A',
-    database: '#B589EC',
-    powershell: '#376EC6',
-    disc: '#D4DCDC'
-  }
-
   let icon = 'file-cloud'
-  let iconColor = defaultColor
+  let iconColor = iconColors['default']
 
   switch (_extension.toLowerCase()) {
     case 'mp4':
@@ -195,8 +201,8 @@ const generateIcon = (file: MoYunFile) => {
       break
   }
 
-  if (fileIconColor[icon]) {
-    iconColor = fileIconColor[icon]
+  if (iconColors[icon]) {
+    iconColor = iconColors[icon]
   }
 
   return { icon, iconColor }
@@ -339,7 +345,8 @@ const fileUtils = {
   listViewMouseWheel,
   isType,
   doubleClick,
-  toFolder
+  toFolder,
+  iconColors
 }
 
 export default fileUtils
