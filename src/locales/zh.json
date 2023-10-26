@@ -41,6 +41,7 @@
   "toggle.language": "语言",
   "toggle.view": "文件视图",
   "toggle.sort": "文件排序",
+  "toggle.sort.order": "排序顺序",
 
   "file.sort.name.text": "名称",
   "file.sort.date.text": "修改日期",

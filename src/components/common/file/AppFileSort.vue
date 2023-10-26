@@ -73,6 +73,7 @@ const selectedTargets = computed(() => [
         <v-list-item-title>{{ $t(item.label) }}</v-list-item-title>
       </v-list-item>
       <v-divider class="my-1"></v-divider>
+      <v-list-subheader>{{ $t('toggle.sort.order') }}</v-list-subheader>
       <v-list-item
         v-for="(item, index) in sortOrders"
         :key="index"
