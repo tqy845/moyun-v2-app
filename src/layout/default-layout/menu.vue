@@ -35,12 +35,7 @@ whenever(ctrl_k, () => {
 </script>
 
 <template>
-  <v-navigation-drawer
-    :color="appStore['settings']['basic']['colorTheme'] !== 'dark' ? `grey-lighten-5` : `#1B1B1B`"
-    nav
-    permanent
-    width="248"
-  >
+  <v-navigation-drawer :color="appStore.customThemeColor()['fileMenu']" nav permanent width="248">
     <!-- 搜索组件 -->
     <AppSearch v-model="cs.search.show" />
 

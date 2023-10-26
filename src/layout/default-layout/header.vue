@@ -13,11 +13,7 @@ const appStore = useAppStore()
 </script>
 
 <template>
-  <v-app-bar
-    :color="
-      appStore['settings']['basic']['colorTheme'] === 'dark' ? `teal-lighten-4` : `teal-darken-4`
-    "
-  >
+  <v-app-bar :color="appStore.customThemeColor()['fileAppBar']">
     <template v-slot:image>
       <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
     </template>

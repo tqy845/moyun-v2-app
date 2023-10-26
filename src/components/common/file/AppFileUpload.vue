@@ -138,11 +138,12 @@ const handleClickArea = () => {
     :transition="fileStore.show ? 'dialog-bottom-transition' : 'dialog-top-transition'"
   >
     <v-card>
-      <v-toolbar dark color="primary">
+      <v-toolbar :color="appStore.customThemeColor()['uploadHeaderBar']">
         <v-toolbar-title>{{ $t('file.upload.title.text') }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-row style="width: max-content" justify="end">
           <v-col cols="auto">
+            <!-- 上传时隐藏上传区域 -->
             <v-switch
               v-model="appStore['settings']['uploadAutoHideUploadArea']"
               color="success"
@@ -154,6 +155,7 @@ const handleClickArea = () => {
             </v-switch>
           </v-col>
           <v-col cols="auto">
+            <!-- 上传完毕自动关闭对话框 -->
             <v-switch
               v-model="appStore['settings']['uploadDialogAutoClose']"
               color="success"
@@ -231,9 +233,11 @@ const handleClickArea = () => {
             </v-list-subheader>
           </template>
           <template #text>
+            <!-- 上传区域 -->
             <div class="file-upload py-3">
               <div
                 class="file-drop-area pa-12"
+                :style="{ backgroundColor: appStore.customThemeColor()['uploadArea'] }"
                 @dragover.prevent
                 @dragenter.prevent
                 @dragleave.prevent
@@ -384,7 +388,6 @@ const handleClickArea = () => {
   .file-drop-area {
     border: 2px dashed #ccc;
     cursor: pointer;
-    background-color: #f7f7f7;
     border-radius: 5px;
 
     p {

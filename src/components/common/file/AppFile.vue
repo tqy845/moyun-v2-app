@@ -37,11 +37,7 @@ defineProps({
         <v-icon
           :icon="`mdi-${moYunFile.icon}`"
           :size="fileStore.itemSize - 120"
-          :color="
-            appStore['settings']['basic']['iconColorTheme'] === '1'
-              ? moYunFile.iconColor
-              : fileUtils.iconColors['pure']
-          "
+          :color="appStore.isColoursIcon() ? moYunFile.iconColor : fileUtils.iconColors['pure']"
         ></v-icon>
       </div>
       <div

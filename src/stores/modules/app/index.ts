@@ -71,6 +71,30 @@ export const useAppStore = defineStore(`appStore`, {
           })
         })
       }
+    },
+    /**
+     * 自定义主题色
+     */
+    customThemeColor() {
+      const darkTheme = {
+        uploadHeaderBar: '#212121',
+        uploadArea: '#2A2A2A',
+        fileMenu: '#1B1B1B',
+        fileAppBar: 'teal-lighten-4'
+      }
+      const lightTheme = {
+        uploadHeaderBar: '#212121',
+        uploadArea: '#F1F1F1',
+        fileMenu: 'grey-lighten-5',
+        fileAppBar: 'teal-darken-4'
+      }
+      return this.settings['basic']['colorTheme'] === 'dark' ? darkTheme : lightTheme
+    },
+    /**
+     * 是否为彩色主题图标
+     */
+    isColoursIcon() {
+      return this.settings['basic']['iconColorTheme'] === '1'
     }
   },
   /**
