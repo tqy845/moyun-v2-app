@@ -1,7 +1,6 @@
 <!-- App -->
 <script lang="ts" setup>
 import { AppNotification } from '@/components/custom'
-import { onMounted } from 'vue'
 import { switchTheme } from './plugins'
 import { useAppStore } from './stores'
 
@@ -11,10 +10,7 @@ window.addEventListener('contextmenu', (e) => e.preventDefault(), false)
 
 const appStore = useAppStore()
 
-onMounted(() => {
-  console.log('started')
-  switchTheme(appStore['settings']['basic']['colorTheme'])
-})
+switchTheme(appStore['settings']['basic']['colorTheme'])
 </script>
 
 <template>

@@ -36,8 +36,15 @@
   "forgot.password": "忘记密码",
   "reset.password": "重置密码",
   "change.password": "修改密码",
-  "toggle.language": "切换语言",
+
+  "toggle.language": "语言",
   "toggle.view": "切换文件视图",
+  "toggle.interface": "外观",
+  "toggle.theme": "主题",
+  "toggle.theme.title.text": "主题：",
+  "toggle.theme.light.text": "日间（浅色）",
+  "toggle.theme.dark.text": "夜间（深色）",
+
   "search.text": "搜索",
   "home.text": "主页",
   "school.text": "学校",
@@ -114,6 +121,27 @@
 
   "trash.can.clear.all": "清空垃圾篓",
   "trash.can.restore.all": "还原所有内容",
+
+  "universal.title.text": "通用",
+  "menu.title.text": "菜单",
+  "theme.title.text": "主题",
+  "searchSetting.title.text": "搜索设置",
+
+  "settings.menu.application.title.text": "应用程序",
+  "settings.menu.transmit.title.text": "传输",
+  "settings.menu.shortcut.title.text": "快捷键",
+  "settings.menu.synchrodisk.title.text": "同步盘",
+
+  "settings.item.showWelcomePage.text": "登录后显示欢迎页",
+  "settings.item.autoLaunch.text": "开机自动启动（推荐）",
+  "settings.item.autoUpdate.text": "自动升级",
+  "settings.item.secondaryMenu.text": "二级菜单",
+  "settings.item.fileClassify.text": "文件分类",
+
+  "settings.item.fileSettings.title.text": "文件",
+  "settings.item.fileSettings.iconTheme.text": "图标主题：",
+  "settings.item.fileSettings.colour.text": "彩色",
+  "settings.item.fileSettings.pure.text": "纯色",
 
   "$vuetify.noDataText": "没有数据",
   "$vuetify.fileInput.counterSize": "共{0}个文件，共{1}",

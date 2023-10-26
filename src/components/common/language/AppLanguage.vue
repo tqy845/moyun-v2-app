@@ -1,14 +1,21 @@
+<!--
+  AppLanguage
+  @author 谭期元
+  @date  2023/10/26
+  @description “语言切换”组件
+-->
 <script lang="ts" setup>
 import { languages, type LanguageItem } from '@/plugins/i18n/helper'
 import { useI18n } from 'vue-i18n'
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { reactive } from 'vue'
-import { useAppStore, useUserStore } from '@/stores'
+import { useAppStore, useFileStore, useUserStore } from '@/stores'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const appStore = useAppStore()
 const userStore = useUserStore()
+const fileStore = useFileStore()
 const { locale } = useI18n()
 const cookies = useCookies(['locale'])
 /**

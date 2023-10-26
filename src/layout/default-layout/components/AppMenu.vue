@@ -29,7 +29,7 @@ const handleChangeSecondMenuItem = (item: any) => {
         <v-icon :icon="`mdi-` + item.icon"></v-icon>
       </template>
       <!-- 菜单项标题 -->
-      <v-list-item-title>{{ item.text }}</v-list-item-title>
+      <v-list-item-title>{{ $t(item.text) }}</v-list-item-title>
     </v-list-item>
   </v-list>
 </template>

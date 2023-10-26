@@ -9,6 +9,9 @@
 import { useAppStore, useFileStore } from '@/stores'
 import { FileType } from '@/types/enums'
 import { reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const fileStore = useFileStore()
 const appStore = useAppStore()
@@ -59,7 +62,7 @@ const handleChangeTab = (item: unknown) => {
       :key="index"
       :value="item.key"
     >
-      <v-icon size="24">mdi-{{ item.icon }}</v-icon> {{ item.label }}
+      <v-icon size="24">mdi-{{ item.icon }}</v-icon> {{ $t(item.label) }}
     </v-tab>
 
     <!-- 更多分类  -->
@@ -100,7 +103,7 @@ const handleChangeTab = (item: unknown) => {
           <template v-slot:prepend>
             <v-icon>mdi-{{ item.icon }}</v-icon>
           </template>
-          {{ item.label }}
+          {{ $t(item.label) }}
         </v-list-item>
       </v-list>
     </v-menu>

@@ -29,9 +29,9 @@ const cs = reactive({
       v-model="appStore['app']['menuIndex']['currentSettingOpenTab']['basic']['tab']"
       align-tabs="end"
     >
-      <v-tab :value="1">基本</v-tab>
-      <v-tab :value="2">菜单</v-tab>
-      <v-tab :value="3">主题</v-tab>
+      <v-tab :value="1">{{ $t('universal.title.text') }}</v-tab>
+      <v-tab :value="2">{{ $t('menu.title.text') }}</v-tab>
+      <v-tab :value="3">{{ $t('theme.title.text') }}</v-tab>
     </v-tabs>
     <v-window v-model="appStore['app']['menuIndex']['currentSettingOpenTab']['basic']['tab']">
       <v-window-item :value="1">
@@ -40,19 +40,19 @@ const cs = reactive({
             <v-card-item>
               <v-checkbox
                 v-model="appStore['settings']['basic']['launchWelcome']"
-                label="登录后显示欢迎页"
+                :label="$t('settings.item.showWelcomePage.text')"
               ></v-checkbox>
             </v-card-item>
             <v-card-item>
               <v-checkbox
                 v-model="appStore['settings']['basic']['powerOn']"
-                label="开机自动启动（推荐）"
+                :label="$t('settings.item.autoLaunch.text')"
               ></v-checkbox>
             </v-card-item>
             <v-card-item>
               <v-checkbox
                 v-model="appStore['settings']['basic']['autoUpdate']"
-                label="自动升级"
+                :label="$t('settings.item.autoUpdate.text')"
               ></v-checkbox>
             </v-card-item>
           </v-card>
@@ -65,10 +65,10 @@ const cs = reactive({
             <v-card-item>
               <v-combobox
                 v-model="fileStore.showMenuItems"
-                :items="fileStore.menuItems"
+                :items="fileStore.menuItems.map((it) => ({ ...it, text: $t(it.text) }))"
                 item-title="text"
-                item-value="key"
-                label="二级菜单"
+                item-value="path"
+                :label="$t('settings.item.secondaryMenu.text')"
                 multiple
                 return-object
               >
@@ -77,7 +77,7 @@ const cs = reactive({
                     <template v-slot:prepend>
                       <v-icon :icon="`mdi-${data.item.raw.icon}`" class="pr-1"></v-icon>
                     </template>
-                    {{ data.item.title }}
+                    {{ $t(data.item.title) }}
                   </v-chip>
                 </template>
               </v-combobox>
@@ -85,10 +85,10 @@ const cs = reactive({
             <v-card-item>
               <v-combobox
                 v-model="fileStore.showClassMenuItems"
-                :items="fileStore.classMenuItems"
+                :items="fileStore.classMenuItems.map((it) => ({ ...it, label: $t(it.label) }))"
                 item-title="label"
                 item-value="key"
-                label="文件分类"
+                :label="$t('settings.item.fileClassify.text')"
                 multiple
                 return-object
               >
@@ -97,7 +97,7 @@ const cs = reactive({
                     <template v-slot:prepend>
                       <v-icon :icon="`mdi-${data.item.raw.icon}`" class="pr-1"></v-icon>
                     </template>
-                    {{ data.item.title }}
+                    {{ $t(data.item.title) }}
                   </v-chip>
                 </template>
               </v-combobox>
@@ -109,27 +109,29 @@ const cs = reactive({
       <v-window-item :value="3">
         <v-container fluid>
           <v-list density="compact">
-            <v-list-item-title class="text-h6">外观</v-list-item-title>
+            <v-list-item-title class="text-h6">{{ $t('toggle.interface') }}</v-list-item-title>
             <v-divider class="my-1"></v-divider>
             <v-list-item class="my-1">
-              <p class="text-subtitle-1 text-grey-darken-1">主题：</p>
+              <p class="text-subtitle-1 text-grey-darken-1">{{ $t('toggle.theme.title.text') }}</p>
               <v-radio-group
                 inline
                 v-model="appStore['settings']['basic']['colorTheme']"
-                @update:model-value="switchTheme(appStore['settings']['basic']['colorTheme'])"
+                @update:model-value="switchTheme"
               >
-                <v-radio label="日间（浅色）" value="light"></v-radio>
-                <v-radio label="夜间（深色）" value="dark"></v-radio>
+                <v-radio :label="$t('toggle.theme.light.text')" value="light"></v-radio>
+                <v-radio :label="$t('toggle.theme.dark.text')" value="dark"></v-radio>
               </v-radio-group>
             </v-list-item>
           </v-list>
 
           <v-list density="compact">
-            <v-list-item-title class="text-h6">文件</v-list-item-title>
+            <v-list-item-title class="text-h6">{{
+              $t('settings.item.fileSettings.title.text')
+            }}</v-list-item-title>
             <v-divider class="my-1"></v-divider>
             <v-list-item class="my-1">
               <p class="text-subtitle-1 text-grey-darken-1">
-                图标主题：
+                {{ $t('settings.item.fileSettings.iconTheme.text') }}
                 <v-icon
                   :icon="`mdi-file-excel`"
                   :size="20"
@@ -184,8 +186,8 @@ const cs = reactive({
                 ...
               </p>
               <v-radio-group inline v-model="appStore['settings']['basic']['iconColorTheme']">
-                <v-radio label="彩色" value="1"></v-radio>
-                <v-radio label="纯色" value="2"></v-radio>
+                <v-radio :label="$t('settings.item.fileSettings.colour.text')" value="1"></v-radio>
+                <v-radio :label="$t('settings.item.fileSettings.pure.text')" value="2"></v-radio>
               </v-radio-group>
             </v-list-item>
           </v-list>

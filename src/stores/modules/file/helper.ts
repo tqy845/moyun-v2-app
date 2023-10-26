@@ -4,7 +4,6 @@ import { Concurrent } from '@/utils/functions/queue'
 import { ACTION_TYPE, FileType } from '@/types/enums'
 import { RightMenuItem } from '@/types/enums/right-menu'
 import { BreadcrumbItem } from '@/types/models/breadcrumb-item.ts'
-import { useI18n } from 'vue-i18n'
 
 /**
  * 文件存储对象接口
@@ -137,7 +136,6 @@ export const getFileDefaultSettings = (): FileStore => {
   const appStore = useAppStore()
   const maxUploadCount = appStore['settings']['maxUploadCount']
   const maxDownLoadCount = appStore['settings']['maxDownLoadCount']
-  const { t } = useI18n()
 
   return {
     show: false,
@@ -153,22 +151,22 @@ export const getFileDefaultSettings = (): FileStore => {
     search: '',
     selectedList: [],
     menuItems: [
-      { text: t('menu.file.text'), icon: 'folder', path: '/personal/file', disabled: true },
+      { text: 'menu.file.text', icon: 'folder', path: '/personal/file', disabled: true },
       {
-        text: t('menu.synchro.disk.text'),
+        text: 'menu.synchro.disk.text',
         icon: 'harddisk',
         path: '/personal/synchro-disk'
       },
       {
-        text: t('menu.trashcan.text'),
+        text: 'menu.trashcan.text',
         icon: 'trash-can',
         path: '/personal/trash-can'
       }
     ],
     showMenuItems: [
-      { text: t('menu.file.text'), icon: 'folder', path: '/personal/file', disabled: true },
+      { text: 'menu.file.text', icon: 'folder', path: '/personal/file', disabled: true },
       {
-        text: t('menu.trashcan.text'),
+        text: 'menu.trashcan.text',
         icon: 'trash-can',
         path: '/personal/trash-can'
       }
@@ -254,56 +252,56 @@ export const getFileDefaultSettings = (): FileStore => {
     trashBasket: [],
     classMenuItems: [
       {
-        label: t('file.view.iconLabel.secondaryMenu.all.text'),
+        label: 'file.view.iconLabel.secondaryMenu.all.text',
         icon: 'file',
         key: FileType.All,
         disabled: true
       },
       {
-        label: t('file.view.iconLabel.secondaryMenu.document.text'),
+        label: 'file.view.iconLabel.secondaryMenu.document.text',
         icon: 'briefcase',
         key: FileType.Document
       },
       {
-        label: t('file.view.iconLabel.secondaryMenu.multimedia.text'),
+        label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
         icon: 'multimedia',
         key: FileType.Media
       },
       {
-        label: t('file.view.iconLabel.secondaryMenu.application.text'),
+        label: 'file.view.iconLabel.secondaryMenu.application.text',
         icon: 'application',
         key: FileType.Application
       },
       {
-        label: t('file.view.iconLabel.secondaryMenu.gho.text'),
+        label: 'file.view.iconLabel.secondaryMenu.gho.text',
         icon: 'ghost',
         key: FileType.Ghost
       },
       {
-        label: t('file.view.iconLabel.secondaryMenu.folder.text'),
+        label: 'file.view.iconLabel.secondaryMenu.folder.text',
         icon: 'folder',
         key: FileType.Folder
       },
       {
-        label: t('file.view.iconLabel.secondaryMenu.package.text'),
+        label: 'file.view.iconLabel.secondaryMenu.package.text',
         icon: 'zip-box',
         key: FileType.Zip
       }
     ],
     showClassMenuItems: [
       {
-        label: t('file.view.iconLabel.secondaryMenu.all.text'),
+        label: 'file.view.iconLabel.secondaryMenu.all.text',
         icon: 'file',
         key: FileType.All,
         disabled: true
       },
       {
-        label: t('file.view.iconLabel.secondaryMenu.document.text'),
+        label: 'file.view.iconLabel.secondaryMenu.document.text',
         icon: 'briefcase',
         key: FileType.Document
       },
       {
-        label: t('file.view.iconLabel.secondaryMenu.multimedia.text'),
+        label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
         icon: 'multimedia',
         key: FileType.Media
       }

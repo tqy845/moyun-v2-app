@@ -11,6 +11,7 @@ import { useI18n } from 'vue-i18n'
 import type { App } from 'vue'
 import { VDataTable, VDataTableVirtual } from 'vuetify/labs/VDataTable'
 import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
+import { useAppStore } from '@/stores'
 
 // 创建 Vuetify 组件实例
 const vuetify = createVuetify({
@@ -60,5 +61,7 @@ export const setupVuetify = (app: App) => {
  * 切换主题
  */
 export const switchTheme = (newTheme: 'dark' | 'light') => {
+  const appStore = useAppStore()
   vuetify.theme.global.name.value = newTheme
+  appStore['settings']['basic']['colorTheme'] = newTheme
 }

@@ -63,10 +63,10 @@ export const useUserStore = defineStore('userStore', {
 
       if (code === 200) {
         const appStore = useAppStore()
-        // const fileStore = useFileStore()
 
         const _oldSettings = appStore['settings']
         appStore.$reset()
+        // const fileStore = useFileStore()
         // fileStore.$reset()
         appStore['settings'] = _oldSettings
         // 设置token
