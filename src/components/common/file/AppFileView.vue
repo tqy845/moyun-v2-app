@@ -7,6 +7,7 @@
 
 <script lang="ts" setup>
 import { useFileStore } from '@/stores'
+import { computed } from 'vue'
 
 const fileStore = useFileStore()
 
@@ -30,6 +31,11 @@ const views = [
 const handleSwitchView = (item: any) => {
   fileStore.view = item.value
 }
+
+/**
+ * 当前选中视图
+ */
+const selected = computed(() => [fileStore.view])
 </script>
 
 <template>
@@ -39,12 +45,12 @@ const handleSwitchView = (item: any) => {
         <v-icon>mdi-view-comfy</v-icon>
       </v-btn>
     </template>
-    <v-list density="compact" nav>
+    <v-list density="compact" nav v-model:selected="selected">
       <v-list-subheader>{{ $t('toggle.view') }}</v-list-subheader>
       <v-list-item
         v-for="(item, index) in views"
         :key="index"
-        :value="index"
+        :value="item.value"
         @click="handleSwitchView(item)"
       >
         <template v-slot:prepend>
