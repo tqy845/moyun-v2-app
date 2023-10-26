@@ -81,11 +81,11 @@ const iconColors: { [key: string]: string } = {
  */
 const generateIcon = (file: MoYunFile) => {
   const { extension, isDirectory, size } = file
-  let _extension = extension
+  const _extension = extension
 
-  if (isDirectory) {
-    _extension = size ? 'folder' : 'folder-file'
-  }
+  // if (isDirectory) {
+  //   _extension = size ? 'folder' : 'folder-file'
+  // }
 
   // 默认类型
   let icon = 'file-cloud'

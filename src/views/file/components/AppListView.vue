@@ -70,7 +70,6 @@ const handleContextRightMenuConfirm = (item: {
   actionType: string | number
   actionData: RightMenuItem
 }) => {
-  // console.log(item, fileStore.fileRightMenuItems)
   if (fileStore.contextRightMenuItems.map((item) => item.type).includes(item.actionType)) {
     rightMenuUtils.contextRightMenuEvent(item.actionData)
   } else {
@@ -98,6 +97,8 @@ const handleRightMenu = (
       cs.rightMenu.menuItems = fileStore.contextRightMenuItems
       break
     case 'file':
+      fileStore.fileRightMenuItems[0]['icon'] = moYunFile!.icon
+      fileStore.fileRightMenuItems[0]['color'] = moYunFile!.iconColor
       cs.rightMenu.menuItems = fileStore.fileRightMenuItems
       if (!fileStore.selectedList.includes(fileStore.renderList[index].name)) {
         handleSelectItem(index)

@@ -6,7 +6,6 @@
 -->
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
 import { RightMenuItem } from '@/types/enums/right-menu'
 
 const emits = defineEmits(['confirm', 'cancel'])

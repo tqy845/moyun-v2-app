@@ -14,6 +14,7 @@ import { fileUtils, rightMenuUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileNullAlert, AppPathBar } from '.'
 import { AppRightMenu } from '../components'
 import { RightMenuItem } from '@/types/enums/right-menu'
+import { MoYunFile } from '@/types/models'
 
 const rightMenuRef = ref<HTMLElement | null>(null)
 const cardRef = ref()
@@ -36,7 +37,8 @@ const cs = reactive({
   rightMenu: {
     show: false,
     location: { x: 0, y: 0 },
-    menuItems: [] as Array<RightMenuItem>
+    menuItems: [] as Array<RightMenuItem>,
+    moYunFile: null as MoYunFile | null
   }
 })
 
@@ -72,11 +74,10 @@ const handleContextRightMenuConfirm = (item: {
   actionType: string | number
   actionData: RightMenuItem
 }) => {
-  // console.log(item, fileStore.fileRightMenuItems)
   if (fileStore.contextRightMenuItems.map((item) => item.type).includes(item.actionType)) {
     rightMenuUtils.contextRightMenuEvent(item.actionData)
   } else {
-    rightMenuUtils.fileRightMenuEvent(item.actionData)
+    rightMenuUtils.fileRightMenuEvent(item.actionData, cs.rightMenu.moYunFile!)
   }
   nextTick(() => {
     cs.rightMenu.show = false
@@ -90,7 +91,8 @@ const handleContextRightMenuConfirm = (item: {
 const handleRightMenu = (
   event: MouseEvent,
   index: number,
-  type: 'context' | 'file' = 'context'
+  type: 'context' | 'file' = 'context',
+  moYunFile?: MoYunFile
 ) => {
   event.preventDefault()
   cs.rightMenu.show = false
@@ -99,6 +101,9 @@ const handleRightMenu = (
       cs.rightMenu.menuItems = fileStore.contextRightMenuItems
       break
     case 'file':
+      fileStore.fileRightMenuItems[0]['icon'] = moYunFile!.icon
+      fileStore.fileRightMenuItems[0]['color'] = moYunFile!.iconColor
+      cs.rightMenu.moYunFile = moYunFile!
       cs.rightMenu.menuItems = fileStore.fileRightMenuItems
       if (!fileStore.selectedList.includes(fileStore.renderList[index].name)) {
         handleSelectItem(index)
@@ -195,7 +200,7 @@ const handleRightMenu = (
               elevation="0"
               @click="handleSelectItem(index)"
               @dblclick="fileUtils.doubleClick(moYunFile)"
-              @contextmenu.stop="handleRightMenu($event, index, 'file')"
+              @contextmenu.stop="handleRightMenu($event, index, 'file', moYunFile)"
             />
           </v-col>
         </v-row>
@@ -229,6 +234,7 @@ const handleRightMenu = (
     id="right-menu"
     :menuItems="cs.rightMenu.menuItems"
     :location="cs.rightMenu.location"
+    :mo-yun-file="cs.rightMenu.moYunFile"
     :style="{ visibility: cs.rightMenu.show ? 'visible' : 'hidden' }"
     @confirm="handleContextRightMenuConfirm"
     @cancel="cs.rightMenu.show = false"

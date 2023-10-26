@@ -4,6 +4,7 @@ import { ACTION_TYPE } from '@/types/enums'
 import { RightMenuItem } from '@/types/enums/right-menu'
 import { useFileDialog } from '@vueuse/core'
 import { fileUtils } from '..'
+import { MoYunFile } from '@/types/models'
 
 /**
  * 上下文右键菜单事件
@@ -39,14 +40,14 @@ const contextRightMenuEvent = (menuItem: RightMenuItem) => {
 /**
  * 文件右键菜单事件
  */
-const fileRightMenuEvent = (menuItem: RightMenuItem) => {
+const fileRightMenuEvent = (menuItem: RightMenuItem, moYunFile: MoYunFile) => {
   const fileStore = useFileStore()
   const isBatch: boolean = fileStore.selectedList.length > 1
   const { OPEN, DELETE, DOWNLOAD } = ACTION_TYPE
 
   switch (menuItem.type) {
     case OPEN:
-      fileStore.preview = true
+      moYunFile.open()
       break
     case DELETE:
       isBatch

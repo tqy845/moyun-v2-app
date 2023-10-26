@@ -40,11 +40,6 @@ useMagicKeys({
   }
 })
 
-const handleDoubleClick = (item: MoYunFile) => {
-  console.log('双击..', item)
-  fileUtils.doubleClick(item)
-}
-
 /**
  * 文件右键菜单
  * @param event 菜单原生事件

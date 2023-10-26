@@ -313,7 +313,7 @@ export class MoYunFile {
     this.name = params.fileName
     this.extension = params.type
     this.path = params.path
-    this.isDirectory = params.isDirectory
+    this.isDirectory = params.isDirectory ?? params.type === 'folder'
     this.size = params.size
     this.isEmpty = params.isEmpty
     this.pinyin = pinyin(params.fileName, { toneType: 'none' }) // 'han yu pin yin'
@@ -330,6 +330,17 @@ export class MoYunFile {
    */
   get generateIcon() {
     return fileUtils.generateIcon(this)
+  }
+
+  /**
+   * 打开文件/文件夹
+   */
+  open() {
+    console.log('this.isDirectory = ', this)
+
+    if (this.isDirectory) {
+      fileUtils.doubleClick(this)
+    }
   }
 
   /**
