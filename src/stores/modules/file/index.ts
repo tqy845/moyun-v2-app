@@ -307,14 +307,13 @@ export const useFileStore = defineStore('fileStore', {
      */
     sort(type?: FileSortType) {
       if (type) {
-        this.currentSortType = type
+        this.currentSortType = [type]
       }
       this.renderList.sort((a, b) => {
         // 递增or递减
-        const sortOrderMultiplier = this.currentSortOrder === 'asc' ? 1 : -1
-        console.log('sortOrderMultiplier = ', sortOrderMultiplier)
+        const sortOrderMultiplier = this.currentSortOrder[0] === 'asc' ? 1 : -1
 
-        switch (this.currentSortType) {
+        switch (this.currentSortType[0]) {
           case 'name':
             // 根据名称进行排序
             return a.name.localeCompare(b.name) * sortOrderMultiplier

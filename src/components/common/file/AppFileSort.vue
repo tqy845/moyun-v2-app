@@ -8,6 +8,7 @@
 <script lang="ts" setup>
 import { useFileStore } from '@/stores'
 import { FileSortOrder, FileSortType } from '@/types/models'
+import { computed } from 'vue'
 
 const fileStore = useFileStore()
 
@@ -41,21 +42,30 @@ const sortOrders: Array<{ label: string; icon: string; value: FileSortOrder }> =
     value: 'desc'
   }
 ]
+
+/**
+ * 选中的排序类型和排序顺序
+ */
+const selectedTargets = computed(() => [
+  ...fileStore.currentSortType,
+  ...fileStore.currentSortOrder
+])
 </script>
 
 <template>
   <v-menu>
+    {{ demo }}
     <template v-slot:activator="{ props }">
       <v-btn :="$attrs" icon v-bind="props">
         <v-icon>mdi-sort</v-icon>
       </v-btn>
     </template>
-    <v-list nav density="compact">
+    <v-list nav density="compact" v-model:selected="selectedTargets" select-strategy="classic">
       <v-list-subheader>{{ $t('toggle.sort') }}</v-list-subheader>
       <v-list-item
         v-for="(item, index) in sorts"
         :key="index"
-        :value="index"
+        :value="item.value"
         @click="fileStore.sort(item.value)"
       >
         <template v-slot:prepend>
@@ -67,11 +77,8 @@ const sortOrders: Array<{ label: string; icon: string; value: FileSortOrder }> =
       <v-list-item
         v-for="(item, index) in sortOrders"
         :key="index"
-        :value="index"
-        @click="
-          ;(fileStore.currentSortOrder = fileStore.currentSortOrder === 'asc' ? 'desc' : 'asc'),
-            fileStore.sort()
-        "
+        :value="item.value"
+        @click=";(fileStore.currentSortOrder[0] = item.value), fileStore.sort()"
       >
         <template v-slot:prepend>
           <v-icon :icon="`mdi-` + item.icon"></v-icon>

@@ -146,11 +146,11 @@ export interface FileStore {
   /**
    * 当前排序类型
    */
-  currentSortType: FileSortType
+  currentSortType: Array<FileSortType>
   /**
    * 当前排序顺序
    */
-  currentSortOrder: FileSortOrder
+  currentSortOrder: Array<FileSortOrder>
 }
 
 /**
@@ -342,7 +342,7 @@ export const getFileDefaultSettings = (): FileStore => {
         key: FileType.Media
       }
     ],
-    currentSortType: 'modify-date',
-    currentSortOrder: 'asc'
+    currentSortType: ['modify-date'],
+    currentSortOrder: ['asc']
   }
 }

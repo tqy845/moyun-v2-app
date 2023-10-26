@@ -455,7 +455,6 @@ export interface MoYunFileChunk {
   hash: string
   chunk: Blob
 }
-
 /**
  * 文件排序类型
  */
