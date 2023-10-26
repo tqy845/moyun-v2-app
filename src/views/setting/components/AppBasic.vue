@@ -65,8 +65,8 @@ const cs = reactive({
             <v-card-item>
               <v-combobox
                 v-model="fileStore.showMenuItems"
-                :items="fileStore.menuItems.map((it) => ({ ...it, text: $t(it.text) }))"
-                item-title="text"
+                :items="fileStore.menuItems.map((it) => ({ ...it, _text: $t(it.text) }))"
+                item-title="_text"
                 item-value="path"
                 :label="$t('settings.item.secondaryMenu.text')"
                 multiple
@@ -85,8 +85,8 @@ const cs = reactive({
             <v-card-item>
               <v-combobox
                 v-model="fileStore.showClassMenuItems"
-                :items="fileStore.classMenuItems.map((it) => ({ ...it, label: $t(it.label) }))"
-                item-title="label"
+                :items="fileStore.classMenuItems.map((it) => ({ ...it, _label: $t(it.label) }))"
+                item-title="_label"
                 item-value="key"
                 :label="$t('settings.item.fileClassify.text')"
                 multiple

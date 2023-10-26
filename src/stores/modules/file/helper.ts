@@ -90,11 +90,17 @@ export interface FileStore {
   /**
    * 文件菜单选项
    */
-  menuItems: Array<{ text: string; icon: string; path: string; disabled?: boolean }>
+  menuItems: Array<{ text: string; _text?: string; icon: string; path: string; disabled?: boolean }>
   /**
    * 展示的文件菜单选项
    */
-  showMenuItems: Array<{ text: string; icon: string; path: string; disabled?: boolean }>
+  showMenuItems: Array<{
+    text: string
+    _text: string
+    icon: string
+    path: string
+    disabled?: boolean
+  }>
 
   /**
    * 文件右键菜单项
@@ -120,11 +126,23 @@ export interface FileStore {
   /**
    * 菜单分类项
    */
-  classMenuItems: Array<{ label: string; icon: string; key: string; disabled?: boolean }>
+  classMenuItems: Array<{
+    label: string
+    _label?: string
+    icon: string
+    key: string
+    disabled?: boolean
+  }>
   /**
    * 展示的分类项（不展示的分类会自动收纳到更多）
    */
-  showClassMenuItems: Array<{ label: string; icon: string; key: string; disabled?: boolean }>
+  showClassMenuItems: Array<{
+    label: string
+    _label: string
+    icon: string
+    key: string
+    disabled?: boolean
+  }>
 }
 
 /**
@@ -164,9 +182,16 @@ export const getFileDefaultSettings = (): FileStore => {
       }
     ],
     showMenuItems: [
-      { text: 'menu.file.text', icon: 'folder', path: '/personal/file', disabled: true },
+      {
+        text: 'menu.file.text',
+        _text: 'menu.file.text',
+        icon: 'folder',
+        path: '/personal/file',
+        disabled: true
+      },
       {
         text: 'menu.trashcan.text',
+        _text: 'menu.trashcan.text',
         icon: 'trash-can',
         path: '/personal/trash-can'
       }
@@ -291,17 +316,20 @@ export const getFileDefaultSettings = (): FileStore => {
     showClassMenuItems: [
       {
         label: 'file.view.iconLabel.secondaryMenu.all.text',
+        _label: 'file.view.iconLabel.secondaryMenu.all.text',
         icon: 'file',
         key: FileType.All,
         disabled: true
       },
       {
         label: 'file.view.iconLabel.secondaryMenu.document.text',
+        _label: 'file.view.iconLabel.secondaryMenu.document.text',
         icon: 'briefcase',
         key: FileType.Document
       },
       {
         label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
+        _label: 'file.view.iconLabel.secondaryMenu.multimedia.text',
         icon: 'multimedia',
         key: FileType.Media
       }
