@@ -54,7 +54,6 @@ const selectedTargets = computed(() => [
 
 <template>
   <v-menu>
-    {{ demo }}
     <template v-slot:activator="{ props }">
       <v-btn :="$attrs" icon v-bind="props">
         <v-icon>mdi-sort</v-icon>
