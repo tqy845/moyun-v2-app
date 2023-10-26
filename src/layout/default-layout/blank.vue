@@ -5,7 +5,11 @@
   @description “空白页”
 -->
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useAppStore } from '@/stores'
+
+const appStore = useAppStore()
+</script>
 
 <template>
   <v-container class="fill-height">
@@ -15,23 +19,43 @@
       </v-col>
       <v-col class="text-button pa-0 ma-1"
         >{{ $t('blank.page.button1.text') }}
-        <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
-        <code class="bg-grey-lighten-3 pa-2 rounded-lg">K</code></v-col
+        <code :class="appStore.customThemeColor()['blankCodeBg']" class="pa-2 rounded-lg"
+          >Ctrl</code
+        >
+        +
+        <code :class="appStore.customThemeColor()['blankCodeBg']" class="pa-2 rounded-lg"
+          >K</code
+        ></v-col
       >
       <v-col class="text-button pa-0 ma-1"
         >{{ $t('blank.page.button2.text') }}
-        <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
-        <code class="bg-grey-lighten-3 pa-2 rounded-lg">F</code></v-col
+        <code :class="appStore.customThemeColor()['blankCodeBg']" class="pa-2 rounded-lg"
+          >Ctrl</code
+        >
+        +
+        <code :class="appStore.customThemeColor()['blankCodeBg']" class="pa-2 rounded-lg"
+          >F</code
+        ></v-col
       >
       <v-col class="text-button pa-0 ma-1"
         >{{ $t('blank.page.button3.text') }}
-        <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
-        <code class="bg-grey-lighten-3 pa-2 rounded-lg">A</code></v-col
+        <code :class="appStore.customThemeColor()['blankCodeBg']" class="pa-2 rounded-lg"
+          >Ctrl</code
+        >
+        +
+        <code :class="appStore.customThemeColor()['blankCodeBg']" class="pa-2 rounded-lg"
+          >A</code
+        ></v-col
       >
       <v-col class="text-button pa-0 ma-1"
         >{{ $t('blank.page.button4.text') }}
-        <code class="bg-grey-lighten-3 pa-2 rounded-lg">Ctrl</code> +
-        <code class="bg-grey-lighten-3 pa-2 rounded-lg">D</code></v-col
+        <code :class="appStore.customThemeColor()['blankCodeBg']" class="pa-2 rounded-lg"
+          >Ctrl</code
+        >
+        +
+        <code :class="appStore.customThemeColor()['blankCodeBg']" class="pa-2 rounded-lg"
+          >D</code
+        ></v-col
       >
     </v-row>
   </v-container>
