@@ -11,6 +11,7 @@ import { useCookies } from '@vueuse/integrations/useCookies'
 import { reactive } from 'vue'
 import { useAppStore, useFileStore, useUserStore } from '@/stores'
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 const route = useRoute()
 const appStore = useAppStore()
@@ -37,6 +38,8 @@ const cs = reactive({
     show: false
   }
 })
+
+const selected = computed(() => [locale.value])
 </script>
 
 <template>
@@ -49,12 +52,12 @@ const cs = reactive({
         <v-icon>mdi-translate</v-icon>
       </v-btn>
     </template>
-    <v-list density="compact" nav>
+    <v-list density="compact" nav v-model:selected="selected">
       <v-list-subheader>{{ $t('toggle.language') }}</v-list-subheader>
       <v-list-item
         v-for="(item, index) in languages"
         :key="index"
-        :value="index"
+        :value="item.value"
         @click="handleSwitchLanguage(item)"
       >
         <v-list-item-title>{{ item.label }}</v-list-item-title>

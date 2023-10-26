@@ -7,6 +7,12 @@
 
 <script lang="ts" setup>
 import { switchTheme } from '@/plugins'
+import { useAppStore } from '@/stores'
+import { computed } from 'vue'
+
+const appStore = useAppStore()
+
+const selected = computed(() => [appStore['settings']['basic']['colorTheme']])
 </script>
 
 <template>
@@ -19,12 +25,13 @@ import { switchTheme } from '@/plugins'
         <v-icon>mdi-theme-light-dark</v-icon>
       </v-btn>
     </template>
-    <v-list density="compact" nav>
+    {{ appStore['settings']['basic']['colorTheme'] }}
+    <v-list density="compact" nav v-model:selected="selected">
       <v-list-subheader>{{ $t('toggle.theme') }}</v-list-subheader>
-      <v-list-item @click="switchTheme('light')">
+      <v-list-item @click="switchTheme('light')" value="light">
         <v-list-item-title>{{ $t('toggle.theme.light.text') }}</v-list-item-title>
       </v-list-item>
-      <v-list-item @click="switchTheme('dark')">
+      <v-list-item @click="switchTheme('dark')" value="dark">
         <v-list-item-title>{{ $t('toggle.theme.dark.text') }}</v-list-item-title>
       </v-list-item>
     </v-list>
