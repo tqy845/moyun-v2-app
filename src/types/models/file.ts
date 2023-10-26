@@ -336,10 +336,10 @@ export class MoYunFile {
    * 打开文件/文件夹
    */
   open() {
-    console.log('this.isDirectory = ', this)
-
     if (this.isDirectory) {
       fileUtils.doubleClick(this)
+    } else {
+      console.log('暂不支持')
     }
   }
 
