@@ -17,6 +17,7 @@ import { fileUtils } from '@/utils/functions'
 import { defineStore } from 'pinia'
 import { useAppStore } from '..'
 import { FileStore, getFileDefaultSettings } from './helper'
+import { BreadcrumbItem } from '@/types/models/breadcrumb-item'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
@@ -279,6 +280,25 @@ export const useFileStore = defineStore('fileStore', {
         .filter((item) => item.path !== '/')
         .map((item) => item.path)
         .join('')
+    },
+    /**
+     * 返回上一页
+     */
+    back() {
+      if (this.breadcrumbItems.length > 1) {
+        this.breadcrumbItems.pop()
+        this.fetch()
+      }
+    },
+    /**
+     * 跳转路径
+     */
+    skipPath(breadcrumbItem: BreadcrumbItem) {
+      // 清空选中
+      this.selectedList.length = 0
+      const endIndex = this.breadcrumbItems.findIndex((item) => item.path === breadcrumbItem.path)
+      this.breadcrumbItems = this.breadcrumbItems.slice(0, endIndex + 1)
+      this.fetch()
     }
   },
 

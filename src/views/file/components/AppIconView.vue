@@ -153,7 +153,12 @@ const handleRightMenu = (
       <!-- 右侧分栏 -->
       <v-spacer></v-spacer>
       <v-col cols="auto" style="width: 180px !important" class="justify-center text-center">
-        <v-btn icon="mdi-arrow-left-bottom" @click="fileStore.fetch()" class=""></v-btn>
+        <v-btn
+          icon="mdi-arrow-left-bottom"
+          @click="fileStore.back"
+          class=""
+          :disabled="fileStore.breadcrumbItems.length <= 1"
+        ></v-btn>
         <v-btn
           icon="mdi-folder-plus-outline"
           @click="fileStore.createFolder(() => (cardRef.$el.scrollTop = cardRef.$el.scrollHeight))"

@@ -8,23 +8,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useFileStore } from '@/stores'
-import { BreadcrumbItem } from '@/types/models/breadcrumb-item'
-import { useElementSize } from '@vueuse/core'
-
 const breadcrumbsRef = ref()
-const demo = useElementSize(breadcrumbsRef)
-
 const fileStore = useFileStore()
-
-const handleChange = (value: unknown) => {
-  // 清空选中
-  fileStore.selectedList.length = 0
-  const endIndex = fileStore.breadcrumbItems.findIndex(
-    (item) => item.path === (value as BreadcrumbItem).path
-  )
-  fileStore.breadcrumbItems = fileStore.breadcrumbItems.slice(0, endIndex + 1)
-  fileStore.fetch()
-}
 </script>
 
 <template>
@@ -36,7 +21,7 @@ const handleChange = (value: unknown) => {
       <v-icon size="large" :icon="'mdi-' + 'folder-open'" class="px-4"></v-icon>
     </template>
     <template v-slot:title="{ item }">
-      <v-btn block variant="text" class="pa-1 ma-0 text-h6" @click="handleChange(item)">{{
+      <v-btn block variant="text" class="pa-1 ma-0 text-h6" @click="fileStore.skipPath(item)">{{
         item.title
       }}</v-btn>
     </template>
