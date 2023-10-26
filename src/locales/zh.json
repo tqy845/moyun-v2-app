@@ -36,6 +36,7 @@
   "forgot.password": "忘记密码",
   "reset.password": "重置密码",
   "change.password": "修改密码",
+  "restore.text": "重新登录",
 
   "toggle.language": "语言",
   "toggle.view": "切换文件视图",

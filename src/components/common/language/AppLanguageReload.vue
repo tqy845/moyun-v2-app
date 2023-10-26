@@ -19,9 +19,10 @@ const userStore = useUserStore()
         <v-card-text> {{ $t('change.i18n.hint.content') }} </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
+          <v-btn :text="$t('confirm.text')" @click="isActive.value = false"></v-btn>
           <v-btn
-            :text="$t('logout.text')"
-            color="error"
+            :text="$t('restore.text')"
+            color="success"
             @click="
               // 用户登出
               userStore.logout(
@@ -29,7 +30,6 @@ const userStore = useUserStore()
               )
             "
           ></v-btn>
-          <v-btn :text="$t('confirm.text')" @click="isActive.value = false"></v-btn>
         </v-card-actions>
       </v-card>
     </template>
