@@ -4,5 +4,14 @@ import AppFileView from './AppFileView.vue'
 import AppFileSearch from './AppFileSearch.vue'
 import AppFileDeleteConfirm from './AppFileDeleteConfirm.vue'
 import AppFilePreview from './AppFilePreview.vue'
+import AppFileSort from './AppFileSort.vue'
 
-export { AppFileUpload, AppFile, AppFileView, AppFileSearch, AppFileDeleteConfirm, AppFilePreview }
+export {
+  AppFileUpload,
+  AppFile,
+  AppFileView,
+  AppFileSearch,
+  AppFileDeleteConfirm,
+  AppFilePreview,
+  AppFileSort
+}

@@ -39,7 +39,16 @@
   "restore.text": "重新登录",
 
   "toggle.language": "语言",
-  "toggle.view": "切换文件视图",
+  "toggle.view": "文件视图",
+  "toggle.sort": "文件排序",
+
+  "file.sort.name.text": "名称",
+  "file.sort.date.text": "修改日期",
+  "file.sort.type.text": "类型",
+
+  "file.sort.asc.text": "递增",
+  "file.sort.desc.text": "递减",
+
   "toggle.interface": "外观",
   "toggle.theme": "主题",
   "toggle.theme.title.text": "主题：",

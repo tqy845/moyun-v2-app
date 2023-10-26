@@ -1,4 +1,4 @@
-import { MoYunFile } from '@/types/models'
+import { FileSortOrder, FileSortType, MoYunFile } from '@/types/models'
 import { useAppStore } from '..'
 import { Concurrent } from '@/utils/functions/queue'
 import { ACTION_TYPE, FileType } from '@/types/enums'
@@ -143,6 +143,14 @@ export interface FileStore {
     key: string
     disabled?: boolean
   }>
+  /**
+   * 当前排序类型
+   */
+  currentSortType: FileSortType
+  /**
+   * 当前排序顺序
+   */
+  currentSortOrder: FileSortOrder
 }
 
 /**
@@ -333,6 +341,8 @@ export const getFileDefaultSettings = (): FileStore => {
         icon: 'multimedia',
         key: FileType.Media
       }
-    ]
+    ],
+    currentSortType: 'modify-date',
+    currentSortOrder: 'asc'
   }
 }

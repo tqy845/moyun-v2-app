@@ -1,3 +1,4 @@
+import { FileSortType } from '@/types/models'
 /**
  * File Store
  */
@@ -61,6 +62,7 @@ export const useFileStore = defineStore('fileStore', {
       const key = appStore.app.menuIndex['currentFileClassifyTab']
       // 分类
       this.renderList = this.classify(key)
+      this.sort()
       // 分页
       // this.paging(this.classifyTabCurrentPage[key] ?? 1)
       this.loading = false
@@ -299,6 +301,34 @@ export const useFileStore = defineStore('fileStore', {
       const endIndex = this.breadcrumbItems.findIndex((item) => item.path === breadcrumbItem.path)
       this.breadcrumbItems = this.breadcrumbItems.slice(0, endIndex + 1)
       this.fetch()
+    },
+    /**
+     * 排序
+     */
+    sort(type?: FileSortType) {
+      if (type) {
+        this.currentSortType = type
+      }
+      this.renderList.sort((a, b) => {
+        // 递增or递减
+        const sortOrderMultiplier = this.currentSortOrder === 'asc' ? 1 : -1
+        console.log('sortOrderMultiplier = ', sortOrderMultiplier)
+
+        switch (this.currentSortType) {
+          case 'name':
+            // 根据名称进行排序
+            return a.name.localeCompare(b.name) * sortOrderMultiplier
+          case 'modify-date':
+            // 根据日期进行排序，假设日期存储在lastModified属性中
+            return (
+              ((new Date(a.lastModified) as any) - (new Date(b.lastModified) as any)) *
+              sortOrderMultiplier
+            )
+          case 'type':
+            // 根据类型进行排序，假设类型存储在extension属性中
+            return a.extension.localeCompare(b.extension) * sortOrderMultiplier
+        }
+      })
     }
   },
 
@@ -309,7 +339,15 @@ export const useFileStore = defineStore('fileStore', {
   persist: [
     {
       storage: localStorage,
-      paths: ['view', 'itemSize', 'showClassMenuItems', 'showMenuItems', 'breadcrumbItems']
+      paths: [
+        'view',
+        'itemSize',
+        'showClassMenuItems',
+        'showMenuItems',
+        'breadcrumbItems',
+        'currentSortType',
+        'currentSortOrder'
+      ]
     }
   ]
 })

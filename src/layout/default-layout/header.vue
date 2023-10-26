@@ -5,7 +5,7 @@
   @description “上边菜单栏”组件
 -->
 <script lang="ts" setup>
-import { AppFileView, AppFileSearch } from '@/components/common'
+import { AppFileView, AppFileSearch, AppFileSort } from '@/components/common'
 import { AppFileClassTabs, AppFileMiniUploadProgress } from './components'
 import { useAppStore } from '@/stores'
 
@@ -32,6 +32,9 @@ const appStore = useAppStore()
 
     <!-- 视图切换 -->
     <AppFileView />
+
+    <!-- 文件排序 -->
+    <AppFileSort />
   </v-app-bar>
 </template>
 

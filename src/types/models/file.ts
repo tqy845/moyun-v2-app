@@ -455,3 +455,13 @@ export interface MoYunFileChunk {
   hash: string
   chunk: Blob
 }
+
+/**
+ * 文件排序类型
+ */
+export type FileSortType = 'name' | 'type' | 'modify-date'
+
+/**
+ * 文件排序顺序
+ */
+export type FileSortOrder = 'asc' | 'desc'
