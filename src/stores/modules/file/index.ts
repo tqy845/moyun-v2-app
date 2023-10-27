@@ -283,7 +283,7 @@ export const useFileStore = defineStore('fileStore', {
         data: { folder }
       } = await folderCreate<{ folder: MoYunFileDto & { modifyDate: string } }>({
         path,
-        fileName:folderName
+        fileName: folderName
       })
       if (code === 200) {
         const appStore = useAppStore()
@@ -292,8 +292,11 @@ export const useFileStore = defineStore('fileStore', {
         if ([FileType.All, FileType.Folder].includes(key)) {
           this.renderList.push(moYunFile)
         }
-        element.scrollTop = element.scrollHeight
-        setTimeout((moYunFile: MoYunFile) => callBack?.(moYunFile))
+
+        setTimeout((moYunFile: MoYunFile) => {
+          element.scrollTop = element.scrollHeight
+          callBack?.(moYunFile)
+        })
       }
       return code === 200
     },
