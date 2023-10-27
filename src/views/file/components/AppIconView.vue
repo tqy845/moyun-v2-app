@@ -164,7 +164,7 @@ const handleRightMenu = (
           class=""
           :disabled="fileStore.breadcrumbItems.length <= 1"
         ></v-btn>
-        <v-btn icon="mdi-folder-plus-outline" @click="fileStore.createFolder(cardRef.$el)"></v-btn>
+        <v-btn icon="mdi-folder-plus-outline" @click="fileStore.createFolder(cardRef?.$el)"></v-btn>
         <v-btn icon="mdi-refresh" @click="fileStore.fetch()" class=""></v-btn>
       </v-col>
     </v-row>

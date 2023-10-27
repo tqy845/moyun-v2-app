@@ -283,7 +283,7 @@ export const useFileStore = defineStore('fileStore', {
         data: { folder }
       } = await folderCreate<{ folder: MoYunFileDto & { modifyDate: string } }>({
         path,
-        folderName
+        fileName:folderName
       })
       if (code === 200) {
         const appStore = useAppStore()
