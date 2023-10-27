@@ -177,7 +177,7 @@ const handleRightMenu = (
   >
     <div class="w-100 h-100">
       <!-- 读取中 -->
-      <AppFileLoading class="mt-16" v-if="fileStore.loading" />
+      <AppFileLoading v-if="fileStore.loading" />
       <!-- 渲染 -->
       <v-btn-toggle
         v-show="!fileStore.show && fileStore.renderList.length"
