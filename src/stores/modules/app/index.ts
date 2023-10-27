@@ -89,7 +89,7 @@ export const useAppStore = defineStore(`appStore`, {
         blankCodeBg: 'bg-grey-lighten-3',
         uploadHeaderBar: '#212121',
         uploadArea: '#F1F1F1',
-        fileMenu: 'grey-lighten-5',
+        fileMenu: 'grey-lighten-3',
         fileAppBar: 'teal-darken-4',
         uploadProgress: 'text-white',
         uploadProgressBg: ''
