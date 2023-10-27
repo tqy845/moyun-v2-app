@@ -2,7 +2,13 @@
  * 文件工具库
  */
 
-import { MoYunFile, MoYunFileDto, MoYunUploadDto } from '@/types/models'
+import {
+  FileSortOrder,
+  FileSortType,
+  MoYunFile,
+  MoYunFileDto,
+  MoYunUploadDto
+} from '@/types/models'
 import { FileExtension, FileType } from '@/types/enums'
 import { useAppStore, useFileStore } from '@/stores'
 
@@ -333,6 +339,26 @@ const doubleClick = (moYunFile: MoYunFile) => {
  */
 const toFolder = (path: string) => {}
 
+const sort = (list: Array<MoYunFile>, sortType: FileSortType, sortOrder: FileSortOrder) => {
+  list.sort((a, b) => {
+    // 递增or递减
+    const sortOrderMultiplier = sortOrder === 'asc' ? 1 : -1
+    switch (sortType) {
+      case 'name':
+        // 根据名称进行排序
+        return a.name.localeCompare(b.name) * sortOrderMultiplier
+      case 'modify-date':
+        // 根据日期进行排序，假设日期存储在lastModified属性中
+        return (
+          ((new Date(a.lastModified) as any) - (new Date(b.lastModified) as any)) *
+          sortOrderMultiplier
+        )
+      case 'type':
+        // 根据类型进行排序，假设类型存储在extension属性中
+        return a.extension.localeCompare(b.extension) * sortOrderMultiplier
+    }
+  })
+}
 /**
  * 文件Utils
  */
@@ -346,7 +372,8 @@ const fileUtils = {
   isType,
   doubleClick,
   toFolder,
-  iconColors
+  iconColors,
+  sort
 }
 
 export default fileUtils

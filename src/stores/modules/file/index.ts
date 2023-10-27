@@ -69,10 +69,6 @@ export const useFileStore = defineStore('fileStore', {
       return this.list
     },
     /**
-     * 获取垃圾篓数据
-     */
-    fetchTrashBasket: {},
-    /**
      * 文件过滤
      * @param name 文件名
      */
@@ -105,8 +101,12 @@ export const useFileStore = defineStore('fileStore', {
      */
     classify(key: FileType = FileType.All) {
       // console.log('分类', key)
-      if (key === FileType.All) return this.list
-      return this.class[key]
+      let result = this.class[key]
+      if (key === FileType.All) {
+        result = this.list
+      }
+      fileUtils.sort(result, this.currentSortType[0], this.currentSortOrder[0])
+      return result
     },
     /**
      * 文件块上传
@@ -309,25 +309,7 @@ export const useFileStore = defineStore('fileStore', {
       if (type) {
         this.currentSortType = [type]
       }
-      this.renderList.sort((a, b) => {
-        // 递增or递减
-        const sortOrderMultiplier = this.currentSortOrder[0] === 'asc' ? 1 : -1
-
-        switch (this.currentSortType[0]) {
-          case 'name':
-            // 根据名称进行排序
-            return a.name.localeCompare(b.name) * sortOrderMultiplier
-          case 'modify-date':
-            // 根据日期进行排序，假设日期存储在lastModified属性中
-            return (
-              ((new Date(a.lastModified) as any) - (new Date(b.lastModified) as any)) *
-              sortOrderMultiplier
-            )
-          case 'type':
-            // 根据类型进行排序，假设类型存储在extension属性中
-            return a.extension.localeCompare(b.extension) * sortOrderMultiplier
-        }
-      })
+      fileUtils.sort(this.renderList, this.currentSortType[0], this.currentSortOrder[0])
     }
   },
 
