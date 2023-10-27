@@ -64,7 +64,7 @@ const handleChangeTab = (item: unknown) => {
     </v-tab>
 
     <!-- 更多分类  -->
-    <v-menu>
+    <v-menu v-if="data.tabMoreItems.length">
       <template v-slot:activator="{ props }">
         <v-btn
           :variant="
