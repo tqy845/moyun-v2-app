@@ -265,10 +265,26 @@ export const useFileStore = defineStore('fileStore', {
      */
     async createFolder(element: HTMLElement, callBack?: Function) {
       const path = this.getCurrentRealPath()
+      const baseFolderName = `新建文件夹`
+
+      // 匹配需要新建的文件夹名称
+      const localFileNameList = this.renderList
+        .filter((it) => it.name.includes(baseFolderName))
+        .map((it) => it.name)
+      let folderName = baseFolderName
+      let count = 1
+      while (localFileNameList.indexOf(folderName) !== -1) {
+        folderName = baseFolderName + `（${count++}）`
+      }
+
+      // 发起请求
       const {
         code,
         data: { folder }
-      } = await folderCreate<{ folder: MoYunFileDto & { modifyDate: string } }>({ path })
+      } = await folderCreate<{ folder: MoYunFileDto & { modifyDate: string } }>({
+        path,
+        folderName
+      })
       if (code === 200) {
         const appStore = useAppStore()
         const key = appStore.app.menuIndex['currentFileClassifyTab']
