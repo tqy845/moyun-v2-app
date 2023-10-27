@@ -33,7 +33,7 @@ defineProps({
     class="pa-0 ma-0 d-flex align-start flex-column justify-start w-100 align-center text-center"
   >
     <div class="text-center w-100 py-1">
-      <div class="mb-0 w-100 justify-center align-center">
+      <div class="mb-1 w-100 justify-center align-center">
         <v-icon
           :icon="`mdi-${moYunFile.icon}`"
           :size="fileStore.itemSize - 120"
@@ -42,7 +42,7 @@ defineProps({
       </div>
       <div
         ref="fileNameRef"
-        class="text-none text-center w-100 position-absolute px-2"
+        class="text-none text-center w-100 position-absolute px-4"
         :class="
           fileStore.selectedList.includes(moYunFile.name) && fileStore.selectedList.length <= 1
             ? null
