@@ -180,8 +180,7 @@ const handleRightMenu = (
       <AppFileLoading class="mt-16" v-if="fileStore.loading" />
       <!-- 渲染 -->
       <v-btn-toggle
-        v-else-if="fileStore.renderList.length"
-        v-show="!fileStore.show"
+        v-show="!fileStore.show && fileStore.renderList.length"
         :density="null"
         :model-value="
           fileStore.selectedList.map((it_name) =>
