@@ -19,6 +19,7 @@ import { defineStore } from 'pinia'
 import { useAppStore } from '..'
 import { FileStore, getFileDefaultSettings } from './helper'
 import { BreadcrumbItem } from '@/types/models/breadcrumb-item'
+import { Ref } from 'vue'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
@@ -262,15 +263,21 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 新建文件夹
      */
-    async createFolder(callBack?: Function) {
+    async createFolder(element: HTMLElement, callBack?: Function) {
       const path = this.getCurrentRealPath()
       const {
         code,
         data: { folder }
       } = await folderCreate<{ folder: MoYunFileDto & { modifyDate: string } }>({ path })
       if (code === 200) {
-        this.renderList.push(new MoYunFile(folder))
-        setTimeout(() => callBack?.())
+        const appStore = useAppStore()
+        const key = appStore.app.menuIndex['currentFileClassifyTab']
+        const moYunFile = new MoYunFile(folder)
+        if ([FileType.All, FileType.Folder].includes(key)) {
+          this.renderList.push(moYunFile)
+        }
+        element.scrollTop = element.scrollHeight
+        setTimeout((moYunFile: MoYunFile) => callBack?.(moYunFile))
       }
       return code === 200
     },

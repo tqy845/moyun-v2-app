@@ -15,6 +15,7 @@ import { AppFileLoading, AppFileNullAlert, AppPathBar } from '.'
 import { AppRightMenu } from '../components'
 import { RightMenuItem } from '@/types/enums/right-menu'
 import { MoYunFile } from '@/types/models'
+import { ACTION_TYPE } from '@/types/enums'
 
 const rightMenuRef = ref<HTMLElement | null>(null)
 const cardRef = ref()
@@ -98,11 +99,15 @@ const handleRightMenu = (
   cs.rightMenu.show = false
   switch (type) {
     case 'context':
+      fileStore.contextRightMenuItems.filter(
+        (it) => it.type === ACTION_TYPE.NEW_FOLDER
+      )[0].element = cardRef.value.$el
       cs.rightMenu.menuItems = fileStore.contextRightMenuItems
       break
     case 'file':
       fileStore.fileRightMenuItems[0]['icon'] = moYunFile!.icon
       fileStore.fileRightMenuItems[0]['color'] = moYunFile!.iconColor
+
       cs.rightMenu.moYunFile = moYunFile!
       cs.rightMenu.menuItems = fileStore.fileRightMenuItems
       if (!fileStore.selectedList.includes(fileStore.renderList[index].name)) {
@@ -159,17 +164,13 @@ const handleRightMenu = (
           class=""
           :disabled="fileStore.breadcrumbItems.length <= 1"
         ></v-btn>
-        <v-btn
-          icon="mdi-folder-plus-outline"
-          @click="fileStore.createFolder(() => (cardRef.$el.scrollTop = cardRef.$el.scrollHeight))"
-        ></v-btn>
+        <v-btn icon="mdi-folder-plus-outline" @click="fileStore.createFolder(cardRef.$el)"></v-btn>
         <v-btn icon="mdi-refresh" @click="fileStore.fetch()" class=""></v-btn>
       </v-col>
     </v-row>
   </v-toolbar>
   <!-- 文件图标列表 -->
   <v-card
-    ref="cardRef"
     class="w-100 ma-0 pa-0"
     :height="windowSize.height.value - 180"
     @contextmenu="handleRightMenu"
@@ -189,7 +190,7 @@ const handleRightMenu = (
         "
         class="h-100 w-100"
       >
-        <v-row v-if="width" class="ma-0 pa-0 align-content-start overflow-auto w-100">
+        <v-row v-if="width" class="ma-0 pa-0 align-content-start overflow-auto w-100" ref="cardRef">
           <v-col
             v-for="(moYunFile, index) in fileStore.renderList"
             :key="index"

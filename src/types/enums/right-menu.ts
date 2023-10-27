@@ -5,4 +5,5 @@ export interface RightMenuItem {
   rightIcon?: string
   shortcutKey?: string
   color?: string
+  element?: HTMLElement
 }

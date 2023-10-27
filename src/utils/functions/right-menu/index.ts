@@ -32,7 +32,7 @@ const contextRightMenuEvent = (menuItem: RightMenuItem) => {
       })
       break
     case NEW_FOLDER:
-      fileStore.createFolder()
+      fileStore.createFolder(menuItem.element!)
       break
   }
 }
