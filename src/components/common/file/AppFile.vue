@@ -49,7 +49,7 @@ const data = reactive({
         v-if="moYunFile.isRename"
         class="mt-3 position-absolute w-100"
         style="z-index: 9999999; left: 0"
-        bg-color="white"
+        :bg-color="appStore.customThemeColor('fileRenameBg')"
         variant="outlined"
         density="compact"
         auto-grow
