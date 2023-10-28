@@ -30,7 +30,7 @@ const data = reactive({
 })
 
 const handleSave = () => {
-  cs.dialog.show = true
+  // cs.dialog.show = true
   // props.moYunFile.rename(data.name)
 }
 </script>
