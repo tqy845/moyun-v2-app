@@ -5,6 +5,7 @@ import AppFileSearch from './AppFileSearch.vue'
 import AppFileDeleteConfirm from './AppFileDeleteConfirm.vue'
 import AppFilePreview from './AppFilePreview.vue'
 import AppFileSort from './AppFileSort.vue'
+import AppFileRenameHint from './AppFileRenameHint.vue'
 
 export {
   AppFileUpload,
@@ -13,5 +14,6 @@ export {
   AppFileSearch,
   AppFileDeleteConfirm,
   AppFilePreview,
-  AppFileSort
+  AppFileSort,
+  AppFileRenameHint
 }

@@ -7,7 +7,7 @@
 
 <script lang="ts" setup>
 import { reactive, nextTick, ref } from 'vue'
-import { AppFile } from '@/components/common'
+import { AppFile, AppFileRenameHint } from '@/components/common'
 import { useElementSize, useWindowSize } from '@vueuse/core'
 import { useAppStore, useFileStore } from '@/stores'
 import { fileUtils, rightMenuUtils } from '@/utils/functions'
@@ -145,7 +145,7 @@ const handleSelectItem = (index: any) => {
     </div>
   </v-card>
 
-  <!-- 上下文右键菜单 -->
+  <!-- 右键菜单 -->
   <AppRightMenu
     ref="rightMenuRef"
     id="right-menu"
@@ -160,6 +160,9 @@ const handleSelectItem = (index: any) => {
     "
     @cancel="cs.rightMenu.show = false"
   />
+
+  <!-- 重命名提示 -->
+  <AppFileRenameHint />
 </template>
 
 <style lang="scss" scoped></style>

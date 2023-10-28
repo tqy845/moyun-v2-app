@@ -396,8 +396,16 @@ export class MoYunFile {
    * @param newName 新的文件名称。
    */
   async rename(newName: string): Promise<void> {
-    this.name = newName
-    this.isRename = false
+    const fileStore = useFileStore()
+    const fileNameList = fileStore.renderList.map((it) => it.name)
+    if (this.name === newName) {
+      this.isRename = false
+    } else if (fileNameList.indexOf(newName) === -1 && this.name !== newName) {
+      this.name = newName
+      this.isRename = false
+    } else {
+      console.log('同名冲突')
+    }
   }
 
   /**
