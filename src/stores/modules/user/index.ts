@@ -18,7 +18,11 @@ import { User, UserProperties } from '@/types/models/user.ts'
 
 export const useUserStore = defineStore('userStore', {
   state: (): UserStore => getUserDefaultSettings(),
-  getters: {},
+  getters: {
+    nameInitial(): string {
+      return this.user.userName?.[0].toLocaleUpperCase() ?? '?'
+    }
+  },
   actions: {
     /**
      * 验证码

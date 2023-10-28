@@ -39,11 +39,9 @@ const selectedMenuItem = computed(() => [appStore.app.menuIndex['currentUserCent
   <v-menu v-model="cs.menu" :close-on-content-click="false" location="end">
     <template v-slot:activator="{ props }">
       <v-list v-bind="props">
-        <v-list-item :subtitle="userStore.user?.userName" :title="userStore.user.email?.[0]">
+        <v-list-item :subtitle="userStore.user?.userName" :title="userStore.user?.nickName">
           <template #prepend>
-            <v-avatar size="x-small" color="primary">{{
-              userStore.user.userName?.[0].toLocaleUpperCase() ?? ''
-            }}</v-avatar>
+            <v-avatar size="x-small" color="primary">{{ userStore.nameInitial }}</v-avatar>
           </template>
         </v-list-item>
       </v-list>
@@ -53,9 +51,7 @@ const selectedMenuItem = computed(() => [appStore.app.menuIndex['currentUserCent
       <v-list>
         <v-list-item :subtitle="userStore.user.email" :title="userStore.user.nickName">
           <template #prepend>
-            <v-avatar color="primary">{{
-              userStore.user.userName?.[0].toLocaleUpperCase() ?? ''
-            }}</v-avatar>
+            <v-avatar color="primary">{{ userStore.nameInitial }}</v-avatar>
           </template>
         </v-list-item>
       </v-list>

@@ -135,9 +135,9 @@ const fetchRequest = async <T = any>(
       }
       return result
     }
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(err)
-    throw new Error(err)
+    throw new Error(err as string)
   } finally {
     controllerMap.delete(requestId)
   }
