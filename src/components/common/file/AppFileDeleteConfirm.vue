@@ -7,7 +7,7 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { ACTION_TYPE, ActionType } from '@/types/enums'
+import { ACTION_TYPE, ActionType, ActionTypeValue } from '@/types/enums'
 import { MoYunUploadDto } from '@/types/models'
 
 const props = defineProps<{
@@ -26,7 +26,7 @@ const cs = reactive({
  * 用户操作
  * @param item 用户的操作
  */
-const handleSelect = (item: number | string) => {
+const handleSelect = (item: ActionTypeValue) => {
   cs.dialog.show = false
   if (item === ACTION_TYPE.CONFIRM) {
     props.item.delete()

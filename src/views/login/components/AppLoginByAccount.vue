@@ -6,7 +6,6 @@
 -->
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { UserProperties } from '@/types/models/user.ts'
 
 const props = defineProps({
   img: {

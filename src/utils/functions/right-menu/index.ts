@@ -1,7 +1,6 @@
-import { ActionType } from './../../../types/enums/basic'
 import { useFileStore } from '@/stores'
 import { ACTION_TYPE } from '@/types/enums'
-import { RightMenuItem } from '@/types/enums/right-menu'
+import { RightMenuItem } from '@/types/models'
 import { useFileDialog } from '@vueuse/core'
 import { fileUtils } from '..'
 import { MoYunFile } from '@/types/models'

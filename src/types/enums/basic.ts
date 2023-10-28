@@ -5,6 +5,8 @@ export interface ActionType {
   [key: string]: number | string
 }
 
+export type ActionTypeValue = keyof ActionType
+
 /**
  * 操作类型
  */
@@ -23,5 +25,6 @@ export const ACTION_TYPE: ActionType = {
   PROGRESS: 'PROGRESS',
   NEW_FOLDER: 'NEW_FOLDER',
   VIEW_MODE: 'VIEW_MODE',
-  SORT_MODE: 'SORT_MODE'
+  SORT_MODE: 'SORT_MODE',
+  RENAME: 'RENAME'
 }

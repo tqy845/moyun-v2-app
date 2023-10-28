@@ -1,9 +1,13 @@
-import { FileSortOrder, FileSortType, MoYunFile } from '@/types/models'
+import {
+  FileSortOrder,
+  FileSortType,
+  MoYunFile,
+  RightMenuItem,
+  BreadcrumbItem
+} from '@/types/models'
 import { useAppStore } from '..'
 import { Concurrent } from '@/utils/functions/queue'
 import { ACTION_TYPE, FileType } from '@/types/enums'
-import { RightMenuItem } from '@/types/enums/right-menu'
-import { BreadcrumbItem } from '@/types/models/breadcrumb-item.ts'
 
 /**
  * 文件存储对象接口
@@ -213,6 +217,18 @@ export const getFileDefaultSettings = (): FileStore => {
         color: 'primary'
       },
       {
+        text: 'right.menu.rename.text',
+        icon: 'rename',
+        type: ACTION_TYPE.RENAME
+      },
+      {
+        text: 'right.menu.property.text',
+        icon: 'wrench',
+        type: ACTION_TYPE.PROPERTY,
+        shortcutKey: 'Alt+Enter'
+      },
+      { type: 'divider' },
+      {
         text: 'right.menu.download.text',
         icon: 'cloud-download',
         type: ACTION_TYPE.DOWNLOAD,
@@ -223,12 +239,7 @@ export const getFileDefaultSettings = (): FileStore => {
         icon: 'account-multiple',
         type: ACTION_TYPE.SHARE
       },
-      {
-        text: 'right.menu.property.text',
-        icon: 'wrench',
-        type: ACTION_TYPE.PROPERTY,
-        shortcutKey: 'Alt+Enter'
-      },
+      { type: 'divider' },
       {
         text: 'right.menu.delete.text',
         icon: 'delete',

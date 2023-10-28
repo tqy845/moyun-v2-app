@@ -1,8 +1,9 @@
-import { User, UserProperties } from '@/types/models/user.ts'
 /**
  * 用户存储对象接口
  * @interface UserStore
  */
+import { User } from '@/types/models'
+
 export interface UserStore {
   /**
    * 用户UUID

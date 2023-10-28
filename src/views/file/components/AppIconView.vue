@@ -6,15 +6,14 @@
 -->
 
 <script lang="ts" setup>
-import { reactive, computed, onMounted, watch, onUpdated, nextTick, ref } from 'vue'
+import { reactive, nextTick, ref } from 'vue'
 import { AppFile } from '@/components/common'
 import { useElementSize, useWindowSize } from '@vueuse/core'
 import { useAppStore, useFileStore } from '@/stores'
-import { fileUtils, rightMenuUtils } from '@/utils/functions'
+import { fileUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileNullAlert, AppPathBar } from '.'
 import { AppRightMenu } from '../components'
-import { RightMenuItem } from '@/types/enums/right-menu'
-import { MoYunFile } from '@/types/models'
+import { MoYunFile, RightMenuItem } from '@/types/models'
 import { ACTION_TYPE } from '@/types/enums'
 
 const rightMenuRef = ref<HTMLElement | null>(null)
@@ -44,20 +43,9 @@ const cs = reactive({
 })
 
 /**
- * 计算分页数
- */
-const pageItemNumber = computed(() => {
-  const { iconViewPageItemNumber } = fileStore
-  const _fileList = fileStore.classify(appStore.app.menuIndex['currentFileClassifyTab'])
-  return Math.ceil(_fileList?.length / iconViewPageItemNumber)
-})
-
-/**
  * 鼠标事件
  */
 window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
-
-onMounted(() => {})
 
 /**
  * 选中文件
@@ -65,24 +53,6 @@ onMounted(() => {})
  */
 const handleSelectItem = (index: any) => {
   fileStore.selected(fileStore.renderList[index].name, props.multiple)
-}
-
-/**
- * 右键菜单点击
- * @param event
- */
-const handleContextRightMenuConfirm = (item: {
-  actionType: string | number
-  actionData: RightMenuItem
-}) => {
-  if (fileStore.contextRightMenuItems.map((item) => item.type).includes(item.actionType)) {
-    rightMenuUtils.contextRightMenuEvent(item.actionData)
-  } else {
-    rightMenuUtils.fileRightMenuEvent(item.actionData, cs.rightMenu.moYunFile!)
-  }
-  nextTick(() => {
-    cs.rightMenu.show = false
-  })
 }
 
 /**
@@ -224,16 +194,6 @@ const handleRightMenu = (
         )}】${$t('file.view.null.text')}`"
       />
     </div>
-    <!-- <v-card-action>
-      <v-pagination
-        :model-value="
-          fileStore.classifyTabCurrentPage[appStore.app.menuIndex['currentFileClassifyTab']]
-        "
-        :length="pageItemNumber"
-        total-visible="6"
-        @update:modelValue="fileStore.changePage"
-      ></v-pagination>
-    </v-card-action> -->
   </v-card>
 
   <!-- 上下文右键菜单 -->
@@ -242,9 +202,13 @@ const handleRightMenu = (
     id="right-menu"
     :menuItems="cs.rightMenu.menuItems"
     :location="cs.rightMenu.location"
-    :mo-yun-file="cs.rightMenu.moYunFile"
+    :moYunFile="cs.rightMenu.moYunFile"
     :style="{ visibility: cs.rightMenu.show ? 'visible' : 'hidden' }"
-    @confirm="handleContextRightMenuConfirm"
+    @confirm="
+      fileStore.rightMenuConfirm($event.type, $event.data, () =>
+        nextTick(() => (cs.rightMenu.show = false))
+      )
+    "
     @cancel="cs.rightMenu.show = false"
   />
 </template>

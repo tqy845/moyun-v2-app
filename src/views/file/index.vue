@@ -10,7 +10,6 @@ import { useElementSize, useKeyModifier, useMagicKeys } from '@vueuse/core'
 import { AppIconView, AppListView } from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { MoYunFile } from '@/types/models'
-import { fileUtils } from '@/utils/functions'
 
 const containerRef = ref(null)
 const { width } = useElementSize(containerRef)

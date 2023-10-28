@@ -6,7 +6,8 @@
 -->
 
 <script lang="ts" setup>
-import { RightMenuItem } from '@/types/enums/right-menu'
+import { ActionTypeValue } from '@/types/enums'
+import { RightMenuItem } from '@/types/models'
 import { emit, listen } from '@tauri-apps/api/event'
 import { appWindow } from '@tauri-apps/api/window'
 import { useElementSize } from '@vueuse/core'
@@ -28,7 +29,7 @@ onMounted(async () => {
     'action',
     async (event: {
       windowLabel: string
-      payload: { actionType: number | string; actionData: { [key: string]: any } }
+      payload: { actionType: ActionTypeValue; actionData: { [key: string]: any } }
     }) => {
       const {
         payload: { actionType, actionData }

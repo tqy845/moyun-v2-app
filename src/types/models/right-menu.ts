@@ -1,8 +1,11 @@
+import { ActionTypeValue } from "../enums"
+
 export interface RightMenuItem {
-  type: string | number
+  type: ActionTypeValue
   text?: string
   icon?: string
   rightIcon?: string
   shortcutKey?: string
   color?: string
+  element?: HTMLElement
 }

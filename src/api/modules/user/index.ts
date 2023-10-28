@@ -1,4 +1,4 @@
-import { User, UserProperties } from '@/types/models/user'
+import { User, UserProperties } from '@/types/models'
 import { tauriRequest, fetchRequest } from '@/utils/request'
 
 /**

@@ -5,13 +5,11 @@
   @description “垃圾篓（回收站）”页面
 -->
 <script lang="ts" setup>
-import { onUnmounted, onMounted, reactive, ref, nextTick } from 'vue'
-import { useElementSize, useKeyModifier, useMagicKeys, whenever } from '@vueuse/core'
+import { onMounted, ref } from 'vue'
+import { useElementSize, useKeyModifier, useMagicKeys } from '@vueuse/core'
 import { AppTrashCanIconView, AppListView } from './components'
 import { useAppStore, useFileStore } from '@/stores'
 import { MoYunFile } from '@/types/models'
-import { LogicalPosition, WebviewWindow } from '@tauri-apps/api/window'
-import { emit, listen } from '@tauri-apps/api/event'
 
 const containerRef = ref(null)
 const { width } = useElementSize(containerRef)
@@ -21,43 +19,6 @@ const appStore = useAppStore()
 const fileStore = useFileStore()
 
 onMounted(async () => {
-  // 监听右键菜单聚焦
-  // data.rightMenuFocusListen = await data.rightMenuInstance!.onFocusChanged(
-  //   async ({ payload: focused }) => {
-  //     if (!focused) {
-  //       data.rightMenuInstance?.hide()
-  //     }
-  //   }
-  // )
-
-  // data.rightMenuListen = await listen(
-  //   'click',
-  //   async (event: {
-  //     windowLabel: string
-  //     payload: {
-  //       labelType: string
-  //       actionType: number | string
-  //       actionData: { [key: string]: any }
-  //     }
-  //   }) => {
-  //     const {
-  //       payload: { actionType, labelType, actionData }
-  //     } = event
-  //     // 右键菜单
-  //     console.log('actionType = ', labelType)
-
-  //     switch (labelType) {
-  //       case 'fileRightMenu':
-  //         // fileStore.fileRightMenuCallBack(actionType, actionData)
-  //         break
-  //       case 'contextRightFileMenu':
-  //         // fileStore.contextRightMenuCallBack(actionType, actionData)
-  //         break
-  //     }
-  //     data.rightMenuInstance?.hide()
-  //   }
-  // )
-
   if (fileStore.search) return
   // 没有全局搜索才执行
   if (!appStore.search) {

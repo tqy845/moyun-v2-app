@@ -6,7 +6,7 @@
 -->
 
 <script lang="ts" setup>
-import { RightMenuItem } from '@/types/enums/right-menu'
+import { RightMenuItem } from '@/types/models'
 
 const emits = defineEmits(['confirm', 'cancel'])
 
@@ -39,7 +39,7 @@ const props = defineProps({
         <v-list-item
           v-else
           rounded="xl"
-          @click="emits('confirm', { actionType: item.type, actionData: item })"
+          @click="emits('confirm', { type: item.type, data: { menuItem: item } })"
         >
           <v-list-item-title>
             <v-row align="center">

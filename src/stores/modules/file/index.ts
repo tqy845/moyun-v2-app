@@ -1,4 +1,3 @@
-import { FileSortType } from '@/types/models'
 /**
  * File Store
  */
@@ -12,14 +11,18 @@ import {
   fileRestoreAll,
   folderCreate
 } from '@/api'
-import { ACTION_TYPE, FileType } from '@/types/enums'
-import { MoYunFile, MoYunFileDto } from '@/types/models'
-import { fileUtils } from '@/utils/functions'
+import { ActionTypeValue, FileType } from '@/types/enums'
+import {
+  MoYunFile,
+  MoYunFileDto,
+  FileSortType,
+  BreadcrumbItem,
+  RightMenuItem
+} from '@/types/models'
+import { fileUtils, rightMenuUtils } from '@/utils/functions'
 import { defineStore } from 'pinia'
 import { useAppStore } from '..'
 import { FileStore, getFileDefaultSettings } from './helper'
-import { BreadcrumbItem } from '@/types/models/breadcrumb-item'
-import { Ref } from 'vue'
 
 export const useFileStore = defineStore('fileStore', {
   state: (): FileStore => getFileDefaultSettings(),
@@ -336,6 +339,29 @@ export const useFileStore = defineStore('fileStore', {
         this.currentSortType = [type]
       }
       fileUtils.sort(this.renderList, this.currentSortType[0], this.currentSortOrder[0])
+    },
+    /**
+     * 右键菜单点击事件
+     * @param type 类型
+     * @param data 数据
+     * @param callBack 回调
+     */
+    rightMenuConfirm(
+      type: ActionTypeValue,
+      data: {
+        menuItem: RightMenuItem
+        file?: MoYunFile
+      },
+      callBack?: Function
+    ) {
+      console.log(type, data)
+
+      if (this.contextRightMenuItems.map((item) => item.type).includes(type)) {
+        rightMenuUtils.contextRightMenuEvent(data.menuItem)
+      } else {
+        rightMenuUtils.fileRightMenuEvent(data.menuItem, data.file!)
+      }
+      callBack?.()
     }
   },
 

@@ -6,14 +6,12 @@
 -->
 
 <script lang="ts" setup>
-import { reactive, computed, onMounted, watch, onUpdated } from 'vue'
+import { onMounted } from 'vue'
 import { AppFile } from '@/components/common'
 import { useWindowSize } from '@vueuse/core'
 import { useAppStore, useFileStore } from '@/stores'
 import { fileUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileNullAlert } from '.'
-import { FileType } from '@/types/enums'
-import { MoYunFile } from '@/types/models'
 
 const windowSize = useWindowSize()
 
