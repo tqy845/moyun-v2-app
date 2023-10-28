@@ -25,7 +25,6 @@ const selected = computed(() => [appStore['settings']['basic']['colorTheme']])
         <v-icon>mdi-theme-light-dark</v-icon>
       </v-btn>
     </template>
-    {{ appStore['settings']['basic']['colorTheme'] }}
     <v-list density="compact" nav v-model:selected="selected">
       <v-list-subheader>{{ $t('toggle.theme') }}</v-list-subheader>
       <v-list-item @click="switchTheme('light')" value="light">
