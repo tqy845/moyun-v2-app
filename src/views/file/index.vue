@@ -33,8 +33,8 @@ useMagicKeys({
   passive: false,
   onEventFired(e) {
     if (e.ctrlKey && e.key === 'a' && e.type === 'keydown') {
-      e.preventDefault()
-      fileStore.selectAll()
+      // e.preventDefault()
+      // fileStore.selectAll()
     }
   }
 })

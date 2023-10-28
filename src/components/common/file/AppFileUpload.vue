@@ -138,7 +138,7 @@ const handleClickArea = () => {
     :transition="fileStore.show ? 'dialog-bottom-transition' : 'dialog-top-transition'"
   >
     <v-card>
-      <v-toolbar :color="appStore.customThemeColor()['uploadHeaderBar']">
+      <v-toolbar :color="appStore.customThemeColor('uploadHeaderBar')">
         <v-toolbar-title>{{ $t('file.upload.title.text') }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-row style="width: max-content" justify="end">
@@ -237,7 +237,7 @@ const handleClickArea = () => {
             <div class="file-upload py-3">
               <div
                 class="file-drop-area pa-12"
-                :style="{ backgroundColor: appStore.customThemeColor()['uploadArea'] }"
+                :style="{ backgroundColor: appStore.customThemeColor('uploadArea') }"
                 @dragover.prevent
                 @dragenter.prevent
                 @dragleave.prevent
@@ -309,11 +309,11 @@ const handleClickArea = () => {
                 height="12"
                 :indeterminate="item.status === 'init' && item.power <= 0"
                 rounded
-                :color="appStore.customThemeColor()['uploadProgressBg']"
+                :color="appStore.customThemeColor('uploadProgressBg')"
               >
                 <strong
                   class="text-overline"
-                  :class="appStore.customThemeColor()['uploadProgress']"
+                  :class="appStore.customThemeColor('uploadProgress')"
                   >{{
                     item.status === 'cancel'
                       ? $t('cancel.text')

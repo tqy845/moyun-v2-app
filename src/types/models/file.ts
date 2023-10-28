@@ -306,6 +306,11 @@ export class MoYunFile {
   isEmpty: boolean
 
   /**
+   * 是否重命名
+   */
+  isRename: boolean = false
+
+  /**
    * 创建一个新的 File 实例
    * @param params 文件属性，包括名称、图标和类型。
    */
@@ -392,6 +397,7 @@ export class MoYunFile {
    */
   async rename(newName: string): Promise<void> {
     this.name = newName
+    this.isRename = false
   }
 
   /**

@@ -10,6 +10,7 @@ import { MoYunFile } from '@/types/models'
 import { useAppStore, useFileStore } from '@/stores'
 import { useElementSize } from '@vueuse/core'
 import { fileUtils } from '@/utils/functions'
+import { reactive } from 'vue'
 
 const fileNameRef = ref()
 
@@ -17,11 +18,15 @@ const { height } = useElementSize(fileNameRef)
 const fileStore = useFileStore()
 const appStore = useAppStore()
 
-defineProps({
+const props = defineProps({
   moYunFile: {
     type: MoYunFile,
     required: true
   }
+})
+
+const data = reactive({
+  name: props.moYunFile.name
 })
 </script>
 
@@ -40,7 +45,21 @@ defineProps({
           :color="appStore.isColoursIcon() ? moYunFile.iconColor : fileUtils.iconColors['pure']"
         ></v-icon>
       </div>
+      <v-textarea
+        v-if="moYunFile.isRename"
+        class="mt-3 position-absolute w-100"
+        style="z-index: 9999999; left: 0"
+        bg-color="white"
+        variant="outlined"
+        density="compact"
+        auto-grow
+        autofocus
+        rows="1"
+        v-model="data.name"
+        v-click-outside="() => moYunFile.rename(data.name)"
+      ></v-textarea>
       <div
+        v-else
         ref="fileNameRef"
         class="text-none text-center w-100 position-absolute px-4"
         :class="

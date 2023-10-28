@@ -46,11 +46,15 @@ const contextRightMenuEvent = (menuItem: RightMenuItem) => {
 const fileRightMenuEvent = (menuItem: RightMenuItem, moYunFile: MoYunFile) => {
   const fileStore = useFileStore()
   const isBatch: boolean = fileStore.selectedList.length > 1
-  const { OPEN, DELETE, DOWNLOAD } = ACTION_TYPE
+  const { OPEN, RENAME, DELETE, DOWNLOAD } = ACTION_TYPE
 
   switch (menuItem.type) {
     case OPEN:
       moYunFile.open()
+      break
+    case RENAME:
+      moYunFile.isRename = true
+      // moYunFile.rename('1')
       break
     case DELETE:
       isBatch

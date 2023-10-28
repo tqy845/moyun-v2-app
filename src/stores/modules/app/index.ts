@@ -75,26 +75,28 @@ export const useAppStore = defineStore(`appStore`, {
     /**
      * 自定义主题色
      */
-    customThemeColor() {
-      const darkTheme = {
+    customThemeColor(key: string) {
+      const darkTheme: { [key: string]: string } = {
         blankCodeBg: 'bg-grey-darken-3',
         uploadHeaderBar: '#212121',
         uploadArea: '#2A2A2A',
         fileMenu: '#1B1B1B',
         fileAppBar: 'teal-lighten-4',
         uploadProgress: 'text-black',
-        uploadProgressBg: '#A3A3A3'
+        uploadProgressBg: '#A3A3A3',
+        fileRenameBg: '#1B1B1B'
       }
-      const lightTheme = {
+      const lightTheme: { [key: string]: string } = {
         blankCodeBg: 'bg-grey-lighten-3',
         uploadHeaderBar: '#212121',
         uploadArea: '#F1F1F1',
         fileMenu: 'grey-lighten-3',
         fileAppBar: 'teal-darken-4',
         uploadProgress: 'text-white',
-        uploadProgressBg: ''
+        uploadProgressBg: '',
+        fileRenameBg: 'white'
       }
-      return this.settings['basic']['colorTheme'] === 'dark' ? darkTheme : lightTheme
+      return this.settings['basic']['colorTheme'] === 'dark' ? darkTheme[key] : lightTheme[key]
     },
     /**
      * 是否为彩色主题图标
