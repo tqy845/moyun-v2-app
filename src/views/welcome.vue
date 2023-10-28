@@ -14,7 +14,7 @@ const appStore = useAppStore()
 <!-- src="https://c.wallhere.com/photos/13/67/abstract_fluid_liquid_illustration_graphic_design_artwork_digital_art_green-2094119.jpg!d" -->
 
 <template>
-  <v-img gradient="to top right, rgba(19,84,122), rgba(128,208,199)" class="h-100">
+  <v-img class="h-100" :gradient="appStore.customThemeColor('welcomeBg')">
     <v-row
       justify="center"
       align="center"
@@ -33,7 +33,7 @@ const appStore = useAppStore()
         style="text-shadow: 1px 2px 3px rgb(4, 4, 4)"
       >
         <v-list-item
-          title="为什么选择 Moyun ？"
+          title="为什么选择 MoYun ？"
           subtitle="Moyun 是一个功能强大的网盘工具，基于Rust从底层开始构建。我们的UI在应用程序中保持一致的风格， 并提供足够的自定义选项以满足任何使用情况。"
         ></v-list-item>
         <v-list-item

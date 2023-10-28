@@ -76,7 +76,9 @@ export const useAppStore = defineStore(`appStore`, {
      * 自定义主题色
      */
     customThemeColor(key: string) {
+      // 深色
       const darkTheme: { [key: string]: string } = {
+        welcomeBg: 'to right top, rgb(19, 84, 122), rgb(45 131 121)',
         blankCodeBg: 'bg-grey-darken-3',
         uploadHeaderBar: '#212121',
         uploadArea: '#2A2A2A',
@@ -86,7 +88,9 @@ export const useAppStore = defineStore(`appStore`, {
         uploadProgressBg: '#A3A3A3',
         fileRenameBg: '#1B1B1B'
       }
+      // 浅色
       const lightTheme: { [key: string]: string } = {
+        welcomeBg: 'to top right, rgba(19,84,122), rgba(128,208,199)',
         blankCodeBg: 'bg-grey-lighten-3',
         uploadHeaderBar: '#212121',
         uploadArea: '#F1F1F1',

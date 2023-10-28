@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "摸云 Safe and sound - Mo yun",
-    "version": "2.0.6"
+    "productName": "摸云 Safe and sound - Mo Yun",
+    "version": "2.1.0"
   },
   "tauri": {
     "allowlist": {
