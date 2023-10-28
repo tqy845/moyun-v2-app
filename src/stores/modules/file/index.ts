@@ -354,9 +354,8 @@ export const useFileStore = defineStore('fileStore', {
       },
       callBack?: Function
     ) {
-      console.log(type, data)
-
-      if (this.contextRightMenuItems.map((item) => item.type).includes(type)) {
+      const contextRightNameList = this.contextRightMenuItems.map((item) => item.type)
+      if (contextRightNameList.includes(type)) {
         rightMenuUtils.contextRightMenuEvent(data.menuItem)
       } else {
         rightMenuUtils.fileRightMenuEvent(data.menuItem, data.file!)

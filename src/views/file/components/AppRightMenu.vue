@@ -6,7 +6,7 @@
 -->
 
 <script lang="ts" setup>
-import { RightMenuItem } from '@/types/models'
+import { MoYunFile, RightMenuItem } from '@/types/models'
 
 const emits = defineEmits(['confirm', 'cancel'])
 
@@ -18,6 +18,10 @@ const props = defineProps({
   location: {
     type: Object,
     required: true
+  },
+  moYunFile: {
+    type: MoYunFile,
+    required: false
   }
 })
 </script>
@@ -39,7 +43,7 @@ const props = defineProps({
         <v-list-item
           v-else
           rounded="xl"
-          @click="emits('confirm', { type: item.type, data: { menuItem: item } })"
+          @click="emits('confirm', { type: item.type, data: { menuItem: item, file: moYunFile } })"
         >
           <v-list-item-title>
             <v-row align="center">

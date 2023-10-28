@@ -33,15 +33,21 @@ const props = defineProps<{
   multiple: boolean
 }>()
 
-const cs = reactive({
+const cs = reactive<{
+  rightMenu: {
+    show: boolean
+    location: { x: number; y: number }
+    menuItems: Array<RightMenuItem>
+    moYunFile: MoYunFile
+  }
+}>({
   rightMenu: {
     show: false,
     location: { x: 0, y: 0 },
     menuItems: [] as Array<RightMenuItem>,
-    moYunFile: null as MoYunFile | null
+    moYunFile: {} as MoYunFile
   }
 })
-
 /**
  * 鼠标事件
  */
