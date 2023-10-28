@@ -10,11 +10,10 @@ import { reactive, nextTick, ref } from 'vue'
 import { AppFile } from '@/components/common'
 import { useElementSize, useWindowSize } from '@vueuse/core'
 import { useAppStore, useFileStore } from '@/stores'
-import { fileUtils } from '@/utils/functions'
+import { fileUtils, rightMenuUtils } from '@/utils/functions'
 import { AppFileLoading, AppFileNullAlert, AppPathBar } from '.'
 import { AppRightMenu } from '../components'
 import { MoYunFile, RightMenuItem } from '@/types/models'
-import { ACTION_TYPE } from '@/types/enums'
 
 const rightMenuRef = ref<HTMLElement | null>(null)
 const cardRef = ref()
@@ -33,21 +32,17 @@ const props = defineProps<{
   multiple: boolean
 }>()
 
-const cs = reactive<{
-  rightMenu: {
-    show: boolean
-    location: { x: number; y: number }
-    menuItems: Array<RightMenuItem>
-    moYunFile: MoYunFile
-  }
-}>({
+const cs = reactive({
   rightMenu: {
     show: false,
     location: { x: 0, y: 0 },
     menuItems: [] as Array<RightMenuItem>,
-    moYunFile: {} as MoYunFile
+    moYunFile: {} as MoYunFile,
+    multiple: props.multiple,
+    index: 0
   }
 })
+
 /**
  * 鼠标事件
  */
@@ -59,68 +54,6 @@ window.addEventListener('wheel', fileUtils.iconViewMouseWheel)
  */
 const handleSelectItem = (index: any) => {
   fileStore.selected(fileStore.renderList[index].name, props.multiple)
-}
-
-/**
- * 右键菜单
- * @param event
- */
-const handleRightMenu = (
-  event: MouseEvent,
-  index: number,
-  type: 'context' | 'file' = 'context',
-  moYunFile?: MoYunFile
-) => {
-  event.preventDefault()
-  cs.rightMenu.show = false
-  switch (type) {
-    case 'context':
-      fileStore.contextRightMenuItems.filter(
-        (it) => it.type === ACTION_TYPE.NEW_FOLDER
-      )[0].element = cardRef.value.$el
-      cs.rightMenu.menuItems = fileStore.contextRightMenuItems
-      break
-    case 'file':
-      fileStore.fileRightMenuItems[0]['icon'] = moYunFile!.icon
-      fileStore.fileRightMenuItems[0]['color'] = moYunFile!.iconColor
-
-      cs.rightMenu.moYunFile = moYunFile!
-      cs.rightMenu.menuItems = fileStore.fileRightMenuItems
-      if (!fileStore.selectedList.includes(fileStore.renderList[index].name)) {
-        handleSelectItem(index)
-      }
-      break
-  }
-  setTimeout(() => {
-    cs.rightMenu.show = true
-
-    // 获取鼠标相对于视口的坐标
-    const clientX = event.clientX
-    const clientY = event.clientY
-    // 计算菜单的 x 和 y 位置，确保不超出 v-card 范围
-    let x = clientX
-    let y = clientY
-
-    // 获取菜单宽度和高度
-    const menuWidth = rightMenuSize.width.value
-    const menuHeight = rightMenuSize.height.value
-
-    const windowWidth = windowSize.width.value
-    const windowHeight = windowSize.height.value
-
-    if (clientX + menuWidth > windowWidth) {
-      // 菜单宽度超出当前元素右边界
-      x = windowWidth - menuWidth - 18
-    }
-
-    if (clientY + menuHeight > windowHeight) {
-      // 菜单高度超出当前元素下边界
-      y = windowHeight - menuHeight - 20
-    }
-
-    // 重制位置
-    cs.rightMenu.location = { x, y }
-  })
 }
 </script>
 
@@ -149,7 +82,7 @@ const handleRightMenu = (
   <v-card
     class="w-100 ma-0 pa-0"
     :height="windowSize.height.value - 180"
-    @contextmenu="handleRightMenu"
+    @contextmenu="rightMenuUtils.enable($event, cs.rightMenu, cardRef?.$el, rightMenuSize)"
   >
     <div class="w-100 h-100">
       <!-- 读取中 -->
@@ -184,7 +117,17 @@ const handleRightMenu = (
               elevation="0"
               @click="handleSelectItem(index)"
               @dblclick="fileUtils.doubleClick(moYunFile)"
-              @contextmenu.stop="handleRightMenu($event, index, 'file', moYunFile)"
+              @contextmenu.stop="
+                rightMenuUtils.enable(
+                  $event,
+                  cs.rightMenu,
+                  cardRef?.$el,
+                  rightMenuSize,
+                  'file',
+                  index,
+                  moYunFile
+                )
+              "
             />
           </v-col>
         </v-row>
@@ -211,7 +154,7 @@ const handleRightMenu = (
     :moYunFile="cs.rightMenu.moYunFile"
     :style="{ visibility: cs.rightMenu.show ? 'visible' : 'hidden' }"
     @confirm="
-      fileStore.rightMenuConfirm($event.type, $event.data, () =>
+      rightMenuUtils.confirm($event.type, $event.data, () =>
         nextTick(() => (cs.rightMenu.show = false))
       )
     "
