@@ -124,10 +124,6 @@ const fetchRequest = async <T = any>(
       // 针对401认证失败进行处理
 
       if (result.code !== 200) {
-        // const router = useRouter()
-        // userStore.logout(() => {
-        //   router.replace('/login')
-        // })
         if (result.code === 401) {
           appStore['401'] = true
           // 无权限，故取消所有网络请求
@@ -141,11 +137,7 @@ const fetchRequest = async <T = any>(
     }
   } catch (err) {
     console.error(err)
-    return {
-      code: -1,
-      message: 'error',
-      data: {} as T
-    }
+    throw new Error(err)
   } finally {
     controllerMap.delete(requestId)
   }
