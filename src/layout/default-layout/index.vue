@@ -47,7 +47,7 @@ const handleClickOutside = () => {
       >
         <!-- 个人信息 -->
         <v-sheet class="">
-          <AppUserCard />
+          <AppUserCard :status="cs.asideMenu.show" />
         </v-sheet>
 
         <!-- 菜单 -->

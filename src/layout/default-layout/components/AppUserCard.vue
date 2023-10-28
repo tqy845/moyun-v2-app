@@ -22,6 +22,13 @@ const cs = reactive({
   hints: true
 })
 
+const props = defineProps({
+  status: {
+    type: Boolean,
+    required: true
+  }
+})
+
 /**
  * 前往设置页面
  */
@@ -48,7 +55,7 @@ const selectedMenuItem = computed(() => [appStore.app.menuIndex['currentUserCent
     </template>
 
     <v-card min-width="300">
-      <v-list>
+      <v-list v-if="status">
         <v-list-item :subtitle="userStore.user.email" :title="userStore.user.nickName">
           <template #prepend>
             <v-avatar color="primary">{{ userStore.nameInitial }}</v-avatar>
