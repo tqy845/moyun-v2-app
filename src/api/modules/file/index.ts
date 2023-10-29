@@ -74,14 +74,18 @@ export const fileDownloadByNameList = <T = any>(params: { fileNames: Array<strin
 
 /**
  * 删除文件<single>
- * @param {string} fileName 文件名
  * @description 软删除
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const fileDeleteByName = <T = any>(fileName: string) => {
+export const fileDeleteByName = <T = any>(params: {
+  fileName: string
+  path: string
+  type: string
+}) => {
   return fetchRequest<T>({
-    url: `/system/user/file/delete/${fileName}`,
-    method: 'PUT'
+    url: `/system/user/file/delete`,
+    method: 'PUT',
+    data: params
   })
 }
 
@@ -92,11 +96,17 @@ export const fileDeleteByName = <T = any>(fileName: string) => {
  * @description 硬删除
  * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
  */
-export const fileDeleteByNameList = <T = any>(params: { fileNames: Array<string> }) => {
+export const fileDeleteByNameList = <T = any>(params: {
+  fileList: Array<{
+    fileName: string
+    path: string
+    type: string
+  }>
+}) => {
   return fetchRequest<T>({
-    url: `/system/user/file/delete/multiple/`,
+    url: `/system/user/file/delete/`,
     method: 'PUT',
-    data: params
+    data: params.fileList
   })
 }
 

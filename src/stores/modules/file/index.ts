@@ -229,7 +229,18 @@ export const useFileStore = defineStore('fileStore', {
      */
     removeByNameList(names: Array<string>) {
       const appStore = useAppStore()
-      fileDeleteByNameList({ fileNames: names })
+      const moYunFileList = this.renderList
+        .filter((it) => it.name && names.includes(it.name))
+        .map((it) => ({
+          fileName: it.name,
+          path: it.path,
+          type: it.extension
+        }))
+
+      fileDeleteByNameList({
+        fileList: moYunFileList
+      })
+
       for (const name of names) {
         this.deleteCache(name, false)
       }

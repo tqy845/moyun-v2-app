@@ -130,8 +130,13 @@ export class MoYunUploadDto {
       fileStore.deleteCache(this.file.name)
     }
     this.deleting = false
-    const { code } = await fileDeleteByName(this.file.name)
-    return code === 200
+    // const { code } = await fileDeleteByName({
+    //   fileName: this.file.name,
+    //   path: this.file.path,
+    //   type: this.file
+    // })
+    // return code === 200
+    return true
   }
 
   /**
@@ -438,7 +443,11 @@ export class MoYunFile {
     console.log('触发删除')
 
     const fileStore = useFileStore()
-    const { code } = await fileDeleteByName(this.name)
+    const { code } = await fileDeleteByName({
+      fileName: this.name,
+      path: this.path,
+      type: this.extension
+    })
     if (code === 200 && deleteLocal) {
       fileStore.deleteCache(this.name)
     }
