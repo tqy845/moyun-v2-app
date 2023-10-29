@@ -31,14 +31,18 @@ const data = reactive({
   name: props.moYunFile.name
 })
 
+/**
+ * 重命名保存
+ */
 const handleSave = async () => {
-  if (cs.dialog.show || props.moYunFile.name.trim() === data.name.trim()) return
+  const { name } = props.moYunFile
+  if (cs.dialog.show || name.trim() === data.name.trim()) return
+
   const { message } = await props.moYunFile.rename(data.name)
   if (message) {
-    cs.dialog.show = true
     cs.dialog.text = message
+    cs.dialog.show = true
     data.name = props.moYunFile.name
-    
   }
 }
 </script>
