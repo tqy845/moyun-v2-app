@@ -280,6 +280,7 @@ export const useFileStore = defineStore('fileStore', {
      * 新建文件夹
      */
     async createFolder(element: HTMLElement, callBack?: Function) {
+      this.loading = true
       const path = this.getCurrentRealPath()
       const baseFolderName = `新建文件夹`
 
@@ -314,6 +315,7 @@ export const useFileStore = defineStore('fileStore', {
           callBack?.(moYunFile)
         })
       }
+      this.loading = false
       return code === 200
     },
     /**

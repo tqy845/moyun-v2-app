@@ -73,8 +73,17 @@ const handleSelectItem = (index: any) => {
           class=""
           :disabled="fileStore.breadcrumbItems.length <= 1"
         ></v-btn>
-        <v-btn icon="mdi-folder-plus-outline" @click="fileStore.createFolder(cardRef?.$el)"></v-btn>
-        <v-btn icon="mdi-refresh" @click="fileStore.fetch()" class=""></v-btn>
+        <v-btn
+          icon="mdi-folder-plus-outline"
+          :loading="fileStore.loading"
+          @click="fileStore.createFolder(cardRef?.$el)"
+        ></v-btn>
+        <v-btn
+          icon="mdi-refresh"
+          :loading="fileStore.loading"
+          @click="fileStore.fetch()"
+          class=""
+        ></v-btn>
       </v-col>
     </v-row>
   </v-toolbar>
