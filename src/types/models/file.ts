@@ -414,10 +414,13 @@ export class MoYunFile {
       })
       if (code === 200) {
         this.name = newName
-        this.extension = this.name.substring(this.name.lastIndexOf('.') + 1, this.name.length)
-        const { icon, iconColor } = this.generateIcon
-        this.icon = icon
-        this.iconColor = iconColor
+        if (!this.isDirectory) {
+          // 不是文件夹
+          this.extension = newName.substring(newName.lastIndexOf('.') + 1, newName.length)
+          const { icon, iconColor } = this.generateIcon
+          this.icon = icon
+          this.iconColor = iconColor
+        }
       }
       result['message'] = message
       this.isRename = false
