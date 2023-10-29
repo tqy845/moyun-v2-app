@@ -159,3 +159,20 @@ export const folderCreate = <T = any>(params: { path: string; fileName: string }
     data: params
   })
 }
+
+/**
+ * 文件/文件夹重命名
+ * @returns 返回一个 Promise，Promise 解析后的值的类型是泛型类型 T
+ */
+export const fileRename = <T = any>(params: {
+  fileName: string
+  newFileName: string
+  path: string
+  type: string
+}) => {
+  return fetchRequest<T>({
+    url: `/system/user/file/rename`,
+    method: 'PUT',
+    data: params
+  })
+}

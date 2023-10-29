@@ -54,7 +54,6 @@ const fileRightMenuEvent = (menuItem: RightMenuItem, moYunFile: MoYunFile) => {
       break
     case RENAME:
       moYunFile.isRename = true
-      // moYunFile.rename('1')
       break
     case DELETE:
       isBatch

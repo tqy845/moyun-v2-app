@@ -7,6 +7,7 @@
 <script lang="ts" setup>
 import { useAppStore, useFileStore } from '@/stores'
 import { MoYunFile } from '@/types/models'
+import { message } from '@tauri-apps/api/dialog'
 import { reactive } from 'vue'
 
 const fileStore = useFileStore()
@@ -21,7 +22,8 @@ const props = defineProps({
 
 const cs = reactive({
   dialog: {
-    show: false
+    show: false,
+    text: ''
   }
 })
 
@@ -29,9 +31,15 @@ const data = reactive({
   name: props.moYunFile.name
 })
 
-const handleSave = () => {
-  // cs.dialog.show = true
-  // props.moYunFile.rename(data.name)
+const handleSave = async () => {
+  if (cs.dialog.show || props.moYunFile.name.trim() === data.name.trim()) return
+  const { message } = await props.moYunFile.rename(data.name)
+  if (message) {
+    cs.dialog.show = true
+    cs.dialog.text = message
+    data.name = props.moYunFile.name
+    
+  }
 }
 </script>
 
@@ -52,20 +60,17 @@ const handleSave = () => {
 
   <!-- 重命名提示 -->
   <v-dialog width="500" v-model="cs.dialog.show">
-    <template v-slot:default="{ isActive }">
-      <v-card title="Dialog">
-        <v-card-text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua.
-        </v-card-text>
+    <v-card>
+      <v-card-text>
+        {{ cs.dialog.text }}
+      </v-card-text>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
+      <v-card-actions>
+        <v-spacer></v-spacer>
 
-          <v-btn text="Close Dialog" @click="isActive.value = false"></v-btn>
-        </v-card-actions>
-      </v-card>
-    </template>
+        <v-btn :text="$t('confirm.text')" @click="cs.dialog.show = false"></v-btn>
+      </v-card-actions>
+    </v-card>
   </v-dialog>
 </template>
 

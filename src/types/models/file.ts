@@ -1,4 +1,4 @@
-import { fileDownloadByName, fileDeleteByName } from '@/api'
+import { fileDownloadByName, fileDeleteByName, fileRename } from '@/api'
 import { pinyin } from 'pinyin-pro'
 import { useFileStore, useUserStore } from '@/stores'
 import { calculateFileSliceSize } from '@/utils/functions/file/helper'
@@ -395,17 +395,33 @@ export class MoYunFile {
    * 重命名文件
    * @param newName 新的文件名称。
    */
-  async rename(newName: string): Promise<void> {
+  async rename(newName: string): Promise<{ message: string }> {
     const fileStore = useFileStore()
     const fileNameList = fileStore.renderList.map((it) => it.name)
+    const result = { message: '' }
+
     if (this.name === newName) {
+      // 文件名无变动
       this.isRename = false
+      result['message'] = '文件名无变动'
     } else if (fileNameList.indexOf(newName) === -1 && this.name !== newName) {
-      this.name = newName
+      // 重命名
+      const { code, message } = await fileRename({
+        fileName: this.name,
+        newFileName: newName,
+        path: this.path,
+        type: this.extension
+      })
+      if (code === 200) {
+        this.name = newName
+      }
+      result['message'] = message
       this.isRename = false
     } else {
-      console.log('同名冲突')
+      result['message'] = '文件名已存在'
     }
+
+    return result
   }
 
   /**
