@@ -403,7 +403,6 @@ export class MoYunFile {
     if (this.name === newName) {
       // 文件名无变动
       this.isRename = false
-      result['message'] = '文件名无变动'
     } else if (fileNameList.indexOf(newName) === -1 && this.name !== newName) {
       // 重命名
       const { code, message } = await fileRename({

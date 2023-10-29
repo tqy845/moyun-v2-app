@@ -53,7 +53,9 @@ const fileRightMenuEvent = (menuItem: RightMenuItem, moYunFile: MoYunFile) => {
       moYunFile.open()
       break
     case RENAME:
-      fileStore.renderList.forEach((it) => (it.isRename = false))
+      fileStore.renderList.forEach((it) => {
+        it.isRename = false
+      })
       moYunFile.isRename = true
       break
     case DELETE:
