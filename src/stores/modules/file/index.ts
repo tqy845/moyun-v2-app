@@ -39,6 +39,8 @@ export const useFileStore = defineStore('fileStore', {
      */
     async fetch(delFlag: 1 | 0 = 0) {
       this.loading = true
+      this.selectedList.length = 0
+
       const appStore = useAppStore()
       const path = this.getCurrentRealPath()
 
