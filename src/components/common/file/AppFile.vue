@@ -42,9 +42,7 @@ const props = defineProps({
           :color="appStore.isColorfulIcon() ? moYunFile.iconColor : fileUtils.iconColors['pure']"
         ></v-icon>
       </div>
-
       <AppFileRename v-if="moYunFile.isRename" :moYunFile="moYunFile" />
-
       <div
         v-else
         ref="fileNameRef"

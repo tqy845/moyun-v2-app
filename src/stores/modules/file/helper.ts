@@ -119,6 +119,10 @@ export interface FileStore {
    */
   breadcrumbItems: Array<BreadcrumbItem>
   /**
+   * 被收纳的面包屑项
+   */
+  moreBreadcrumbItems: Array<BreadcrumbItem>
+  /**
    * 文件预览
    */
   preview: boolean
@@ -292,6 +296,7 @@ export const getFileDefaultSettings = (): FileStore => {
         disabled: false
       }
     ],
+    moreBreadcrumbItems: [],
     preview: false,
     trashBasket: [],
     classMenuItems: [

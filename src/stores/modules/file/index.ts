@@ -339,12 +339,14 @@ export const useFileStore = defineStore('fileStore', {
     /**
      * 跳转路径
      */
-    skipPath(breadcrumbItem: BreadcrumbItem) {
+    skipPath(breadcrumbItem: BreadcrumbItem, callback?: Function) {
       // 清空选中
+      this.loading = true
       this.selectedList.length = 0
       const endIndex = this.breadcrumbItems.findIndex((item) => item.path === breadcrumbItem.path)
       this.breadcrumbItems = this.breadcrumbItems.slice(0, endIndex + 1)
       this.fetch()
+      setTimeout(callback?.())
     },
     /**
      * 排序

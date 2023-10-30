@@ -60,7 +60,7 @@ const handleSelectItem = (index: any) => {
 <template>
   <!-- 导航条 -->
   <v-toolbar border density="compact">
-    <div class="bg-orange overflow-hidden">
+    <div class="text-truncate w-100">
       <AppPathBar />
     </div>
     <v-spacer></v-spacer>
@@ -166,4 +166,14 @@ const handleSelectItem = (index: any) => {
   />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.demo {
+  word-break: break-all;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 1 !important; /* 这里是超出几行省略 */
+  overflow: hidden !important;
+  background-color: red;
+}
+</style>
