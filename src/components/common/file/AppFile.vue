@@ -25,8 +25,6 @@ const props = defineProps({
     required: true
   }
 })
-
-
 </script>
 
 <template>
@@ -41,7 +39,7 @@ const props = defineProps({
         <v-icon
           :icon="`mdi-${moYunFile.icon}`"
           :size="fileStore.itemSize - 120"
-          :color="appStore.isColoursIcon() ? moYunFile.iconColor : fileUtils.iconColors['pure']"
+          :color="appStore.isColorfulIcon() ? moYunFile.iconColor : fileUtils.iconColors['pure']"
         ></v-icon>
       </div>
 

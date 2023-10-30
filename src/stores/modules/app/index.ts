@@ -105,7 +105,7 @@ export const useAppStore = defineStore(`appStore`, {
     /**
      * 是否为彩色主题图标
      */
-    isColoursIcon() {
+    isColorfulIcon() {
       return this.settings['basic']['iconColorTheme'] === '1'
     },
     /**
