@@ -60,32 +60,27 @@ const handleSelectItem = (index: any) => {
 <template>
   <!-- 导航条 -->
   <v-toolbar border density="compact">
-    <v-row align="center" justify="start">
-      <v-col cols="auto" class="">
-        <AppPathBar />
-      </v-col>
-      <!-- 右侧分栏 -->
-      <v-spacer></v-spacer>
-      <v-col cols="auto" style="width: 180px !important" class="justify-center text-center">
-        <v-btn
-          icon="mdi-arrow-left-bottom"
-          @click="fileStore.back"
-          class=""
-          :disabled="fileStore.breadcrumbItems.length <= 1"
-        ></v-btn>
-        <v-btn
-          icon="mdi-folder-plus-outline"
-          :loading="fileStore.loading"
-          @click="fileStore.createFolder(cardRef?.$el)"
-        ></v-btn>
-        <v-btn
-          icon="mdi-refresh"
-          :loading="fileStore.loading"
-          @click="fileStore.fetch()"
-          class=""
-        ></v-btn>
-      </v-col>
-    </v-row>
+    <div class="bg-orange overflow-hidden">
+      <AppPathBar />
+    </div>
+    <v-spacer></v-spacer>
+    <v-btn
+      icon="mdi-arrow-left-bottom"
+      @click="fileStore.back"
+      class=""
+      :disabled="fileStore.breadcrumbItems.length <= 1"
+    ></v-btn>
+    <v-btn
+      icon="mdi-folder-plus-outline"
+      :loading="fileStore.loading"
+      @click="fileStore.createFolder(cardRef?.$el)"
+    ></v-btn>
+    <v-btn
+      icon="mdi-refresh"
+      :loading="fileStore.loading"
+      @click="fileStore.fetch()"
+      class=""
+    ></v-btn>
   </v-toolbar>
   <!-- 文件图标列表 -->
   <v-card
