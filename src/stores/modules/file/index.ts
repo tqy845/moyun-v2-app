@@ -322,7 +322,8 @@ export const useFileStore = defineStore('fileStore', {
      * 获得当前真实路径
      */
     getCurrentRealPath() {
-      return this.breadcrumbItems
+      const pathList = this.moreBreadcrumbItems.reverse().concat(this.breadcrumbItems)
+      return pathList
         .filter((item) => item.path !== '/')
         .map((item) => item.path)
         .join('')
@@ -345,6 +346,7 @@ export const useFileStore = defineStore('fileStore', {
       this.selectedList.length = 0
       const endIndex = this.breadcrumbItems.findIndex((item) => item.path === breadcrumbItem.path)
       this.breadcrumbItems = this.breadcrumbItems.slice(0, endIndex + 1)
+
       this.fetch()
       setTimeout(callback?.())
     },

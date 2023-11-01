@@ -57,7 +57,7 @@ const updateBreadcrumbItems = () =>
             shouldContinue = false // 停止循环
           } else {
             lastElementNode!.style.width = `${calc}px` // sumWidth - sumWidthExcludeLastElement
-            console.log(calc)
+            // console.log(calc)
           }
         } else {
           shouldContinue = false // 停止循环
